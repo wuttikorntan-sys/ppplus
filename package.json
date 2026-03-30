@@ -5,7 +5,7 @@
   "description": "PP+ Web App",
   "scripts": {
     "dev": "npm run dev --prefix frontend",
-    "build": "npm install --prefix frontend && npm run build --prefix frontend",
+    "build": "npm install --prefix frontend && npm run build --prefix frontend && cp -r frontend/.next .next",
     "start": "node frontend/server.js",
     "seed": "node frontend/seed-mysql.js"
   }
