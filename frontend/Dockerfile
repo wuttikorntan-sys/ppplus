@@ -30,11 +30,12 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/seed.js ./seed.js
+COPY --from=builder --chown=nextjs:nodejs /app/seed-mysql.js ./seed-mysql.js
 COPY --from=builder /app/node_modules/bcryptjs ./node_modules/bcryptjs
 COPY --from=builder /app/node_modules/nodemailer ./node_modules/nodemailer
+COPY --from=builder /app/node_modules/mysql2 ./node_modules/mysql2
 
-RUN mkdir -p data public/uploads && chown -R nextjs:nodejs data public/uploads
+RUN mkdir -p uploads && chown -R nextjs:nodejs uploads
 
 USER nextjs
 
@@ -43,4 +44,4 @@ EXPOSE 3030
 ENV PORT=3030
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["sh", "-c", "node seed.js && node server.js"]
+CMD ["sh", "-c", "node seed-mysql.js && node server.js"]

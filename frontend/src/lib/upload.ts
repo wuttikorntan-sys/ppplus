@@ -1,4 +1,15 @@
-import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
+
+// Persistent uploads directory outside the git-managed area
+// On Hostinger: ~/uploads/ persists across deploys
+// Locally: ./uploads/ in project root
+const UPLOADS_DIR = process.env.UPLOADS_DIR
+  || path.join(process.cwd(), 'uploads');
+
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
@@ -14,34 +25,16 @@ export async function saveUploadedFile(formData: FormData, fieldName: string): P
     throw new Error('ไฟล์ต้องมีขนาดไม่เกิน 5MB');
   }
 
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME!;
-  const apiKey = process.env.CLOUDINARY_API_KEY!;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET!;
-
-  const timestamp = Math.floor(Date.now() / 1000).toString();
-  const folder = 'ppplus';
-  const paramsToSign = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
-  const signature = crypto.createHash('sha1').update(paramsToSign).digest('hex');
+  const ext = path.extname(file.name) || '.png';
+  const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext;
+  const filePath = path.join(UPLOADS_DIR, uniqueName);
 
   const buffer = Buffer.from(await file.arrayBuffer());
+  fs.writeFileSync(filePath, buffer);
 
-  const uploadForm = new FormData();
-  uploadForm.append('file', new Blob([buffer], { type: file.type }), file.name);
-  uploadForm.append('api_key', apiKey);
-  uploadForm.append('timestamp', timestamp);
-  uploadForm.append('signature', signature);
-  uploadForm.append('folder', folder);
+  return `/uploads/${uniqueName}`;
+}
 
-  const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`,
-    { method: 'POST', body: uploadForm },
-  );
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Cloudinary upload failed: ${err}`);
-  }
-
-  const json = await res.json();
-  return json.secure_url as string;
+export function getUploadsDir(): string {
+  return UPLOADS_DIR;
 }
