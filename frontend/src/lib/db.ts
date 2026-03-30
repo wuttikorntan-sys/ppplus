@@ -18,8 +18,8 @@ function toBool(v: unknown): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapRow(row: any) {
-  const out: Record<string, unknown> = {};
+function mapRow(row: any): any {
+  const out: any = {};
   for (const [k, v] of Object.entries(row)) {
     if (v instanceof Date) out[k] = v.toISOString();
     else out[k] = v;
@@ -279,7 +279,7 @@ export const db = {
             nameTh: mapped.catNameTh!,
             nameEn: mapped.catNameEn!,
             sortOrder: mapped.catSortOrder!,
-            createdAt: mapped.catCreatedAt instanceof Date ? (mapped.catCreatedAt as unknown as Date).toISOString() : mapped.catCreatedAt!,
+            createdAt: mapped.catCreatedAt!,
           };
         }
         delete mapped.catNameTh; delete mapped.catNameEn; delete mapped.catSortOrder; delete mapped.catCreatedAt;
