@@ -13,13 +13,13 @@ const menuItemSchema = z.object({
   price: z.number().positive(),
   isAvailable: z.boolean().optional(),
   sortOrder: z.number().int().optional(),
-  brand: z.string().nullable().optional(),
-  colorCode: z.string().nullable().optional(),
-  colorName: z.string().nullable().optional(),
-  finishType: z.string().nullable().optional(),
-  coverageArea: z.number().nullable().optional(),
-  size: z.string().nullable().optional(),
-  unit: z.string().nullable().optional(),
+  brand: z.string().nullable().default(null),
+  colorCode: z.string().nullable().default(null),
+  colorName: z.string().nullable().default(null),
+  finishType: z.string().nullable().default(null),
+  coverageArea: z.number().nullable().default(null),
+  size: z.string().nullable().default(null),
+  unit: z.string().nullable().default(null),
 });
 
 export async function GET(req: NextRequest) {
@@ -62,6 +62,13 @@ export async function POST(req: NextRequest) {
       isAvailable: data.isAvailable ?? true,
       sortOrder: data.sortOrder ?? 0,
       image: imagePath,
+      brand: data.brand ?? null,
+      colorCode: data.colorCode ?? null,
+      colorName: data.colorName ?? null,
+      finishType: data.finishType ?? null,
+      coverageArea: data.coverageArea ?? null,
+      size: data.size ?? null,
+      unit: data.unit ?? null,
     });
 
     return NextResponse.json({ success: true, data: item }, { status: 201 });
