@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #F8FAFC;
+  --color-warm-white: #FAFAFA;
+  --color-primary: #1E3A5F;
+  --color-primary-light: #2A4A73;
+  --color-primary-dark: #152C4A;
+  --color-accent: #2EC4B6;
+  --color-accent-light: #4DD4C8;
+  --color-accent-dark: #1FA89C;
+  --color-text: #1E293B;
+  --color-dark: #0F172A;
+  --font-heading: 'Inter', 'Kanit', sans-serif;
+  --font-body: 'Inter', 'Kanit', sans-serif;
+}
+
+body {
+  background: var(--color-warm-white);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode */
+.dark body,
+html.dark body {
+  background: #121212;
+  color: #E0E0E0;
+}
+
+.dark .bg-white {
+  background-color: #1E1E1E !important;
+}
+
+.dark .bg-white\/95 {
+  background-color: rgba(30, 30, 30, 0.95) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: #252525 !important;
+}
+
+.dark .text-\[\#1E293B\],
+.dark .text-gray-900 {
+  color: #E0E0E0 !important;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: #9CA3AF !important;
+}
+
+.dark .text-gray-400 {
+  color: #6B7280 !important;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200 {
+  border-color: #333333 !important;
+}
+
+.dark .shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: #333333 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html, body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Marquee animation */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee-scroll 25s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

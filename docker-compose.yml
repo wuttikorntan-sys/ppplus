@@ -1,0 +1,27 @@
+services:
+  # ── Frontend (Next.js — includes API) ──────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: amoris-frontend
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: "dev-jwt-secret-key-amoris-2026"
+      JWT_REFRESH_SECRET: "dev-refresh-secret-key-amoris-2026"
+      GOOGLE_PLACES_API_KEY: "AIzaSyD0BgYsVlMFNwczPbWmuPPFMWvOQtOUFRo"
+      GOOGLE_PLACE_ID: "ChIJV9BlfXf83DARCvVvB_u-ttU"
+      SMTP_HOST: "smtp.gmail.com"
+      SMTP_PORT: "587"
+      SMTP_USER: "amorissamui@gmail.com"
+      SMTP_PASS: "fewo jmcu uuca kyhg"
+      SMTP_TO: "amorissamui@gmail.com"
+    ports:
+      - "3030:3030"
+    volumes:
+      - app_uploads:/app/public/uploads
+      - app_data:/app/data
+
+volumes:
+  app_uploads:
+  app_data:

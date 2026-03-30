@@ -1,0 +1,218 @@
+﻿{
+  "nav": {
+    "home": "Home",
+    "menu": "Products",
+    "about": "About",
+    "gallery": "Gallery",
+    "contact": "Contact",
+    "calculator": "Calculator",
+    "blog": "Blog",
+    "login": "Login",
+    "logout": "Logout",
+    "admin": "Admin"
+  },
+  "home": {
+    "hero": {
+      "title": "PP+",
+      "subtitle": "Your Complete Paint Solution",
+      "description": "Premium paint supplier — interior, exterior, spray, automotive, and industrial coatings from leading brands with expert consultation",
+      "cta_menu": "View Products",
+      "cta_contact": "Contact Us"
+    },
+    "welcome": {
+      "tagline": "About Us",
+      "title": "Your Complete Paint Expert",
+      "text": "PP+ is a comprehensive paint store offering products from all leading brands with expert color consultation for home, decoration, or industrial projects.",
+      "cta": "Our Story"
+    },
+    "featured": {
+      "title": "Featured Products",
+      "subtitle": "Best sellers from top brands"
+    },
+    "gallery_preview": {
+      "title": "Our Projects",
+      "subtitle": "See what our customers have achieved",
+      "cta": "View Gallery"
+    },
+    "reviews": {
+      "title": "What Our Customers Say"
+    },
+    "contact": {
+      "title": "Visit Our Shop",
+      "subtitle": "We're here to help"
+    },
+    "brands": {
+      "title": "Trusted Brands",
+      "subtitle": "Authorized dealer for all leading paint brands"
+    },
+    "calculator_cta": {
+      "title": "Paint Calculator",
+      "subtitle": "Calculate how much paint you need for your project",
+      "cta": "Calculate Now"
+    },
+    "blog_preview": {
+      "title": "Paint Tips & Knowledge",
+      "subtitle": "Expert advice for your painting projects",
+      "cta": "Read More Articles"
+    }
+  },
+  "menu": {
+    "title": "Our Products",
+    "subtitle": "Browse our complete paint catalog",
+    "search": "Search products...",
+    "all": "All",
+    "baht": "฿",
+    "brand": "Brand",
+    "finish": "Finish",
+    "all_brands": "All Brands",
+    "all_finishes": "All Finishes",
+    "coverage": "Coverage",
+    "sqm_per_liter": "m²/L",
+    "size": "Size",
+    "add_inquiry": "Inquire"
+  },
+  "about": {
+    "title": "About PP+",
+    "story": {
+      "title": "Our Story",
+      "p1": "PP+ was founded with a passion for helping customers find the perfect paint for every project. We bring together all leading paint brands under one roof in Bangkok.",
+      "p2": "Our team of paint experts has years of experience in the industry, providing professional consultation on color selection, paint types, and application techniques.",
+      "p3": "We believe that the right paint can transform any space. That's why we're committed to offering genuine products, competitive prices, and expert advice to every customer."
+    },
+    "values": {
+      "title": "Our Values",
+      "fresh": { "title": "100% Genuine", "text": "All products are genuine from authorized distributors" },
+      "authentic": { "title": "Expert Advice", "text": "Professional paint consultation for every project" },
+      "passion": { "title": "Customer First", "text": "We go the extra mile to ensure your satisfaction" }
+    },
+    "team": {
+      "title": "Our Team",
+      "text": "A dedicated team of paint experts with years of industry experience"
+    }
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "Projects & Showcase",
+    "categories": {
+      "all": "All",
+      "projects": "Projects",
+      "before_after": "Before & After",
+      "shop": "Our Shop"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We're ready to help",
+    "info": {
+      "address": "Bangkok, Thailand",
+      "phone": "02-987-6543",
+      "email": "info@PP+.co.th",
+      "line": "@PP+",
+      "hours_title": "Opening Hours",
+      "lunch": "Mon-Sat: 8:00 AM - 6:00 PM",
+      "dinner": "Sun: 9:00 AM - 3:00 PM",
+      "closed": "Open every day"
+    },
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Send Message",
+      "success": "Message sent successfully"
+    }
+  },
+  "calculator": {
+    "title": "Paint Calculator",
+    "subtitle": "Calculate How Much Paint You Need",
+    "room_width": "Room Width (m)",
+    "room_length": "Room Length (m)",
+    "room_height": "Room Height (m)",
+    "doors": "Number of Doors",
+    "windows": "Number of Windows",
+    "coats": "Number of Coats",
+    "calculate": "Calculate",
+    "reset": "Reset",
+    "result": {
+      "title": "Calculation Result",
+      "wall_area": "Total Wall Area",
+      "paint_needed": "Paint Needed",
+      "liters": "liters",
+      "sqm": "m²",
+      "cans_needed": "Containers Needed",
+      "estimated_cost": "Estimated Cost",
+      "select_product": "Select a product to see estimated cost"
+    }
+  },
+  "blog": {
+    "title": "Paint Tips & Knowledge",
+    "subtitle": "Expert advice for your painting projects",
+    "read_more": "Read More",
+    "back_to_list": "Back to Articles",
+    "published": "Published",
+    "tags": "Tags",
+    "no_posts": "No articles yet"
+  },
+  "auth": {
+    "login": {
+      "title": "Admin Login",
+      "subtitle": "PP+ Management System",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login"
+    }
+  },
+  "footer": {
+    "description": "Your complete paint solution in Bangkok — all leading brands, expert advice",
+    "quick_links": "Quick Links",
+    "contact": "Contact Info",
+    "follow": "Follow Us",
+    "rights": "All rights reserved"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "baht": "THB"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "menu": "Products",
+    "categories": "Categories",
+    "gallery": "Gallery",
+    "hero_slides": "Hero Slides",
+    "homepage": "Homepage",
+    "blog": "Blog",
+    "popups": "Popups",
+    "users": "Users",
+    "settings": "Settings",
+    "reviews": "Reviews",
+    "stats": {
+      "menu_items": "Products",
+      "users": "Users",
+      "active_popups": "Active Popups",
+      "blog_posts": "Blog Posts"
+    },
+    "popup": {
+      "title": "Manage Popups",
+      "add": "Add Popup",
+      "edit": "Edit Popup",
+      "form": {
+        "title": "Title",
+        "title_th": "Title (Thai)",
+        "description": "Description",
+        "description_th": "Description (Thai)",
+        "image_url": "Image URL",
+        "active": "Active"
+      },
+      "no_popups": "No popups yet",
+      "confirm_delete": "Are you sure you want to delete this popup?"
+    }
+  }
+}
