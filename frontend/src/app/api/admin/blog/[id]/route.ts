@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     let image: string | null | undefined = undefined;
     const file = formData.get('image') as File | null;
     if (file && file.size > 0) {
-      image = await saveUploadedFile(file, 'blog');
+      image = await saveUploadedFile(formData, 'image');
     }
 
     const updateData: Record<string, unknown> = { ...data };

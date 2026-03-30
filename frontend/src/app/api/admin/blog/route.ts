@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     let image: string | null = null;
     const file = formData.get('image') as File | null;
     if (file && file.size > 0) {
-      image = await saveUploadedFile(file, 'blog');
+      image = await saveUploadedFile(formData, 'image');
     }
 
     const post = await db.blogPosts.create({
