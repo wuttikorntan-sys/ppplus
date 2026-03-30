@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mysql from 'mysql2/promise';
 
 /* ───── connection pool ───── */
@@ -169,16 +170,16 @@ export const db = {
     async findMany(opts?: { orderBy?: string }): Promise<UserRecord[]> {
       const order = opts?.orderBy === 'createdAt:desc' ? 'ORDER BY createdAt DESC' : 'ORDER BY id ASC';
       const [rows] = await pool.query(`SELECT * FROM users ${order}`);
-      return (rows as unknown[]).map(mapRow) as UserRecord[];
+      return (rows as any[]).map(mapRow) as UserRecord[];
     },
     async findById(id: number): Promise<UserRecord | undefined> {
       const [rows] = await pool.query('SELECT * FROM users WHERE id = ? LIMIT 1', [id]);
-      const arr = rows as unknown[];
+      const arr = rows as any[];
       return arr.length ? (mapRow(arr[0]) as UserRecord) : undefined;
     },
     async findByEmail(email: string): Promise<UserRecord | undefined> {
       const [rows] = await pool.query('SELECT * FROM users WHERE email = ? LIMIT 1', [email]);
-      const arr = rows as unknown[];
+      const arr = rows as any[];
       return arr.length ? (mapRow(arr[0]) as UserRecord) : undefined;
     },
     async create(data: Omit<UserRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<UserRecord> {
@@ -208,7 +209,7 @@ export const db = {
     },
     async count(): Promise<number> {
       const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM users');
-      return (rows as Record<string, number>[])[0].cnt;
+      return (rows as any[])[0].cnt;
     },
   },
 
@@ -216,11 +217,11 @@ export const db = {
   categories: {
     async findMany(): Promise<CategoryRecord[]> {
       const [rows] = await pool.query('SELECT * FROM categories ORDER BY sortOrder ASC');
-      return (rows as unknown[]).map(mapRow) as CategoryRecord[];
+      return (rows as any[]).map(mapRow) as CategoryRecord[];
     },
     async findById(id: number): Promise<CategoryRecord | undefined> {
       const [rows] = await pool.query('SELECT * FROM categories WHERE id = ? LIMIT 1', [id]);
-      const arr = rows as unknown[];
+      const arr = rows as any[];
       return arr.length ? (mapRow(arr[0]) as CategoryRecord) : undefined;
     },
     async create(data: Omit<CategoryRecord, 'id' | 'createdAt'>): Promise<CategoryRecord> {
@@ -251,7 +252,7 @@ export const db = {
     },
     async count(): Promise<number> {
       const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM categories');
-      return (rows as Record<string, number>[])[0].cnt;
+      return (rows as any[])[0].cnt;
     },
   },
 
@@ -270,7 +271,7 @@ export const db = {
       if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
       sql += ' ORDER BY c.sortOrder ASC, m.sortOrder ASC';
       const [rows] = await pool.query(sql, vals);
-      return (rows as Record<string, unknown>[]).map((row) => {
+      return (rows as any[]).map((row) => {
         const mapped = mapRow(row) as MenuItemRecord & { category?: CategoryRecord; catNameTh?: string; catNameEn?: string; catSortOrder?: number; catCreatedAt?: string };
         if (opts?.includeCategory && mapped.catNameTh != null) {
           mapped.category = {
@@ -287,7 +288,7 @@ export const db = {
     },
     async findById(id: number, includeCategory = false): Promise<(MenuItemRecord & { category?: CategoryRecord }) | undefined> {
       const [rows] = await pool.query('SELECT * FROM menu_items WHERE id = ? LIMIT 1', [id]);
-      const arr = rows as unknown[];
+      const arr = rows as any[];
       if (!arr.length) return undefined;
       const item = mapRow(arr[0]) as MenuItemRecord & { category?: CategoryRecord };
       if (includeCategory) {
@@ -331,7 +332,7 @@ export const db = {
     },
     async count(): Promise<number> {
       const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM menu_items');
-      return (rows as Record<string, number>[])[0].cnt;
+      return (rows as any[])[0].cnt;
     },
   },
 
@@ -350,7 +351,7 @@ export const db = {
       if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
       sql += ' ORDER BY createdAt DESC';
       const [rows] = await pool.query(sql, vals);
-      return (rows as unknown[]).map(mapRow) as PopupRecord[];
+      return (rows as any[]).map(mapRow) as PopupRecord[];
     },
     async create(data: Omit<PopupRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<PopupRecord> {
       const ts = now();
@@ -361,11 +362,11 @@ export const db = {
       );
       const id = (res as mysql.ResultSetHeader).insertId;
       const [rows] = await pool.query('SELECT * FROM popups WHERE id = ? LIMIT 1', [id]);
-      return mapRow((rows as unknown[])[0]) as PopupRecord;
+      return mapRow((rows as any[])[0]) as PopupRecord;
     },
     async update(id: number, data: Partial<PopupRecord>): Promise<PopupRecord | undefined> {
       const [check] = await pool.query('SELECT id FROM popups WHERE id = ?', [id]);
-      if (!(check as unknown[]).length) return undefined;
+      if (!(check as any[]).length) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
       const allowed = ['title', 'titleTh', 'description', 'descriptionTh', 'imageUrl', 'badge', 'tags', 'tagsTh', 'features', 'featuresTh', 'buttonText', 'buttonTextTh', 'isActive'] as const;
@@ -378,12 +379,12 @@ export const db = {
       }
       if (fields.length === 0) {
         const [rows] = await pool.query('SELECT * FROM popups WHERE id = ? LIMIT 1', [id]);
-        return mapRow((rows as unknown[])[0]) as PopupRecord;
+        return mapRow((rows as any[])[0]) as PopupRecord;
       }
       fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
       await pool.query(`UPDATE popups SET ${fields.join(', ')} WHERE id = ?`, vals);
       const [rows] = await pool.query('SELECT * FROM popups WHERE id = ? LIMIT 1', [id]);
-      return mapRow((rows as unknown[])[0]) as PopupRecord;
+      return mapRow((rows as any[])[0]) as PopupRecord;
     },
     async delete(id: number): Promise<boolean> {
       const [res] = await pool.query('DELETE FROM popups WHERE id = ?', [id]);
@@ -406,7 +407,7 @@ export const db = {
       if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
       sql += ' ORDER BY sortOrder ASC';
       const [rows] = await pool.query(sql, vals);
-      return (rows as unknown[]).map(mapRow) as HeroSlideRecord[];
+      return (rows as any[]).map(mapRow) as HeroSlideRecord[];
     },
     async create(data: Omit<HeroSlideRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<HeroSlideRecord> {
       const ts = now();
@@ -417,11 +418,11 @@ export const db = {
       );
       const id = (res as mysql.ResultSetHeader).insertId;
       const [rows] = await pool.query('SELECT * FROM hero_slides WHERE id = ? LIMIT 1', [id]);
-      return mapRow((rows as unknown[])[0]) as HeroSlideRecord;
+      return mapRow((rows as any[])[0]) as HeroSlideRecord;
     },
     async update(id: number, data: Partial<HeroSlideRecord>): Promise<HeroSlideRecord | undefined> {
       const [check] = await pool.query('SELECT id FROM hero_slides WHERE id = ?', [id]);
-      if (!(check as unknown[]).length) return undefined;
+      if (!(check as any[]).length) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
       const allowed = ['type', 'image', 'videoUrl', 'titleTh', 'titleEn', 'isActive', 'sortOrder'] as const;
@@ -434,12 +435,12 @@ export const db = {
       }
       if (fields.length === 0) {
         const [rows] = await pool.query('SELECT * FROM hero_slides WHERE id = ? LIMIT 1', [id]);
-        return mapRow((rows as unknown[])[0]) as HeroSlideRecord;
+        return mapRow((rows as any[])[0]) as HeroSlideRecord;
       }
       fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
       await pool.query(`UPDATE hero_slides SET ${fields.join(', ')} WHERE id = ?`, vals);
       const [rows] = await pool.query('SELECT * FROM hero_slides WHERE id = ? LIMIT 1', [id]);
-      return mapRow((rows as unknown[])[0]) as HeroSlideRecord;
+      return mapRow((rows as any[])[0]) as HeroSlideRecord;
     },
     async delete(id: number): Promise<boolean> {
       const [res] = await pool.query('DELETE FROM hero_slides WHERE id = ?', [id]);
@@ -462,7 +463,7 @@ export const db = {
       if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
       sql += ' ORDER BY sortOrder ASC';
       const [rows] = await pool.query(sql, vals);
-      return (rows as unknown[]).map(mapRow) as GalleryImageRecord[];
+      return (rows as any[]).map(mapRow) as GalleryImageRecord[];
     },
     async create(data: Omit<GalleryImageRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<GalleryImageRecord> {
       const ts = now();
@@ -473,11 +474,11 @@ export const db = {
       );
       const id = (res as mysql.ResultSetHeader).insertId;
       const [rows] = await pool.query('SELECT * FROM gallery_images WHERE id = ? LIMIT 1', [id]);
-      return mapRow((rows as unknown[])[0]) as GalleryImageRecord;
+      return mapRow((rows as any[])[0]) as GalleryImageRecord;
     },
     async update(id: number, data: Partial<GalleryImageRecord>): Promise<GalleryImageRecord | undefined> {
       const [check] = await pool.query('SELECT id FROM gallery_images WHERE id = ?', [id]);
-      if (!(check as unknown[]).length) return undefined;
+      if (!(check as any[]).length) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
       const allowed = ['image', 'category', 'labelTh', 'labelEn', 'sortOrder', 'isActive'] as const;
@@ -490,12 +491,12 @@ export const db = {
       }
       if (fields.length === 0) {
         const [rows] = await pool.query('SELECT * FROM gallery_images WHERE id = ? LIMIT 1', [id]);
-        return mapRow((rows as unknown[])[0]) as GalleryImageRecord;
+        return mapRow((rows as any[])[0]) as GalleryImageRecord;
       }
       fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
       await pool.query(`UPDATE gallery_images SET ${fields.join(', ')} WHERE id = ?`, vals);
       const [rows] = await pool.query('SELECT * FROM gallery_images WHERE id = ? LIMIT 1', [id]);
-      return mapRow((rows as unknown[])[0]) as GalleryImageRecord;
+      return mapRow((rows as any[])[0]) as GalleryImageRecord;
     },
     async delete(id: number): Promise<boolean> {
       const [res] = await pool.query('DELETE FROM gallery_images WHERE id = ?', [id]);
@@ -507,11 +508,11 @@ export const db = {
   siteContents: {
     async findMany(): Promise<SiteContentRecord[]> {
       const [rows] = await pool.query('SELECT * FROM site_contents ORDER BY `key` ASC');
-      return (rows as unknown[]).map(mapRow) as SiteContentRecord[];
+      return (rows as any[]).map(mapRow) as SiteContentRecord[];
     },
     async findByKey(key: string): Promise<SiteContentRecord | undefined> {
       const [rows] = await pool.query('SELECT * FROM site_contents WHERE `key` = ? LIMIT 1', [key]);
-      const arr = rows as unknown[];
+      const arr = rows as any[];
       return arr.length ? (mapRow(arr[0]) as SiteContentRecord) : undefined;
     },
     async upsert(data: { key: string; valueTh: string; valueEn: string; type?: string }): Promise<SiteContentRecord> {
@@ -541,7 +542,7 @@ export const db = {
       if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
       sql += ' ORDER BY r.createdAt DESC';
       const [rows] = await pool.query(sql, vals);
-      return (rows as Record<string, unknown>[]).map((row) => {
+      return (rows as any[]).map((row) => {
         const mapped = mapRow(row) as ReviewRecord & { user?: { id: number; name: string; email: string }; uid?: number; uname?: string; uemail?: string };
         if (mapped.uid) {
           mapped.user = { id: mapped.uid, name: mapped.uname!, email: mapped.uemail! };
@@ -558,11 +559,11 @@ export const db = {
       );
       const id = (res as mysql.ResultSetHeader).insertId;
       const [rows] = await pool.query('SELECT * FROM reviews WHERE id = ? LIMIT 1', [id]);
-      return mapRow((rows as unknown[])[0]) as ReviewRecord;
+      return mapRow((rows as any[])[0]) as ReviewRecord;
     },
     async update(id: number, data: Partial<ReviewRecord>): Promise<ReviewRecord | undefined> {
       const [check] = await pool.query('SELECT id FROM reviews WHERE id = ?', [id]);
-      if (!(check as unknown[]).length) return undefined;
+      if (!(check as any[]).length) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
       for (const k of ['userId', 'rating', 'comment', 'isApproved'] as const) {
@@ -574,12 +575,12 @@ export const db = {
       }
       if (fields.length === 0) {
         const [rows] = await pool.query('SELECT * FROM reviews WHERE id = ? LIMIT 1', [id]);
-        return mapRow((rows as unknown[])[0]) as ReviewRecord;
+        return mapRow((rows as any[])[0]) as ReviewRecord;
       }
       fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
       await pool.query(`UPDATE reviews SET ${fields.join(', ')} WHERE id = ?`, vals);
       const [rows] = await pool.query('SELECT * FROM reviews WHERE id = ? LIMIT 1', [id]);
-      return mapRow((rows as unknown[])[0]) as ReviewRecord;
+      return mapRow((rows as any[])[0]) as ReviewRecord;
     },
     async delete(id: number): Promise<boolean> {
       const [res] = await pool.query('DELETE FROM reviews WHERE id = ?', [id]);
@@ -602,16 +603,16 @@ export const db = {
       if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
       sql += ' ORDER BY createdAt DESC';
       const [rows] = await pool.query(sql, vals);
-      return (rows as unknown[]).map(mapRow) as BlogPostRecord[];
+      return (rows as any[]).map(mapRow) as BlogPostRecord[];
     },
     async findById(id: number): Promise<BlogPostRecord | undefined> {
       const [rows] = await pool.query('SELECT * FROM blog_posts WHERE id = ? LIMIT 1', [id]);
-      const arr = rows as unknown[];
+      const arr = rows as any[];
       return arr.length ? (mapRow(arr[0]) as BlogPostRecord) : undefined;
     },
     async findBySlug(slug: string): Promise<BlogPostRecord | undefined> {
       const [rows] = await pool.query('SELECT * FROM blog_posts WHERE slug = ? LIMIT 1', [slug]);
-      const arr = rows as unknown[];
+      const arr = rows as any[];
       return arr.length ? (mapRow(arr[0]) as BlogPostRecord) : undefined;
     },
     async create(data: Omit<BlogPostRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<BlogPostRecord> {
@@ -648,7 +649,7 @@ export const db = {
     },
     async count(): Promise<number> {
       const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM blog_posts');
-      return (rows as Record<string, number>[])[0].cnt;
+      return (rows as any[])[0].cnt;
     },
   },
 };
