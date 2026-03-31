@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "PP Plus - ร้านขายสีครบวงจร",
   description: "ร้านขายสีครบวงจรในกรุงเทพ สีทาบ้าน สีสเปรย์ สีรถยนต์ อุปกรณ์ทาสี ทุกแบรนด์ชั้นนำ",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
   },
 };
 

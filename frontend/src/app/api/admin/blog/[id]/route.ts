@@ -4,6 +4,13 @@ import { db } from '@/lib/db';
 import { requireAdmin, handleError, ApiError } from '@/lib/api-server';
 import { saveUploadedFile } from '@/lib/upload';
 
+function formatPost(post: Record<string, unknown>) {
+  const tags = typeof post.tags === 'string' && post.tags
+    ? post.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
+    : [];
+  return { ...post, tags };
+}
+
 const blogPostSchema = z.object({
   titleTh: z.string().min(1),
   titleEn: z.string().min(1),
@@ -34,7 +41,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       excerptEn: formData.get('excerptEn') as string || undefined,
       slug: formData.get('slug') as string || undefined,
       tags: formData.get('tags') as string || undefined,
-      isPublished: formData.get('isPublished') !== undefined ? formData.get('isPublished') !== 'false' : undefined,
+      isPublished: formData.has('isPublished') ? formData.get('isPublished') !== 'false' : undefined,
     });
 
     let image: string | null | undefined = undefined;
@@ -50,7 +57,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     const post = await db.blogPosts.update(postId, updateData);
-    return NextResponse.json({ success: true, data: post });
+    return NextResponse.json({ success: true, data: formatPost(post!) });
   } catch (err) {
     return handleError(err);
   }

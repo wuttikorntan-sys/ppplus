@@ -4,6 +4,13 @@ import { db } from '@/lib/db';
 import { requireAdmin, handleError } from '@/lib/api-server';
 import { saveUploadedFile } from '@/lib/upload';
 
+function formatPost(post: Record<string, unknown>) {
+  const tags = typeof post.tags === 'string' && post.tags
+    ? post.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
+    : [];
+  return { ...post, tags };
+}
+
 const blogPostSchema = z.object({
   titleTh: z.string().min(1),
   titleEn: z.string().min(1),
@@ -20,7 +27,7 @@ export async function GET(req: NextRequest) {
   try {
     requireAdmin(req);
     const posts = await db.blogPosts.findMany();
-    return NextResponse.json({ success: true, data: posts });
+    return NextResponse.json({ success: true, data: posts.map(formatPost) });
   } catch (err) {
     return handleError(err);
   }
@@ -57,7 +64,7 @@ export async function POST(req: NextRequest) {
       publishedAt: data.isPublished ? new Date().toISOString() : null,
     });
 
-    return NextResponse.json({ success: true, data: post }, { status: 201 });
+    return NextResponse.json({ success: true, data: formatPost(post) }, { status: 201 });
   } catch (err) {
     return handleError(err);
   }
