@@ -48,7 +48,7 @@ export default function B2BPage() {
   };
 
   useEffect(() => {
-    api.get('/b2b/documents').then((res) => {
+    api.get('/b2b/documents').then((res: any) => {
       if (res.data) setDocuments(res.data);
     }).catch(() => {});
   }, []);
