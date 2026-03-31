@@ -22,8 +22,11 @@ interface ColorFormula {
   createdAt: string;
 }
 
-const emptyForm = {
-  carBrand: '', colorCode: '', colorNameTh: '', colorNameEn: '', yearRange: '', formulaType: 'solid' as const, deltaE: '', isActive: true,
+const emptyForm: {
+  carBrand: string; colorCode: string; colorNameTh: string; colorNameEn: string; yearRange: string;
+  formulaType: 'solid' | 'metallic' | 'pearl'; deltaE: string; isActive: boolean;
+} = {
+  carBrand: '', colorCode: '', colorNameTh: '', colorNameEn: '', yearRange: '', formulaType: 'solid', deltaE: '', isActive: true,
 };
 
 const formulaTypes = [
