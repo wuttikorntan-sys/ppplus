@@ -25,6 +25,7 @@ import {
   MapPin,
   BookOpen,
   Database,
+  Handshake,
 } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 
@@ -57,6 +58,13 @@ const navSections = [
     ],
   },
   {
+    titleTh: 'ธุรกิจ',
+    titleEn: 'Business',
+    items: [
+      { key: 'b2b', icon: Handshake, href: '/admin/b2b' },
+    ],
+  },
+  {
     titleTh: 'ระบบ',
     titleEn: 'System',
     items: [
@@ -79,6 +87,7 @@ const labels: Record<string, Record<string, string>> = {
     gallery: 'แกลเลอรี่',
     blog: 'บทความ',
     popups: 'ป๊อปอัพ',
+    b2b: 'ตัวแทนจำหน่าย',
     users: 'ผู้ใช้งาน',
     backup: 'สำรองข้อมูล',
     settings: 'ตั้งค่า',
@@ -94,6 +103,7 @@ const labels: Record<string, Record<string, string>> = {
     gallery: 'Gallery',
     blog: 'Blog',
     popups: 'Popups',
+    b2b: 'B2B Applications',
     users: 'Users',
     backup: 'Backup & Import',
     settings: 'Settings',
