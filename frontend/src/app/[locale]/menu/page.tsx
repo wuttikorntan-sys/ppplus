@@ -3,8 +3,9 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Paintbrush, Droplets, SprayCan, Car, Layers, Wrench, Factory } from 'lucide-react';
+import { Search, Paintbrush, Droplets, SprayCan, Car, Layers, Wrench, Factory, Beaker, Shield, Disc, HardHat, FileText } from 'lucide-react';
 import Image from 'next/image';
+import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
 
 interface Category {
@@ -29,6 +30,9 @@ interface MenuItem {
   colorName: string | null;
   finishType: string | null;
   size: string | null;
+  mixingRatio: string | null;
+  videoUrl: string | null;
+  tdsFile: string | null;
   category: Category;
 }
 
@@ -52,13 +56,18 @@ export default function MenuPage() {
         setCategories(catRes.data);
       } catch {
         setCategories([
-          { id: 1, nameTh: 'สีภายใน', nameEn: 'Interior Paint', sortOrder: 1 },
-          { id: 2, nameTh: 'สีภายนอก', nameEn: 'Exterior Paint', sortOrder: 2 },
-          { id: 3, nameTh: 'สเปรย์', nameEn: 'Spray Paint', sortOrder: 3 },
-          { id: 4, nameTh: 'สีรถยนต์', nameEn: 'Automotive Paint', sortOrder: 4 },
-          { id: 5, nameTh: 'รองพื้น/ไพรเมอร์', nameEn: 'Primers & Undercoats', sortOrder: 5 },
-          { id: 6, nameTh: 'อุปกรณ์ทาสี', nameEn: 'Painting Tools', sortOrder: 6 },
-          { id: 7, nameTh: 'สีอุตสาหกรรม', nameEn: 'Industrial Paint', sortOrder: 7 },
+          { id: 1, nameTh: '2K Topcoat', nameEn: '2K Topcoat', sortOrder: 1 },
+          { id: 2, nameTh: 'Basecoat', nameEn: 'Basecoat', sortOrder: 2 },
+          { id: 3, nameTh: 'Clear Coat', nameEn: 'Clear Coat', sortOrder: 3 },
+          { id: 4, nameTh: 'Primer / Surfacer', nameEn: 'Primer / Surfacer', sortOrder: 4 },
+          { id: 5, nameTh: 'Epoxy Primer', nameEn: 'Epoxy Primer', sortOrder: 5 },
+          { id: 6, nameTh: 'ทินเนอร์', nameEn: 'Thinner', sortOrder: 6 },
+          { id: 7, nameTh: 'ฮาร์ดเดนเนอร์', nameEn: 'Hardener', sortOrder: 7 },
+          { id: 8, nameTh: 'สารเติมแต่ง', nameEn: 'Additives', sortOrder: 8 },
+          { id: 9, nameTh: 'ปืนพ่นสี', nameEn: 'Spray Gun', sortOrder: 9 },
+          { id: 10, nameTh: 'กระดาษทราย', nameEn: 'Sandpaper', sortOrder: 10 },
+          { id: 11, nameTh: 'เครื่องขัด', nameEn: 'Polisher', sortOrder: 11 },
+          { id: 12, nameTh: 'อุปกรณ์ป้องกัน (PPE)', nameEn: 'PPE', sortOrder: 12 },
         ]);
         setItems([]);
       } finally {
@@ -78,13 +87,18 @@ export default function MenuPage() {
   });
 
   const categoryIcons: Record<number, React.ReactNode> = {
-    1: <Paintbrush className="w-4 h-4" />,
-    2: <Droplets className="w-4 h-4" />,
+    1: <Car className="w-4 h-4" />,
+    2: <Paintbrush className="w-4 h-4" />,
     3: <SprayCan className="w-4 h-4" />,
-    4: <Car className="w-4 h-4" />,
-    5: <Layers className="w-4 h-4" />,
-    6: <Wrench className="w-4 h-4" />,
-    7: <Factory className="w-4 h-4" />,
+    4: <Layers className="w-4 h-4" />,
+    5: <Shield className="w-4 h-4" />,
+    6: <Droplets className="w-4 h-4" />,
+    7: <Beaker className="w-4 h-4" />,
+    8: <Factory className="w-4 h-4" />,
+    9: <Wrench className="w-4 h-4" />,
+    10: <Disc className="w-4 h-4" />,
+    11: <Wrench className="w-4 h-4" />,
+    12: <HardHat className="w-4 h-4" />,
   };
 
   return (
@@ -183,9 +197,26 @@ export default function MenuPage() {
                   {item.size && (
                     <p className="text-[#64748B] text-xs md:text-sm">{item.size}</p>
                   )}
+                  {item.mixingRatio && (
+                    <p className="text-[#64748B] text-xs hidden md:block">{locale === 'th' ? 'สัดส่วนผสม: ' : 'Mix Ratio: '}{item.mixingRatio}</p>
+                  )}
                   {item.finishType && (
                     <p className="text-[#64748B] text-xs hidden md:block">{locale === 'th' ? 'เนื้อสี: ' : 'Finish: '}{item.finishType}</p>
                   )}
+                  <div className="mt-2 md:mt-3 flex gap-2">
+                    <Link
+                      href={`/quote?productId=${item.id}&productName=${encodeURIComponent(locale === 'th' ? item.nameTh : item.nameEn)}`}
+                      className="flex-1 text-center text-xs md:text-sm font-medium py-1.5 md:py-2 rounded-lg bg-[#1E3A5F] text-white hover:bg-[#1E3A5F]/90 transition"
+                    >
+                      {locale === 'th' ? 'ขอราคา' : 'Get Quote'}
+                    </Link>
+                    {item.tdsFile && (
+                      <a href={item.tdsFile} target="_blank" rel="noopener noreferrer"
+                        className="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-gray-400 hover:text-[#1E3A5F] hover:border-[#1E3A5F] transition">
+                        <FileText className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}

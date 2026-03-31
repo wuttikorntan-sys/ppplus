@@ -7,6 +7,9 @@
     "contact": "Contact",
     "calculator": "Calculator",
     "blog": "Blog",
+    "color_matching": "Color Matching",
+    "b2b": "Dealer",
+    "quote": "Get Quote",
     "login": "Login",
     "logout": "Logout",
     "admin": "Admin"
@@ -14,51 +17,51 @@
   "home": {
     "hero": {
       "title": "PP+",
-      "subtitle": "Your Complete Paint Solution",
-      "description": "Premium paint supplier — interior, exterior, spray, automotive, and industrial coatings from leading brands with expert consultation",
+      "subtitle": "Complete Automotive Paint System | Factory Standard",
+      "description": "Automotive paint specialists — 2K Topcoat, Basecoat, Clear Coat, Primer with precision Color Matching system for professional body shops",
       "cta_menu": "View Products",
-      "cta_contact": "Contact Us"
+      "cta_contact": "Get Quote"
     },
     "welcome": {
       "tagline": "About Us",
-      "title": "Your Complete Paint Expert",
-      "text": "PP+ is a comprehensive paint store offering products from all leading brands with expert color consultation for home, decoration, or industrial projects.",
+      "title": "Complete Automotive Paint Expert",
+      "text": "PP+ manufactures and distributes high-quality automotive paint with Spectrophotometer technology for precise color matching ΔE ≤ 1.0, offering a complete system from Primer to Clear Coat.",
       "cta": "Our Story"
     },
     "featured": {
       "title": "Featured Products",
-      "subtitle": "Best sellers from top brands"
+      "subtitle": "Premium automotive paint products — complete system"
     },
     "gallery_preview": {
       "title": "Our Projects",
-      "subtitle": "See what our customers have achieved",
+      "subtitle": "See the results from body shops using PP+",
       "cta": "View Gallery"
     },
     "reviews": {
       "title": "What Our Customers Say"
     },
     "contact": {
-      "title": "Visit Our Shop",
-      "subtitle": "We're here to help"
+      "title": "Contact Us",
+      "subtitle": "Expert automotive paint consultation"
     },
     "brands": {
       "title": "Trusted Brands",
-      "subtitle": "Authorized dealer for all leading paint brands"
+      "subtitle": "Factory-standard quality products"
     },
     "calculator_cta": {
       "title": "Paint Calculator",
-      "subtitle": "Calculate how much paint you need for your project",
+      "subtitle": "Calculate how much paint you need for your spray work",
       "cta": "Calculate Now"
     },
     "blog_preview": {
-      "title": "Paint Tips & Knowledge",
-      "subtitle": "Expert advice for your painting projects",
+      "title": "Automotive Paint Tips",
+      "subtitle": "Expert knowledge for professional painters",
       "cta": "Read More Articles"
     }
   },
   "menu": {
     "title": "Our Products",
-    "subtitle": "Browse our complete paint catalog",
+    "subtitle": "Complete automotive paint system & equipment",
     "search": "Search products...",
     "all": "All",
     "baht": "฿",
@@ -69,25 +72,28 @@
     "coverage": "Coverage",
     "sqm_per_liter": "m²/L",
     "size": "Size",
-    "add_inquiry": "Inquire"
+    "add_inquiry": "Get Quote",
+    "mix_ratio": "Mix Ratio",
+    "get_quote": "Get Quote",
+    "download_tds": "Download TDS"
   },
   "about": {
     "title": "About PP+",
     "story": {
       "title": "Our Story",
-      "p1": "PP+ was founded with a passion for helping customers find the perfect paint for every project. We bring together all leading paint brands under one roof in Bangkok.",
-      "p2": "Our team of paint experts has years of experience in the industry, providing professional consultation on color selection, paint types, and application techniques.",
-      "p3": "We believe that the right paint can transform any space. That's why we're committed to offering genuine products, competitive prices, and expert advice to every customer."
+      "p1": "PP+ is an automotive paint manufacturer and distributor established with the goal of elevating automotive paint standards in Thailand, with formulas developed in our own R&D laboratory.",
+      "p2": "Using X-Rite Spectrophotometer and CIEDE2000 color difference system, every formula achieves ΔE ≤ 1.0, guaranteeing the highest precision in color matching for all car brands and models.",
+      "p3": "Our R&D team is committed to developing the highest quality automotive paint products, with every batch tested in our QC laboratory to ensure consistent quality for every customer."
     },
     "values": {
       "title": "Our Values",
-      "fresh": { "title": "100% Genuine", "text": "All products are genuine from authorized distributors" },
-      "authentic": { "title": "Expert Advice", "text": "Professional paint consultation for every project" },
-      "passion": { "title": "Customer First", "text": "We go the extra mile to ensure your satisfaction" }
+      "quality": { "title": "Precision Color Matching", "text": "ΔE ≤ 1.0 with X-Rite Spectrophotometer technology" },
+      "variety": { "title": "Complete System", "text": "Full product range from Primer to Clear Coat" },
+      "service": { "title": "Factory Standard", "text": "ISO-standard QC testing for every batch" }
     },
     "team": {
       "title": "Our Team",
-      "text": "A dedicated team of paint experts with years of industry experience"
+      "text": "Automotive paint R&D team with over 15 years of experience and ISO-level QC laboratory"
     }
   },
   "gallery": {
@@ -162,7 +168,7 @@
     }
   },
   "footer": {
-    "description": "Your complete paint solution in Bangkok — all leading brands, expert advice",
+    "description": "Automotive paint manufacturer & distributor — precision color matching, factory standard",
     "quick_links": "Quick Links",
     "contact": "Contact Info",
     "follow": "Follow Us",
@@ -213,6 +219,47 @@
       },
       "no_popups": "No popups yet",
       "confirm_delete": "Are you sure you want to delete this popup?"
+    }
+  },
+  "colorMatching": {
+    "title": "Automotive Color Matching System",
+    "subtitle": "Search color formulas for all car brands with precision ΔE ≤ 1.0",
+    "search": "Search color name or code...",
+    "all_brands": "All Brands",
+    "no_results": "No color formulas found",
+    "color_code": "Color Code",
+    "formula_type": "Formula Type",
+    "delta_e": "ΔE Value",
+    "year_range": "Year Range"
+  },
+  "b2b": {
+    "title": "Become a Dealer",
+    "subtitle": "Join the PP+ dealer network — exclusive discounts for body shops and retailers",
+    "form": {
+      "company": "Company / Shop Name",
+      "contact": "Contact Person",
+      "phone": "Phone",
+      "email": "Email",
+      "business_type": "Business Type",
+      "province": "Province",
+      "message": "Additional Details",
+      "submit": "Submit Application",
+      "success": "Application submitted successfully. Our team will contact you within 2 business days."
+    }
+  },
+  "quote": {
+    "title": "Request a Quote",
+    "subtitle": "Fill in your details and we'll get back to you within 24 hours",
+    "form": {
+      "name": "Full Name",
+      "phone": "Phone",
+      "email": "Email",
+      "company": "Company / Shop (optional)",
+      "product": "Product Name",
+      "quantity": "Quantity",
+      "message": "Additional Details",
+      "submit": "Submit Request",
+      "success": "Request submitted successfully. Our team will contact you within 24 hours."
     }
   }
 }

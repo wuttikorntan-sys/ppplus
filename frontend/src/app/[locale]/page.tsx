@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
-import { ArrowRight, ChevronLeft, ChevronRight, MapPin, Phone, Mail, Clock, Paintbrush, Palette, ShieldCheck, Truck, Navigation } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, MapPin, Phone, Mail, Clock, Target, Palette, ShieldCheck, Truck, Navigation, Beaker, Car } from 'lucide-react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import Popup from '@/components/Popup';
@@ -16,17 +16,17 @@ interface ContentMap {
 }
 
 const featuredItems = [
-  { id: 1, nameTh: 'TOA 4 Seasons ภายนอก', nameEn: 'TOA 4 Seasons Exterior', price: 1850, image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=300&fit=crop' },
-  { id: 2, nameTh: 'Beger Cool All Plus', nameEn: 'Beger Cool All Plus', price: 2200, image: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&h=300&fit=crop' },
-  { id: 3, nameTh: 'Jotun Essence สีภายใน', nameEn: 'Jotun Essence Interior', price: 1650, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop' },
-  { id: 4, nameTh: 'Dulux Weathershield', nameEn: 'Dulux Weathershield', price: 2400, image: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=400&h=300&fit=crop' },
+  { id: 1, nameTh: '2K Topcoat สีพ่นรถยนต์', nameEn: '2K Topcoat Automotive', price: 1850, image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=300&fit=crop' },
+  { id: 2, nameTh: 'Clear Coat 2:1 เงาสูง', nameEn: 'Clear Coat 2:1 High Gloss', price: 2200, image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop' },
+  { id: 3, nameTh: 'Basecoat Metallic Silver', nameEn: 'Basecoat Metallic Silver', price: 1650, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop' },
+  { id: 4, nameTh: 'Primer Surfacer 2K', nameEn: 'Primer Surfacer 2K', price: 1400, image: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=400&h=300&fit=crop' },
 ];
 
 const defaultSlides: { type: 'video' | 'image'; src: string; poster?: string }[] = [
-  { type: 'image', src: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=1920&h=1080&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1920&h=1080&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1920&h=1080&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&h=1080&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1920&h=1080&fit=crop' },
   { type: 'image', src: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&h=1080&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=1920&h=1080&fit=crop' },
 ];
 
 interface HeroSlideData {
@@ -42,42 +42,42 @@ interface HeroSlideData {
 
 const defaultContent: ContentMap = {
   'hero.title': { th: 'PP+', en: 'PP+' },
-  'hero.subtitle': { th: 'ร้านขายสีครบวงจร', en: 'Complete Paint Solutions' },
-  'hero.description': { th: 'ศูนย์รวมสีทาบ้านคุณภาพ จากแบรนด์ชั้นนำ TOA, Beger, Jotun, Dulux, Nippon พร้อมอุปกรณ์ทาสีครบครัน บริการผสมสีตามสั่ง', en: 'Premium paint center with top brands: TOA, Beger, Jotun, Dulux, Nippon. Full range of painting supplies with custom color mixing service.' },
+  'hero.subtitle': { th: 'สีพ่นรถยนต์ครบระบบ | มาตรฐานโรงงาน', en: 'Complete Automotive Paint System | Factory Standard' },
+  'hero.description': { th: 'ศูนย์รวมสีพ่นรถยนต์ครบระบบ Primer / Basecoat / Clear / Thinner พร้อมสูตรสีตรงรุ่น ด้วยเครื่อง Spectrophotometer และทีมเทคนิคมืออาชีพ', en: 'Complete automotive paint center — Primer, Basecoat, Clear, Thinner with precise color matching using Spectrophotometer and professional technical team.' },
   'hero.cta_menu': { th: 'ดูสินค้า', en: 'View Products' },
-  'hero.cta_contact': { th: 'ติดต่อเรา', en: 'Contact Us' },
+  'hero.cta_contact': { th: 'ขอใบเสนอราคา', en: 'Get Quote' },
   'featured.title': { th: 'สินค้าขายดี', en: 'Best Sellers' },
-  'featured.subtitle': { th: 'สีคุณภาพจากแบรนด์ชั้นนำที่ลูกค้าไว้วางใจ', en: 'Quality paints from trusted leading brands' },
+  'featured.subtitle': { th: 'สินค้าสีพ่นรถยนต์คุณภาพที่ช่างไว้วางใจ', en: 'Quality automotive paint products trusted by professionals' },
   'welcome.tagline': { th: 'เกี่ยวกับเรา', en: 'About Us' },
-  'welcome.title': { th: 'ผู้เชี่ยวชาญด้านสีครบวงจร', en: 'Your Complete Paint Expert' },
-  'welcome.text': { th: 'PP+ เป็นศูนย์รวมสีทาบ้านและอุปกรณ์ทาสีครบวงจร ด้วยประสบการณ์กว่า 10 ปีในวงการสี เรามีทีมผู้เชี่ยวชาญพร้อมให้คำปรึกษาเรื่องสีและการทาสีอย่างมืออาชีพ', en: 'PP+ is a complete paint and painting supplies center. With over 10 years of experience, our team of experts provides professional paint consultation.' },
+  'welcome.title': { th: 'ผู้เชี่ยวชาญสีพ่นรถยนต์ครบระบบ', en: 'Complete Automotive Paint Expert' },
+  'welcome.text': { th: 'PP+ เป็นศูนย์รวมสีพ่นรถยนต์ครบระบบ ด้วยประสบการณ์กว่า 10 ปี เรามีทีมเทคนิคพร้อมสูตรสีแม่นยำ ΔE < 0.5 รองรับทุกยี่ห้อรถยนต์ ทั้ง Toyota, Honda, Nissan, Mazda, Isuzu', en: 'PP+ is a complete automotive paint center. With over 10 years of experience, our technical team provides precise color matching with ΔE < 0.5 for all car brands.' },
   'welcome.cta': { th: 'เรื่องราวของเรา', en: 'Our Story' },
   'welcome.years': { th: '10+', en: '10+' },
   'welcome.years_label': { th: 'ปี', en: 'Years' },
-  'brands.tagline': { th: 'แบรนด์ชั้นนำ', en: 'Leading Brands' },
-  'brands.title': { th: 'สีจากแบรนด์ที่คุณไว้วางใจ', en: 'Paint From Brands You Trust' },
-  'brands.text1': { th: 'เราเป็นตัวแทนจำหน่ายอย่างเป็นทางการของแบรนด์สีชั้นนำ ทั้ง TOA, Beger, Jotun, Dulux และ Nippon Paint', en: 'We are an authorized dealer of leading paint brands including TOA, Beger, Jotun, Dulux, and Nippon Paint.' },
-  'brands.text2': { th: 'สีทุกรุ่นพร้อมส่งทันที มีสต็อกอยู่ตลอด', en: 'All paint models ready for immediate delivery.' },
+  'brands.tagline': { th: 'ระบบสีครบ', en: 'Complete System' },
+  'brands.title': { th: 'ครบทุกขั้นตอนการพ่นสี', en: 'Complete Paint Process' },
+  'brands.text1': { th: 'เรามีสินค้าครบทุกขั้นตอน ตั้งแต่ Primer, Basecoat, Clear Coat ไปจนถึง Thinner และ Hardener พร้อม TDS และวิธีผสมที่ชัดเจน', en: 'We have products for every step — from Primer, Basecoat, Clear Coat to Thinner and Hardener, with TDS and clear mixing instructions.' },
+  'brands.text2': { th: 'สินค้าทุกรุ่นพร้อมส่งทันที มีสต็อกอยู่ตลอด', en: 'All products ready for immediate delivery.' },
   'brands.cta': { th: 'ดูสินค้า', en: 'Browse Products' },
   'brands.badge': { th: '100%', en: '100%' },
-  'brands.badge_label': { th: 'ของแท้', en: 'Genuine' },
-  'services.tagline': { th: 'บริการของเรา', en: 'Our Services' },
-  'services.title': { th: 'บริการครบวงจร', en: 'Complete Service Center' },
-  'services.text1': { th: 'บริการผสมสีด้วยเครื่องผสมสีอัตโนมัติที่ทันสมัย สามารถผสมสีได้ตรงตามโทนที่ต้องการ', en: 'Color mixing with modern automatic machines, ensuring exact color matching.' },
-  'services.text2': { th: 'พร้อมบริการจัดส่งถึงหน้างาน', en: 'Delivery service available.' },
-  'services.cta': { th: 'ดูแกลเลอรี่', en: 'View Gallery' },
-  'services.badge': { th: '5,000+', en: '5,000+' },
-  'services.badge_label': { th: 'เฉดสี', en: 'Colors' },
+  'brands.badge_label': { th: 'คุณภาพ', en: 'Quality' },
+  'services.tagline': { th: 'สูตรสีตรงรุ่น', en: 'Color Matching' },
+  'services.title': { th: 'ระบบสูตรสีแม่นยำ', en: 'Precise Color Matching System' },
+  'services.text1': { th: 'ใช้เครื่อง Spectrophotometer และมาตรฐาน CIEDE2000 ในการวัดค่าสี ให้ได้สูตรสีที่ตรงรุ่นรถยนต์ของคุณ', en: 'Using Spectrophotometer and CIEDE2000 standard for color measurement, delivering precise color formulas for your vehicle.' },
+  'services.text2': { th: 'รองรับรถยนต์ทุกยี่ห้อ Toyota, Honda, Nissan, Mazda, Isuzu, Ford, Mitsubishi', en: 'Supporting all car brands — Toyota, Honda, Nissan, Mazda, Isuzu, Ford, Mitsubishi.' },
+  'services.cta': { th: 'ค้นหาสูตรสี', en: 'Find Color Formula' },
+  'services.badge': { th: 'ΔE<0.5', en: 'ΔE<0.5' },
+  'services.badge_label': { th: 'แม่นยำ', en: 'Precision' },
   'experience.tagline': { th: 'ทำไมต้อง PP+', en: 'Why PP+' },
   'experience.title': { th: 'สิ่งที่ทำให้เราแตกต่าง', en: 'What Sets Us Apart' },
-  'experience.card1_title': { th: 'สีคุณภาพ', en: 'Quality Paints' },
-  'experience.card1_desc': { th: 'สีจากแบรนด์ชั้นนำ การันตีของแท้ คุณภาพมาตรฐาน', en: 'Paints from leading brands, guaranteed authentic' },
-  'experience.card2_title': { th: 'ผสมสีตามสั่ง', en: 'Custom Mixing' },
-  'experience.card2_desc': { th: 'บริการผสมสีด้วยเครื่องอัตโนมัติ ได้สีตรงตามต้องการ', en: 'Automatic color mixing for exact matching' },
-  'experience.card3_title': { th: 'รับประกันคุณภาพ', en: 'Quality Guarantee' },
-  'experience.card3_desc': { th: 'สินค้าทุกชิ้นรับประกันของแท้ เคลมได้หากมีปัญหา', en: 'All products guaranteed authentic with warranty' },
-  'experience.card4_title': { th: 'จัดส่งรวดเร็ว', en: 'Fast Delivery' },
-  'experience.card4_desc': { th: 'บริการจัดส่งถึงหน้างาน รวดเร็วทันใจ', en: 'Fast delivery right to your site' },
+  'experience.card1_title': { th: 'สูตรสีแม่นยำ', en: 'Precise Formulas' },
+  'experience.card1_desc': { th: 'Spectrophotometer / CIEDE2000 ค่า ΔE < 0.5', en: 'Spectrophotometer / CIEDE2000 with ΔE < 0.5' },
+  'experience.card2_title': { th: 'ครบทั้งระบบ', en: 'Complete System' },
+  'experience.card2_desc': { th: 'Primer / Basecoat / Clear / Thinner ครบจบในที่เดียว', en: 'Primer / Basecoat / Clear / Thinner — all in one place' },
+  'experience.card3_title': { th: 'ทีมเทคนิค', en: 'Technical Team' },
+  'experience.card3_desc': { th: 'ทีมช่างมืออาชีพพร้อมให้คำปรึกษาและซัพพอร์ต', en: 'Professional team ready to consult and support' },
+  'experience.card4_title': { th: 'ส่งไวทั่วไทย', en: 'Fast Delivery' },
+  'experience.card4_desc': { th: 'จัดส่งรวดเร็วไปทุกอู่สีทั่วประเทศ', en: 'Fast delivery to body shops nationwide' },
   'contact.title': { th: 'มาเยี่ยมเรา', en: 'Visit Us' },
   'contact.subtitle': { th: 'เรายินดีให้บริการคุณ', en: 'We are ready to serve you' },
   'location.address': { th: 'กรุงเทพมหานคร', en: 'Bangkok, Thailand' },
@@ -180,7 +180,7 @@ export default function HomePage() {
             <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-10">{c('hero.description')}</p>
             <div className="flex flex-row gap-3 justify-center px-4">
               <Link href="/menu" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 bg-[#2EC4B6] text-white font-semibold rounded-lg hover:bg-[#26a89c] transition-all transform hover:scale-105 text-sm sm:text-base">{c('hero.cta_menu')}</Link>
-              <Link href="/contact" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-[#1E3A5F] transition-all text-sm sm:text-base">{c('hero.cta_contact')}</Link>
+              <Link href="/quote" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-[#1E3A5F] transition-all text-sm sm:text-base">{c('hero.cta_contact')}</Link>
             </div>
           </motion.div>
         </div>
@@ -230,7 +230,7 @@ export default function HomePage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <Image src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&h=600&fit=crop" alt="Paint shop" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                <Image src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&h=600&fit=crop" alt="Automotive paint" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1E3A5F] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -278,7 +278,7 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold text-[#1E293B] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('services.title')}</h2>
               <p className="text-[#64748B] leading-relaxed mb-4">{c('services.text1')}</p>
               <p className="text-[#64748B] leading-relaxed mb-8">{c('services.text2')}</p>
-              <Link href="/gallery" className="inline-flex items-center gap-2 text-[#1E3A5F] hover:text-[#2EC4B6] font-medium transition-colors">{c('services.cta')} <ArrowRight className="w-4 h-4" /></Link>
+              <Link href="/color-matching" className="inline-flex items-center gap-2 text-[#1E3A5F] hover:text-[#2EC4B6] font-medium transition-colors">{c('services.cta')} <ArrowRight className="w-4 h-4" /></Link>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
@@ -304,9 +304,9 @@ export default function HomePage() {
           </motion.div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { icon: Paintbrush, titleKey: 'experience.card1_title', descKey: 'experience.card1_desc' },
+              { icon: Target, titleKey: 'experience.card1_title', descKey: 'experience.card1_desc' },
               { icon: Palette, titleKey: 'experience.card2_title', descKey: 'experience.card2_desc' },
-              { icon: ShieldCheck, titleKey: 'experience.card3_title', descKey: 'experience.card3_desc' },
+              { icon: Beaker, titleKey: 'experience.card3_title', descKey: 'experience.card3_desc' },
               { icon: Truck, titleKey: 'experience.card4_title', descKey: 'experience.card4_desc' },
             ].map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="text-center group bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 hover:shadow-md transition-all">

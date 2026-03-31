@@ -20,6 +20,12 @@ const menuItemSchema = z.object({
   coverageArea: z.number().nullable().default(null),
   size: z.string().nullable().default(null),
   unit: z.string().nullable().default(null),
+  mixingRatio: z.string().nullable().default(null),
+  applicationMethodTh: z.string().nullable().default(null),
+  applicationMethodEn: z.string().nullable().default(null),
+  featuresTh: z.string().nullable().default(null),
+  featuresEn: z.string().nullable().default(null),
+  videoUrl: z.string().nullable().default(null),
 });
 
 export async function GET(req: NextRequest) {
@@ -53,9 +59,16 @@ export async function POST(req: NextRequest) {
       coverageArea: formData.get('coverageArea') ? parseFloat(formData.get('coverageArea') as string) : null,
       size: formData.get('size') as string || null,
       unit: formData.get('unit') as string || null,
+      mixingRatio: formData.get('mixingRatio') as string || null,
+      applicationMethodTh: formData.get('applicationMethodTh') as string || null,
+      applicationMethodEn: formData.get('applicationMethodEn') as string || null,
+      featuresTh: formData.get('featuresTh') as string || null,
+      featuresEn: formData.get('featuresEn') as string || null,
+      videoUrl: formData.get('videoUrl') as string || null,
     });
 
     const imagePath = await saveUploadedFile(formData, 'image');
+    const tdsPath = await saveUploadedFile(formData, 'tdsFile');
 
     const item = await db.menuItems.create({
       ...data,
@@ -69,6 +82,13 @@ export async function POST(req: NextRequest) {
       coverageArea: data.coverageArea ?? null,
       size: data.size ?? null,
       unit: data.unit ?? null,
+      mixingRatio: data.mixingRatio ?? null,
+      applicationMethodTh: data.applicationMethodTh ?? null,
+      applicationMethodEn: data.applicationMethodEn ?? null,
+      featuresTh: data.featuresTh ?? null,
+      featuresEn: data.featuresEn ?? null,
+      tdsFile: tdsPath,
+      videoUrl: data.videoUrl ?? null,
     });
 
     return NextResponse.json({ success: true, data: item }, { status: 201 });

@@ -20,6 +20,12 @@ const menuItemSchema = z.object({
   coverageArea: z.number().nullable().default(null),
   size: z.string().nullable().default(null),
   unit: z.string().nullable().default(null),
+  mixingRatio: z.string().nullable().default(null),
+  applicationMethodTh: z.string().nullable().default(null),
+  applicationMethodEn: z.string().nullable().default(null),
+  featuresTh: z.string().nullable().default(null),
+  featuresEn: z.string().nullable().default(null),
+  videoUrl: z.string().nullable().default(null),
 });
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -47,11 +53,19 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       coverageArea: formData.get('coverageArea') ? parseFloat(formData.get('coverageArea') as string) : undefined,
       size: formData.get('size') as string || undefined,
       unit: formData.get('unit') as string || undefined,
+      mixingRatio: formData.get('mixingRatio') as string || undefined,
+      applicationMethodTh: formData.get('applicationMethodTh') as string || undefined,
+      applicationMethodEn: formData.get('applicationMethodEn') as string || undefined,
+      featuresTh: formData.get('featuresTh') as string || undefined,
+      featuresEn: formData.get('featuresEn') as string || undefined,
+      videoUrl: formData.get('videoUrl') as string || undefined,
     });
 
     const updateData: Record<string, unknown> = { ...data };
     const imagePath = await saveUploadedFile(formData, 'image');
     if (imagePath) updateData.image = imagePath;
+    const tdsPath = await saveUploadedFile(formData, 'tdsFile');
+    if (tdsPath) updateData.tdsFile = tdsPath;
 
     const item = await db.menuItems.update(id, updateData);
     if (!item) throw new ApiError('ไม่พบสินค้า', 404);

@@ -2,7 +2,7 @@
 
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { MapPin, Phone, Mail, Paintbrush } from 'lucide-react';
+import { MapPin, Phone, Mail, Car } from 'lucide-react';
 import { FaFacebookF, FaWhatsapp, FaLine, FaInstagram, FaTiktok, FaXTwitter } from 'react-icons/fa6';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
@@ -45,7 +45,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-11 h-11 rounded-xl bg-[#1E3A5F] flex items-center justify-center">
-                <Paintbrush className="w-6 h-6 text-[#2EC4B6]" />
+                <Car className="w-6 h-6 text-[#2EC4B6]" />
               </div>
               <div>
                 <span className="text-xl font-bold text-[#2EC4B6] block" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -84,9 +84,9 @@ export default function Footer() {
               {[
                 { href: '/' as const, label: nav('home') },
                 { href: '/menu' as const, label: nav('menu') },
-                { href: '/calculator' as const, label: nav('calculator') },
+                { href: '/color-matching' as const, label: nav('color_matching') },
+                { href: '/b2b' as const, label: nav('b2b') },
                 { href: '/blog' as const, label: nav('blog') },
-                { href: '/gallery' as const, label: nav('gallery') },
                 { href: '/about' as const, label: nav('about') },
                 { href: '/contact' as const, label: nav('contact') },
               ].map((link) => (

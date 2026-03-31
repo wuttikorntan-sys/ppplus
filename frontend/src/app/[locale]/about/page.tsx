@@ -1,24 +1,48 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Palette, Truck } from 'lucide-react';
+import { ShieldCheck, Target, Beaker, Factory, Award, FlaskConical, Microscope } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AboutPage() {
   const t = useTranslations('about');
+  const locale = useLocale();
 
   const values = [
-    { icon: ShieldCheck, key: 'quality' as const, color: 'bg-[#1E3A5F]' },
-    { icon: Palette, key: 'variety' as const, color: 'bg-[#2EC4B6]' },
-    { icon: Truck, key: 'service' as const, color: 'bg-[#64748B]' },
+    { icon: Target, key: 'quality' as const, color: 'bg-[#1E3A5F]' },
+    { icon: Beaker, key: 'variety' as const, color: 'bg-[#2EC4B6]' },
+    { icon: ShieldCheck, key: 'service' as const, color: 'bg-[#64748B]' },
+  ];
+
+  const capabilities = [
+    {
+      icon: FlaskConical,
+      title: locale === 'th' ? 'ห้องปฏิบัติการ QC' : 'QC Laboratory',
+      text: locale === 'th' ? 'ทดสอบคุณภาพสีทุก Batch ด้วยเครื่องมือมาตรฐาน ISO' : 'ISO-standard quality testing for every batch',
+    },
+    {
+      icon: Microscope,
+      title: locale === 'th' ? 'Spectrophotometer' : 'Spectrophotometer',
+      text: locale === 'th' ? 'วัดค่าสีด้วย X-Rite เทียบ ΔE ≤ 1.0 ทุกสูตร' : 'X-Rite color measurement with ΔE ≤ 1.0 for every formula',
+    },
+    {
+      icon: Factory,
+      title: locale === 'th' ? 'โรงงานผลิต' : 'Manufacturing Plant',
+      text: locale === 'th' ? 'ผลิตในประเทศไทย ควบคุมคุณภาพครบกระบวนการ' : 'Made in Thailand with full quality control process',
+    },
+    {
+      icon: Award,
+      title: locale === 'th' ? 'มาตรฐาน มอก.' : 'TIS Certified',
+      text: locale === 'th' ? 'ผ่านการรับรองมาตรฐานอุตสาหกรรม' : 'Certified by Thai Industrial Standards Institute',
+    },
   ];
 
   return (
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative py-20 text-white overflow-hidden">
-        <Image src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1920&h=600&fit=crop" alt="Paint shop" fill className="object-cover" priority />
+        <Image src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=1920&h=600&fit=crop" alt="Automotive paint factory" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A5F]/85 to-[#2EC4B6]/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -38,6 +62,26 @@ export default function AboutPage() {
               <p>{t('story.p3')}</p>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Capabilities */}
+      <section className="py-20 bg-[#1E3A5F] text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold mb-12 text-center" style={{ fontFamily: 'var(--font-heading)' }}>
+            {locale === 'th' ? 'ศักยภาพการผลิต' : 'Our Capabilities'}
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {capabilities.map((cap, idx) => (
+              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+                <div className="w-14 h-14 bg-[#2EC4B6] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <cap.icon className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{cap.title}</h3>
+                <p className="text-white/70 text-sm">{cap.text}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -64,7 +108,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-6 relative bg-[#1E3A5F]/10 flex items-center justify-center">
-              <Palette className="w-12 h-12 text-[#1E3A5F]" />
+              <Factory className="w-12 h-12 text-[#1E3A5F]" />
             </div>
             <h2 className="text-3xl font-bold text-[#1E293B] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>{t('team.title')}</h2>
             <p className="text-[#64748B] text-lg">{t('team.text')}</p>
@@ -77,14 +121,14 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
+              { src: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&h=400&fit=crop', alt: 'Auto body shop' },
+              { src: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=400&h=400&fit=crop', alt: 'Spray booth' },
+              { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=400&fit=crop', alt: 'Paint mixing' },
+              { src: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=400&h=400&fit=crop', alt: 'Color samples' },
+              { src: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=400&fit=crop', alt: 'Finished car' },
               { src: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=400&fit=crop', alt: 'Paint cans' },
-              { src: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&h=400&fit=crop', alt: 'Color mixing' },
-              { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=400&fit=crop', alt: 'Wall painting' },
-              { src: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=400&h=400&fit=crop', alt: 'Color palette' },
-              { src: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&h=400&fit=crop', alt: 'Interior design' },
-              { src: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=400&fit=crop', alt: 'Modern room' },
-              { src: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop', alt: 'Living room' },
-              { src: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?w=400&h=400&fit=crop', alt: 'Paint roller' },
+              { src: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&h=400&fit=crop', alt: 'Factory floor' },
+              { src: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?w=400&h=400&fit=crop', alt: 'Lab equipment' },
             ].map((img, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.05 }} className="aspect-square rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow relative">
                 <Image src={img.src} alt={img.alt} fill className="object-cover hover:scale-110 transition-transform duration-500" sizes="(max-width: 640px) 50vw, 25vw" />

@@ -76,6 +76,13 @@ export interface MenuItemRecord {
   coverageArea: number | null;
   size: string | null;
   unit: string | null;
+  mixingRatio: string | null;
+  applicationMethodTh: string | null;
+  applicationMethodEn: string | null;
+  featuresTh: string | null;
+  featuresEn: string | null;
+  tdsFile: string | null;
+  videoUrl: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -157,6 +164,50 @@ export interface SiteContentRecord {
   valueTh: string;
   valueEn: string;
   type: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ColorFormulaRecord {
+  id: number;
+  carBrand: string;
+  colorCode: string;
+  colorNameTh: string | null;
+  colorNameEn: string | null;
+  yearRange: string | null;
+  formulaType: 'solid' | 'metallic' | 'pearl';
+  deltaE: number | null;
+  image: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface B2bApplicationRecord {
+  id: number;
+  companyName: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+  businessType: string;
+  province: string | null;
+  message: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface QuoteRequestRecord {
+  id: number;
+  name: string;
+  phone: string;
+  email: string | null;
+  company: string | null;
+  productId: number | null;
+  productName: string | null;
+  quantity: string | null;
+  message: string | null;
+  status: 'pending' | 'quoted' | 'closed';
   createdAt: string;
   updatedAt: string;
 }
@@ -301,9 +352,9 @@ export const db = {
     async create(data: Omit<MenuItemRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<MenuItemRecord> {
       const ts = now();
       const [res] = await pool.query(
-        `INSERT INTO menu_items (categoryId, nameTh, nameEn, descriptionTh, descriptionEn, price, image, isAvailable, sortOrder, brand, colorCode, colorName, finishType, coverageArea, size, unit, createdAt, updatedAt)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [data.categoryId, data.nameTh, data.nameEn, data.descriptionTh, data.descriptionEn, data.price, data.image, data.isAvailable ? 1 : 0, data.sortOrder, data.brand, data.colorCode, data.colorName, data.finishType, data.coverageArea, data.size, data.unit, ts, ts],
+        `INSERT INTO menu_items (categoryId, nameTh, nameEn, descriptionTh, descriptionEn, price, image, isAvailable, sortOrder, brand, colorCode, colorName, finishType, coverageArea, size, unit, mixingRatio, applicationMethodTh, applicationMethodEn, featuresTh, featuresEn, tdsFile, videoUrl, createdAt, updatedAt)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [data.categoryId, data.nameTh, data.nameEn, data.descriptionTh, data.descriptionEn, data.price, data.image, data.isAvailable ? 1 : 0, data.sortOrder, data.brand, data.colorCode, data.colorName, data.finishType, data.coverageArea, data.size, data.unit, data.mixingRatio, data.applicationMethodTh, data.applicationMethodEn, data.featuresTh, data.featuresEn, data.tdsFile, data.videoUrl, ts, ts],
       );
       const id = (res as mysql.ResultSetHeader).insertId;
       return (await this.findById(id)) as MenuItemRecord;
@@ -313,7 +364,7 @@ export const db = {
       if (!existing) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
-      const allowed = ['categoryId', 'nameTh', 'nameEn', 'descriptionTh', 'descriptionEn', 'price', 'image', 'isAvailable', 'sortOrder', 'brand', 'colorCode', 'colorName', 'finishType', 'coverageArea', 'size', 'unit'] as const;
+      const allowed = ['categoryId', 'nameTh', 'nameEn', 'descriptionTh', 'descriptionEn', 'price', 'image', 'isAvailable', 'sortOrder', 'brand', 'colorCode', 'colorName', 'finishType', 'coverageArea', 'size', 'unit', 'mixingRatio', 'applicationMethodTh', 'applicationMethodEn', 'featuresTh', 'featuresEn', 'tdsFile', 'videoUrl'] as const;
       for (const k of allowed) {
         if (k in data) {
           const v = data[k];
@@ -650,6 +701,137 @@ export const db = {
     async count(): Promise<number> {
       const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM blog_posts');
       return (rows as any[])[0].cnt;
+    },
+  },
+
+  /* ── colorFormulas ── */
+  colorFormulas: {
+    async findMany(opts?: { where?: Record<string, unknown> }): Promise<ColorFormulaRecord[]> {
+      let sql = 'SELECT * FROM color_formulas';
+      const conditions: string[] = [];
+      const vals: unknown[] = [];
+      if (opts?.where) {
+        for (const [k, v] of Object.entries(opts.where)) {
+          if (k === 'search' && typeof v === 'string' && v) {
+            conditions.push('(carBrand LIKE ? OR colorCode LIKE ? OR colorNameTh LIKE ? OR colorNameEn LIKE ?)');
+            const sv = `%${v}%`;
+            vals.push(sv, sv, sv, sv);
+          } else {
+            conditions.push(`${k} = ?`);
+            vals.push(v);
+          }
+        }
+      }
+      if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
+      sql += ' ORDER BY carBrand ASC, colorCode ASC';
+      const [rows] = await pool.query(sql, vals);
+      return (rows as any[]).map(mapRow) as ColorFormulaRecord[];
+    },
+    async findById(id: number): Promise<ColorFormulaRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM color_formulas WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as ColorFormulaRecord) : undefined;
+    },
+    async create(data: Omit<ColorFormulaRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<ColorFormulaRecord> {
+      const ts = now();
+      const [res] = await pool.query(
+        'INSERT INTO color_formulas (carBrand, colorCode, colorNameTh, colorNameEn, yearRange, formulaType, deltaE, image, isActive, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [data.carBrand, data.colorCode, data.colorNameTh, data.colorNameEn, data.yearRange, data.formulaType, data.deltaE, data.image, data.isActive ? 1 : 0, ts, ts],
+      );
+      const id = (res as mysql.ResultSetHeader).insertId;
+      return (await this.findById(id))!;
+    },
+    async update(id: number, data: Partial<ColorFormulaRecord>): Promise<ColorFormulaRecord | undefined> {
+      const existing = await this.findById(id);
+      if (!existing) return undefined;
+      const fields: string[] = [];
+      const vals: unknown[] = [];
+      const allowed = ['carBrand', 'colorCode', 'colorNameTh', 'colorNameEn', 'yearRange', 'formulaType', 'deltaE', 'image', 'isActive'] as const;
+      for (const k of allowed) {
+        if (k in data) {
+          const v = data[k];
+          fields.push(`${k} = ?`);
+          vals.push(k === 'isActive' ? (v ? 1 : 0) : v);
+        }
+      }
+      if (fields.length === 0) return existing;
+      fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
+      await pool.query(`UPDATE color_formulas SET ${fields.join(', ')} WHERE id = ?`, vals);
+      return (await this.findById(id))!;
+    },
+    async delete(id: number): Promise<boolean> {
+      const [res] = await pool.query('DELETE FROM color_formulas WHERE id = ?', [id]);
+      return (res as mysql.ResultSetHeader).affectedRows > 0;
+    },
+    async getBrands(): Promise<string[]> {
+      const [rows] = await pool.query('SELECT DISTINCT carBrand FROM color_formulas WHERE isActive = 1 ORDER BY carBrand ASC');
+      return (rows as any[]).map((r: any) => r.carBrand);
+    },
+  },
+
+  /* ── b2bApplications ── */
+  b2bApplications: {
+    async findMany(): Promise<B2bApplicationRecord[]> {
+      const [rows] = await pool.query('SELECT * FROM b2b_applications ORDER BY createdAt DESC');
+      return (rows as any[]).map(mapRow) as B2bApplicationRecord[];
+    },
+    async create(data: Omit<B2bApplicationRecord, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<B2bApplicationRecord> {
+      const ts = now();
+      const [res] = await pool.query(
+        'INSERT INTO b2b_applications (companyName, contactPerson, phone, email, businessType, province, message, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [data.companyName, data.contactPerson, data.phone, data.email, data.businessType, data.province, data.message, ts, ts],
+      );
+      const id = (res as mysql.ResultSetHeader).insertId;
+      const [rows] = await pool.query('SELECT * FROM b2b_applications WHERE id = ? LIMIT 1', [id]);
+      return mapRow((rows as any[])[0]) as B2bApplicationRecord;
+    },
+    async update(id: number, data: Partial<B2bApplicationRecord>): Promise<B2bApplicationRecord | undefined> {
+      const [check] = await pool.query('SELECT id FROM b2b_applications WHERE id = ?', [id]);
+      if (!(check as any[]).length) return undefined;
+      const fields: string[] = [];
+      const vals: unknown[] = [];
+      if ('status' in data) { fields.push('status = ?'); vals.push(data.status); }
+      if (fields.length === 0) {
+        const [rows] = await pool.query('SELECT * FROM b2b_applications WHERE id = ? LIMIT 1', [id]);
+        return mapRow((rows as any[])[0]) as B2bApplicationRecord;
+      }
+      fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
+      await pool.query(`UPDATE b2b_applications SET ${fields.join(', ')} WHERE id = ?`, vals);
+      const [rows] = await pool.query('SELECT * FROM b2b_applications WHERE id = ? LIMIT 1', [id]);
+      return mapRow((rows as any[])[0]) as B2bApplicationRecord;
+    },
+  },
+
+  /* ── quoteRequests ── */
+  quoteRequests: {
+    async findMany(): Promise<QuoteRequestRecord[]> {
+      const [rows] = await pool.query('SELECT * FROM quote_requests ORDER BY createdAt DESC');
+      return (rows as any[]).map(mapRow) as QuoteRequestRecord[];
+    },
+    async create(data: Omit<QuoteRequestRecord, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<QuoteRequestRecord> {
+      const ts = now();
+      const [res] = await pool.query(
+        'INSERT INTO quote_requests (name, phone, email, company, productId, productName, quantity, message, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [data.name, data.phone, data.email, data.company, data.productId, data.productName, data.quantity, data.message, ts, ts],
+      );
+      const id = (res as mysql.ResultSetHeader).insertId;
+      const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);
+      return mapRow((rows as any[])[0]) as QuoteRequestRecord;
+    },
+    async update(id: number, data: Partial<QuoteRequestRecord>): Promise<QuoteRequestRecord | undefined> {
+      const [check] = await pool.query('SELECT id FROM quote_requests WHERE id = ?', [id]);
+      if (!(check as any[]).length) return undefined;
+      const fields: string[] = [];
+      const vals: unknown[] = [];
+      if ('status' in data) { fields.push('status = ?'); vals.push(data.status); }
+      if (fields.length === 0) {
+        const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);
+        return mapRow((rows as any[])[0]) as QuoteRequestRecord;
+      }
+      fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
+      await pool.query(`UPDATE quote_requests SET ${fields.join(', ')} WHERE id = ?`, vals);
+      const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);
+      return mapRow((rows as any[])[0]) as QuoteRequestRecord;
     },
   },
 };
