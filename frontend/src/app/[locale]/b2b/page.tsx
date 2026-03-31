@@ -1,12 +1,21 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Building2, FileDown, Users, ShieldCheck, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
+
+interface B2bDocument {
+  id: number;
+  nameTh: string;
+  nameEn: string;
+  filePath: string;
+  fileSize: string;
+  fileType: string;
+}
 
 export default function B2BPage() {
   const t = useTranslations('b2b');
@@ -18,6 +27,7 @@ export default function B2BPage() {
   });
   const [saving, setSaving] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [documents, setDocuments] = useState<B2bDocument[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +46,12 @@ export default function B2BPage() {
       setSaving(false);
     }
   };
+
+  useEffect(() => {
+    api.get('/b2b/documents').then((res) => {
+      if (res.data) setDocuments(res.data);
+    }).catch(() => {});
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -165,28 +181,29 @@ export default function B2BPage() {
               ))}
             </div>
 
-            {/* Document Downloads placeholder */}
+            {/* Document Downloads */}
             <div className="bg-white rounded-xl p-6 border border-gray-100">
               <h3 className="font-semibold text-[#1E293B] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
                 {th ? 'เอกสารดาวน์โหลด' : 'Download Documents'}
               </h3>
-              <div className="space-y-3">
-                {[
-                  { name: th ? 'แคตตาล็อกสินค้า 2026' : 'Product Catalog 2026', size: 'PDF · 5.2 MB' },
-                  { name: th ? 'ตารางราคาส่ง' : 'Wholesale Price List', size: 'PDF · 1.8 MB' },
-                  { name: th ? 'เงื่อนไขตัวแทนจำหน่าย' : 'Dealer Terms & Conditions', size: 'PDF · 820 KB' },
-                ].map((doc, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-3 bg-[#FAFAFA] rounded-lg">
-                    <div>
-                      <p className="text-sm font-medium text-[#1E293B]">{doc.name}</p>
-                      <p className="text-xs text-[#64748B]">{doc.size}</p>
+              {documents.length === 0 ? (
+                <p className="text-sm text-[#64748B] text-center py-4">{th ? 'ยังไม่มีเอกสาร' : 'No documents available'}</p>
+              ) : (
+                <div className="space-y-3">
+                  {documents.map((doc) => (
+                    <div key={doc.id} className="flex items-center justify-between p-3 bg-[#FAFAFA] rounded-lg">
+                      <div>
+                        <p className="text-sm font-medium text-[#1E293B]">{th ? doc.nameTh : doc.nameEn}</p>
+                        <p className="text-xs text-[#64748B]">{doc.fileType} · {doc.fileSize}</p>
+                      </div>
+                      <a href={doc.filePath} download target="_blank" rel="noopener noreferrer"
+                        className="px-3 py-1.5 text-xs font-medium text-[#1E3A5F] bg-[#1E3A5F]/10 rounded-lg hover:bg-[#1E3A5F]/20 transition">
+                        <FileDown className="w-4 h-4" />
+                      </a>
                     </div>
-                    <button className="px-3 py-1.5 text-xs font-medium text-[#1E3A5F] bg-[#1E3A5F]/10 rounded-lg hover:bg-[#1E3A5F]/20 transition">
-                      <FileDown className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         </div>

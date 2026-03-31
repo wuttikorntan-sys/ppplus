@@ -212,6 +212,19 @@ export interface QuoteRequestRecord {
   updatedAt: string;
 }
 
+export interface B2bDocumentRecord {
+  id: number;
+  nameTh: string;
+  nameEn: string;
+  filePath: string;
+  fileSize: string;
+  fileType: string;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 /* ====================================================================
    db – MySQL implementation (same method signatures, now async)
    ==================================================================== */
@@ -832,6 +845,50 @@ export const db = {
       await pool.query(`UPDATE quote_requests SET ${fields.join(', ')} WHERE id = ?`, vals);
       const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);
       return mapRow((rows as any[])[0]) as QuoteRequestRecord;
+    },
+  },
+
+  /* ── B2B documents ── */
+  b2bDocuments: {
+    async findMany(activeOnly = false): Promise<B2bDocumentRecord[]> {
+      const where = activeOnly ? 'WHERE isActive = 1' : '';
+      const [rows] = await pool.query(`SELECT * FROM b2b_documents ${where} ORDER BY sortOrder ASC, createdAt DESC`);
+      return (rows as any[]).map(mapRow) as B2bDocumentRecord[];
+    },
+    async findById(id: number): Promise<B2bDocumentRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM b2b_documents WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as B2bDocumentRecord) : undefined;
+    },
+    async create(data: Omit<B2bDocumentRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<B2bDocumentRecord> {
+      const ts = now();
+      const [res] = await pool.query(
+        'INSERT INTO b2b_documents (nameTh, nameEn, filePath, fileSize, fileType, sortOrder, isActive, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [data.nameTh, data.nameEn, data.filePath, data.fileSize, data.fileType, data.sortOrder, data.isActive ? 1 : 0, ts, ts],
+      );
+      const id = (res as mysql.ResultSetHeader).insertId;
+      return (await this.findById(id))!;
+    },
+    async update(id: number, data: Partial<B2bDocumentRecord>): Promise<B2bDocumentRecord | undefined> {
+      const existing = await this.findById(id);
+      if (!existing) return undefined;
+      const fields: string[] = [];
+      const vals: unknown[] = [];
+      if ('nameTh' in data) { fields.push('nameTh = ?'); vals.push(data.nameTh); }
+      if ('nameEn' in data) { fields.push('nameEn = ?'); vals.push(data.nameEn); }
+      if ('filePath' in data) { fields.push('filePath = ?'); vals.push(data.filePath); }
+      if ('fileSize' in data) { fields.push('fileSize = ?'); vals.push(data.fileSize); }
+      if ('fileType' in data) { fields.push('fileType = ?'); vals.push(data.fileType); }
+      if ('sortOrder' in data) { fields.push('sortOrder = ?'); vals.push(data.sortOrder); }
+      if ('isActive' in data) { fields.push('isActive = ?'); vals.push(data.isActive ? 1 : 0); }
+      if (fields.length === 0) return existing;
+      fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
+      await pool.query(`UPDATE b2b_documents SET ${fields.join(', ')} WHERE id = ?`, vals);
+      return (await this.findById(id))!;
+    },
+    async delete(id: number): Promise<boolean> {
+      const [res] = await pool.query('DELETE FROM b2b_documents WHERE id = ?', [id]);
+      return (res as mysql.ResultSetHeader).affectedRows > 0;
     },
   },
 };

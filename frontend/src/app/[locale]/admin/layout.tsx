@@ -29,6 +29,7 @@ import {
   Palette,
   Star,
   MessageSquareQuote,
+  FileDown,
 } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 
@@ -66,6 +67,7 @@ const navSections = [
     titleEn: 'Business',
     items: [
       { key: 'b2b', icon: Handshake, href: '/admin/b2b' },
+      { key: 'b2b-documents', icon: FileDown, href: '/admin/b2b-documents' },
       { key: 'quotes', icon: MessageSquareQuote, href: '/admin/quotes' },
       { key: 'reviews', icon: Star, href: '/admin/reviews' },
     ],
@@ -95,6 +97,7 @@ const labels: Record<string, Record<string, string>> = {
     blog: 'บทความ',
     popups: 'ป๊อปอัพ',
     b2b: 'ตัวแทนจำหน่าย',
+    'b2b-documents': 'เอกสาร B2B',
     quotes: 'ใบเสนอราคา',
     reviews: 'รีวิว',
     users: 'ผู้ใช้งาน',
@@ -114,6 +117,7 @@ const labels: Record<string, Record<string, string>> = {
     blog: 'Blog',
     popups: 'Popups',
     b2b: 'B2B Applications',
+    'b2b-documents': 'B2B Documents',
     quotes: 'Quote Requests',
     reviews: 'Reviews',
     users: 'Users',

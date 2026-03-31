@@ -38,3 +38,28 @@ export async function saveUploadedFile(formData: FormData, fieldName: string): P
 export function getUploadsDir(): string {
   return UPLOADS_DIR;
 }
+
+const DOCUMENT_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+const DOC_MAX_SIZE = 20 * 1024 * 1024; // 20MB
+
+export async function saveUploadedDocument(formData: FormData, fieldName: string): Promise<string | null> {
+  const file = formData.get(fieldName);
+  if (!file || !(file instanceof File) || file.size === 0) return null;
+
+  const allAllowed = [...ALLOWED_TYPES, ...DOCUMENT_TYPES];
+  if (!allAllowed.includes(file.type)) {
+    throw new Error('อนุญาตเฉพาะไฟล์ PDF, Word หรือรูปภาพ');
+  }
+  if (file.size > DOC_MAX_SIZE) {
+    throw new Error('ไฟล์ต้องมีขนาดไม่เกิน 20MB');
+  }
+
+  const ext = path.extname(file.name) || '.pdf';
+  const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext;
+  const filePath = path.join(UPLOADS_DIR, uniqueName);
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  fs.writeFileSync(filePath, buffer);
+
+  return `/uploads/${uniqueName}`;
+}
