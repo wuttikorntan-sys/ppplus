@@ -92,7 +92,7 @@ export default function AdminDashboard() {
           {th ? 'แดชบอร์ด' : 'Dashboard'}
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          {th ? 'ภาพรวมของ PP+' : 'Overview of PP+'}
+          {th ? 'ภาพรวมของ PP Plus' : 'Overview of PP Plus'}
         </p>
       </div>
 

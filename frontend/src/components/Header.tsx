@@ -42,7 +42,7 @@ export default function Header() {
               <Car className="w-5 h-5 lg:w-6 lg:h-6 text-[#2EC4B6]" />
             </div>
             <span className="text-xl lg:text-2xl font-bold text-[#1E3A5F]" style={{ fontFamily: 'var(--font-heading)' }}>
-              PP+
+              PP Plus
             </span>
           </Link>
 

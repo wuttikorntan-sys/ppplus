@@ -60,15 +60,15 @@ export async function POST(request: NextRequest) {
     const safeMessage = escapeHtml(message);
 
     await transporter.sendMail({
-      from: `"PP+ Contact" <${smtpUser}>`,
+      from: `"PP Plus Contact" <${smtpUser}>`,
       replyTo: email,
       to: toEmail,
-      subject: `[PP+] ข้อความจาก ${safeName}`,
+      subject: `[PP Plus] ข้อความจาก ${safeName}`,
       html: `
         <div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;padding:0;">
           <div style="background:#1E3A5F;padding:24px 32px;border-radius:12px 12px 0 0;">
             <h2 style="color:#fff;margin:0;font-size:20px;">📩 ข้อความใหม่จากเว็บไซต์</h2>
-            <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px;">PP+ - ร้านขายสีครบวงจร</p>
+            <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px;">PP Plus - ร้านขายสีครบวงจร</p>
           </div>
           <div style="background:#fff;padding:24px 32px;border:1px solid #eee;border-top:none;">
             <table style="width:100%;border-collapse:collapse;">
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
             </div>
           </div>
           <div style="background:#f9f9f9;padding:16px 32px;border-radius:0 0 12px 12px;border:1px solid #eee;border-top:none;">
-            <p style="color:#999;font-size:12px;margin:0;text-align:center;">ส่งจากฟอร์มติดต่อ PP+.co.th</p>
+            <p style="color:#999;font-size:12px;margin:0;text-align:center;">ส่งจากฟอร์มติดต่อ ppplus.co.th</p>
           </div>
         </div>
       `,

@@ -60,7 +60,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen">
       <section className="relative py-20 text-white overflow-hidden">
-        <Image src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1920&h=600&fit=crop" alt="PP+" fill className="object-cover" priority />
+        <Image src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1920&h=600&fit=crop" alt="PP Plus" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A5F]/85 to-[#2EC4B6]/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -117,7 +117,7 @@ export default function ContactPage() {
             <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="space-y-6">
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
                 <div className="h-64">
-                  <iframe src={mapUrl} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="PP+ Paint Shop" />
+                  <iframe src={mapUrl} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="PP Plus Paint Shop" />
                 </div>
                 <div className="p-3 border-t border-gray-100 flex justify-end">
                   <a href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1E3A5F] text-white font-medium rounded-lg hover:bg-[#2a4d75] transition-all text-sm">

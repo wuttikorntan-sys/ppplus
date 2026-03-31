@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
+﻿/* eslint-disable @typescript-eslint/no-require-imports */
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 
@@ -206,7 +206,7 @@ async function main() {
 
   // Seed default site contents
   const siteDefaults = [
-    { key: 'store_name', valueTh: 'PP+', valueEn: 'PP+', type: 'text' },
+    { key: 'store_name', valueTh: 'PP Plus', valueEn: 'PP Plus', type: 'text' },
     { key: 'store_phone', valueTh: '02-XXX-XXXX', valueEn: '02-XXX-XXXX', type: 'text' },
     { key: 'store_email', valueTh: 'info@ppplus.co.th', valueEn: 'info@ppplus.co.th', type: 'text' },
     { key: 'store_address', valueTh: 'กรุงเทพฯ', valueEn: 'Bangkok', type: 'text' },

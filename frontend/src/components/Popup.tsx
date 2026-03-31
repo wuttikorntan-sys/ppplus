@@ -105,7 +105,7 @@ export default function Popup({ locale }: { locale: string }) {
               <div className="relative w-full aspect-[4/3] overflow-hidden">
                 <img
                   src={imageUrl}
-                  alt={title || 'PP+'}
+                  alt={title || 'PP Plus'}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent" />
@@ -122,7 +122,7 @@ export default function Popup({ locale }: { locale: string }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-bold text-white truncate" style={{ fontFamily: 'var(--font-heading)' }}>
-                      {title || 'PP+'}
+                      {title || 'PP Plus'}
                     </h3>
                     <span className="shrink-0 px-2.5 py-0.5 bg-emerald-500 text-white text-[10px] font-bold rounded-md uppercase tracking-wide">
                       {badge}

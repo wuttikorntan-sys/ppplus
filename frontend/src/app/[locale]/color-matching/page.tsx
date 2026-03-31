@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
@@ -203,7 +203,7 @@ export default function ColorMatchingPage() {
         {/* Explanation Section */}
         <div className="mt-16 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           <h2 className="text-2xl font-bold text-[#1E293B] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
-            {th ? 'ทำไมสูตรสี PP+ ถึงแม่นยำ?' : 'Why PP+ Color Matching is Accurate?'}
+            {th ? 'ทำไมสูตรสี PP Plus ถึงแม่นยำ?' : 'Why PP Plus Color Matching is Accurate?'}
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
@@ -232,7 +232,7 @@ export default function ColorMatchingPage() {
               </ul>
               <div className="mt-6 p-4 bg-[#1E3A5F]/5 rounded-xl">
                 <p className="text-sm font-medium text-[#1E3A5F] mb-1">{th ? 'ต้องการสูตรสีพิเศษ?' : 'Need a custom formula?'}</p>
-                <p className="text-xs text-[#64748B]">{th ? 'ส่งชิ้นส่วนมาให้เราวัดสีได้เลย ติดต่อทีม PP+' : 'Send us a sample for measurement. Contact PP+ team.'}</p>
+                <p className="text-xs text-[#64748B]">{th ? 'ส่งชิ้นส่วนมาให้เราวัดสีได้เลย ติดต่อทีม PP Plus' : 'Send us a sample for measurement. Contact PP Plus team.'}</p>
               </div>
             </div>
           </div>

@@ -41,7 +41,7 @@ interface HeroSlideData {
 }
 
 const defaultContent: ContentMap = {
-  'hero.title': { th: 'PP+', en: 'PP+' },
+  'hero.title': { th: 'PP Plus', en: 'PP Plus' },
   'hero.subtitle': { th: 'สีพ่นรถยนต์ครบระบบ | มาตรฐานโรงงาน', en: 'Complete Automotive Paint System | Factory Standard' },
   'hero.description': { th: 'ศูนย์รวมสีพ่นรถยนต์ครบระบบ Primer / Basecoat / Clear / Thinner พร้อมสูตรสีตรงรุ่น ด้วยเครื่อง Spectrophotometer และทีมเทคนิคมืออาชีพ', en: 'Complete automotive paint center — Primer, Basecoat, Clear, Thinner with precise color matching using Spectrophotometer and professional technical team.' },
   'hero.cta_menu': { th: 'ดูสินค้า', en: 'View Products' },
@@ -50,7 +50,7 @@ const defaultContent: ContentMap = {
   'featured.subtitle': { th: 'สินค้าสีพ่นรถยนต์คุณภาพที่ช่างไว้วางใจ', en: 'Quality automotive paint products trusted by professionals' },
   'welcome.tagline': { th: 'เกี่ยวกับเรา', en: 'About Us' },
   'welcome.title': { th: 'ผู้เชี่ยวชาญสีพ่นรถยนต์ครบระบบ', en: 'Complete Automotive Paint Expert' },
-  'welcome.text': { th: 'PP+ เป็นศูนย์รวมสีพ่นรถยนต์ครบระบบ ด้วยประสบการณ์กว่า 10 ปี เรามีทีมเทคนิคพร้อมสูตรสีแม่นยำ ΔE < 0.5 รองรับทุกยี่ห้อรถยนต์ ทั้ง Toyota, Honda, Nissan, Mazda, Isuzu', en: 'PP+ is a complete automotive paint center. With over 10 years of experience, our technical team provides precise color matching with ΔE < 0.5 for all car brands.' },
+  'welcome.text': { th: 'PP Plus เป็นศูนย์รวมสีพ่นรถยนต์ครบระบบ ด้วยประสบการณ์กว่า 10 ปี เรามีทีมเทคนิคพร้อมสูตรสีแม่นยำ ΔE < 0.5 รองรับทุกยี่ห้อรถยนต์ ทั้ง Toyota, Honda, Nissan, Mazda, Isuzu', en: 'PP Plus is a complete automotive paint center. With over 10 years of experience, our technical team provides precise color matching with ΔE < 0.5 for all car brands.' },
   'welcome.cta': { th: 'เรื่องราวของเรา', en: 'Our Story' },
   'welcome.years': { th: '10+', en: '10+' },
   'welcome.years_label': { th: 'ปี', en: 'Years' },
@@ -68,7 +68,7 @@ const defaultContent: ContentMap = {
   'services.cta': { th: 'ค้นหาสูตรสี', en: 'Find Color Formula' },
   'services.badge': { th: 'ΔE<0.5', en: 'ΔE<0.5' },
   'services.badge_label': { th: 'แม่นยำ', en: 'Precision' },
-  'experience.tagline': { th: 'ทำไมต้อง PP+', en: 'Why PP+' },
+  'experience.tagline': { th: 'ทำไมต้อง PP Plus', en: 'Why PP Plus' },
   'experience.title': { th: 'สิ่งที่ทำให้เราแตกต่าง', en: 'What Sets Us Apart' },
   'experience.card1_title': { th: 'สูตรสีแม่นยำ', en: 'Precise Formulas' },
   'experience.card1_desc': { th: 'Spectrophotometer / CIEDE2000 ค่า ΔE < 0.5', en: 'Spectrophotometer / CIEDE2000 with ΔE < 0.5' },
@@ -82,7 +82,7 @@ const defaultContent: ContentMap = {
   'contact.subtitle': { th: 'เรายินดีให้บริการคุณ', en: 'We are ready to serve you' },
   'location.address': { th: 'กรุงเทพมหานคร', en: 'Bangkok, Thailand' },
   'location.phone': { th: '02-XXX-XXXX', en: '02-XXX-XXXX' },
-  'location.email': { th: 'info@PP+.co.th', en: 'info@PP+.co.th' },
+  'location.email': { th: 'info@ppplus.co.th', en: 'info@ppplus.co.th' },
   'location.hours_title': { th: 'เวลาทำการ', en: 'Opening Hours' },
   'location.hours1': { th: 'จันทร์ - เสาร์: 08:00 - 18:00', en: 'Mon - Sat: 8:00 AM - 6:00 PM' },
   'location.hours2': { th: 'อาทิตย์: 09:00 - 16:00', en: 'Sun: 9:00 AM - 4:00 PM' },
@@ -161,7 +161,7 @@ export default function HomePage() {
             {slide.type === 'video' ? (
               <video autoPlay loop muted playsInline poster={slide.poster} className="w-full h-full object-cover"><source src={slide.src} type="video/mp4" /></video>
             ) : (
-              <Image src={slide.src} alt="PP+" fill className="object-cover" sizes="100vw" priority={idx === 0} />
+              <Image src={slide.src} alt="PP Plus" fill className="object-cover" sizes="100vw" priority={idx === 0} />
             )}
           </div>
         ))}
@@ -295,7 +295,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Why PP+ */}
+      {/* Why PP Plus */}
       <section className="py-20 bg-[#FAFAFA] relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
@@ -334,7 +334,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-3 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-2 bg-white rounded-2xl shadow-sm overflow-hidden">
               <div className="h-[350px] md:h-[400px]">
-                <iframe src={c('location.map_embed')} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="PP+" />
+                <iframe src={c('location.map_embed')} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="PP Plus" />
               </div>
               <div className="p-3 border-t border-gray-100 flex justify-end">
                 <a href={`https://www.google.com/maps/dir/?api=1&destination=${c('location.lat')},${c('location.lng')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1E3A5F] text-white font-medium rounded-lg hover:bg-[#2a4d75] transition-all text-sm">

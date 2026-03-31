@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
@@ -58,7 +58,7 @@ export default function B2BPage() {
         {/* Benefits */}
         <div className="grid md:grid-cols-3 gap-6 mb-16">
           {[
-            { icon: Building2, title: th ? 'ตัวแทนจำหน่าย' : 'Dealer Program', desc: th ? 'สมัครเป็นตัวแทนจำหน่ายสีรถยนต์ PP+ ในพื้นที่ของคุณ' : 'Become a PP+ automotive paint dealer in your area' },
+            { icon: Building2, title: th ? 'ตัวแทนจำหน่าย' : 'Dealer Program', desc: th ? 'สมัครเป็นตัวแทนจำหน่ายสีรถยนต์ PP Plus ในพื้นที่ของคุณ' : 'Become a PP Plus automotive paint dealer in your area' },
             { icon: FileDown, title: th ? 'เอกสารดาวน์โหลด' : 'Documents', desc: th ? 'TDS, MSDS, และเอกสารเทคนิคสำหรับลูกค้า B2B' : 'TDS, MSDS, and technical documents for B2B customers' },
             { icon: Users, title: th ? 'ราคาพิเศษ' : 'Special Pricing', desc: th ? 'ราคาส่งพิเศษสำหรับอู่สี ร้านอะไหล่ และตัวแทน' : 'Wholesale pricing for body shops, parts stores, and dealers' },
           ].map((item, idx) => (
@@ -147,7 +147,7 @@ export default function B2BPage() {
           {/* Info */}
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
             <h2 className="text-2xl font-bold text-[#1E293B] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
-              {th ? 'ทำไมต้องเป็นพาร์ทเนอร์ PP+?' : 'Why Partner with PP+?'}
+              {th ? 'ทำไมต้องเป็นพาร์ทเนอร์ PP Plus?' : 'Why Partner with PP Plus?'}
             </h2>
             <div className="space-y-4 mb-8">
               {[

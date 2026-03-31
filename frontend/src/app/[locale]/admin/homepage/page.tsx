@@ -74,8 +74,8 @@ const sections = [
   },
   {
     id: 'experience',
-    titleTh: 'ส่วนทำไมต้อง PP+',
-    titleEn: 'Why PP+ Section',
+    titleTh: 'ส่วนทำไมต้อง PP Plus',
+    titleEn: 'Why PP Plus Section',
     fields: [
       { key: 'experience.tagline', labelTh: 'แท็กไลน์', labelEn: 'Tagline' },
       { key: 'experience.title', labelTh: 'หัวข้อ', labelEn: 'Title' },
@@ -102,16 +102,16 @@ const sections = [
 
 // Default values matching current hardcoded text
 const defaults: ContentMap = {
-  'hero.title': { th: 'PP+', en: 'PP+' },
+  'hero.title': { th: 'PP Plus', en: 'PP Plus' },
   'hero.subtitle': { th: 'ร้านขายสีครบวงจร', en: 'Complete Paint Solutions' },
   'hero.description': { th: 'จำหน่ายสีทาบ้านทุกประเภท จากแบรนด์ชั้นนำ TOA, Beger, Jotun, Dulux, Nippon พร้อมบริการผสมสี ให้คำปรึกษา และจัดส่งถึงหน้างาน', en: 'Premium house paints from leading brands TOA, Beger, Jotun, Dulux, Nippon with color mixing service, expert advice, and delivery' },
   'hero.cta_menu': { th: 'ดูสินค้า', en: 'View Products' },
   'hero.cta_contact': { th: 'ติดต่อเรา', en: 'Contact Us' },
   'featured.title': { th: 'สินค้าแนะนำ', en: 'Featured Products' },
   'featured.subtitle': { th: 'สินค้าขายดีที่ลูกค้าเลือกใช้มากที่สุด', en: 'Best-selling products chosen by our customers' },
-  'welcome.tagline': { th: 'ยินดีต้อนรับสู่ PP+', en: 'Welcome to PP+' },
+  'welcome.tagline': { th: 'ยินดีต้อนรับสู่ PP Plus', en: 'Welcome to PP Plus' },
   'welcome.title': { th: 'ร้านขายสีครบวงจรในกรุงเทพฯ', en: 'Your Complete Paint Shop in Bangkok' },
-  'welcome.text': { th: 'PP+ เป็นร้านขายสีครบวงจรที่คัดสรรสีคุณภาพจากแบรนด์ชั้นนำ พร้อมทีมงานผู้เชี่ยวชาญที่พร้อมให้คำปรึกษาเรื่องสีและการทาสี ไม่ว่าจะเป็นงานบ้าน คอนโด หรือโปรเจกต์ขนาดใหญ่', en: 'PP+ is a complete paint shop offering quality paints from leading brands. Our expert team is ready to advise on colors and painting for homes, condos, or large projects.' },
+  'welcome.text': { th: 'PP Plus เป็นร้านขายสีครบวงจรที่คัดสรรสีคุณภาพจากแบรนด์ชั้นนำ พร้อมทีมงานผู้เชี่ยวชาญที่พร้อมให้คำปรึกษาเรื่องสีและการทาสี ไม่ว่าจะเป็นงานบ้าน คอนโด หรือโปรเจกต์ขนาดใหญ่', en: 'PP Plus is a complete paint shop offering quality paints from leading brands. Our expert team is ready to advise on colors and painting for homes, condos, or large projects.' },
   'welcome.cta': { th: 'เกี่ยวกับเรา', en: 'About Us' },
   'welcome.years': { th: '10+', en: '10+' },
   'welcome.years_label': { th: 'Years', en: 'Years' },
@@ -129,7 +129,7 @@ const defaults: ContentMap = {
   'services.cta': { th: 'คำนวณสี', en: 'Paint Calculator' },
   'services.badge': { th: '1000+', en: '1000+' },
   'services.badge_label': { th: 'เฉดสี', en: 'Colors' },
-  'experience.tagline': { th: 'ทำไมต้อง PP+', en: 'Why PP+' },
+  'experience.tagline': { th: 'ทำไมต้อง PP Plus', en: 'Why PP Plus' },
   'experience.title': { th: 'สิ่งที่ทำให้เราแตกต่าง', en: 'What Makes Us Different' },
   'experience.card1_title': { th: 'แบรนด์ชั้นนำ', en: 'Premium Brands' },
   'experience.card1_desc': { th: 'จำหน่ายสีจากแบรนด์ชั้นนำ TOA, Beger, Jotun, Dulux, Nippon', en: 'Authorized dealer for TOA, Beger, Jotun, Dulux, Nippon' },

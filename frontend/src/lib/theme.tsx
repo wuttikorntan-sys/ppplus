@@ -19,7 +19,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('PP+-theme') as Theme | null;
+    const saved = localStorage.getItem('ppplus-theme') as Theme | null;
     if (saved === 'dark' || saved === 'light') {
       setTheme(saved);
     } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -36,7 +36,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('PP+-theme', theme);
+    localStorage.setItem('ppplus-theme', theme);
   }, [theme, mounted]);
 
   const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));

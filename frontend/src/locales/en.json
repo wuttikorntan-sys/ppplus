@@ -1,4 +1,4 @@
-{
+﻿{
   "nav": {
     "home": "Home",
     "menu": "Products",
@@ -16,7 +16,7 @@
   },
   "home": {
     "hero": {
-      "title": "PP+",
+      "title": "PP Plus",
       "subtitle": "Complete Automotive Paint System | Factory Standard",
       "description": "Automotive paint specialists — 2K Topcoat, Basecoat, Clear Coat, Primer with precision Color Matching system for professional body shops",
       "cta_menu": "View Products",
@@ -25,7 +25,7 @@
     "welcome": {
       "tagline": "About Us",
       "title": "Complete Automotive Paint Expert",
-      "text": "PP+ manufactures and distributes high-quality automotive paint with Spectrophotometer technology for precise color matching ΔE ≤ 1.0, offering a complete system from Primer to Clear Coat.",
+      "text": "PP Plus manufactures and distributes high-quality automotive paint with Spectrophotometer technology for precise color matching ΔE ≤ 1.0, offering a complete system from Primer to Clear Coat.",
       "cta": "Our Story"
     },
     "featured": {
@@ -34,7 +34,7 @@
     },
     "gallery_preview": {
       "title": "Our Projects",
-      "subtitle": "See the results from body shops using PP+",
+      "subtitle": "See the results from body shops using PP Plus",
       "cta": "View Gallery"
     },
     "reviews": {
@@ -78,10 +78,10 @@
     "download_tds": "Download TDS"
   },
   "about": {
-    "title": "About PP+",
+    "title": "About PP Plus",
     "story": {
       "title": "Our Story",
-      "p1": "PP+ is an automotive paint manufacturer and distributor established with the goal of elevating automotive paint standards in Thailand, with formulas developed in our own R&D laboratory.",
+      "p1": "PP Plus is an automotive paint manufacturer and distributor established with the goal of elevating automotive paint standards in Thailand, with formulas developed in our own R&D laboratory.",
       "p2": "Using X-Rite Spectrophotometer and CIEDE2000 color difference system, every formula achieves ΔE ≤ 1.0, guaranteeing the highest precision in color matching for all car brands and models.",
       "p3": "Our R&D team is committed to developing the highest quality automotive paint products, with every batch tested in our QC laboratory to ensure consistent quality for every customer."
     },
@@ -112,8 +112,8 @@
     "info": {
       "address": "Bangkok, Thailand",
       "phone": "02-987-6543",
-      "email": "info@PP+.co.th",
-      "line": "@PP+",
+      "email": "info@ppplus.co.th",
+      "line": "@ppplus",
       "hours_title": "Opening Hours",
       "lunch": "Mon-Sat: 8:00 AM - 6:00 PM",
       "dinner": "Sun: 9:00 AM - 3:00 PM",
@@ -161,7 +161,7 @@
   "auth": {
     "login": {
       "title": "Admin Login",
-      "subtitle": "PP+ Management System",
+      "subtitle": "PP Plus Management System",
       "email": "Email",
       "password": "Password",
       "submit": "Login"
@@ -234,7 +234,7 @@
   },
   "b2b": {
     "title": "Become a Dealer",
-    "subtitle": "Join the PP+ dealer network — exclusive discounts for body shops and retailers",
+    "subtitle": "Join the PP Plus dealer network — exclusive discounts for body shops and retailers",
     "form": {
       "company": "Company / Shop Name",
       "contact": "Contact Person",

@@ -47,8 +47,8 @@ const sections: { id: string; titleTh: string; titleEn: string; icon: typeof Map
 const defaults: ContentMap = {
   'location.address': { th: 'กรุงเทพมหานคร 10110', en: 'Bangkok 10110' },
   'location.phone': { th: '02-123-4567', en: '02-123-4567' },
-  'location.email': { th: 'info@PP+.co.th', en: 'info@PP+.co.th' },
-  'location.line': { th: '@PP+', en: '@PP+' },
+  'location.email': { th: 'info@ppplus.co.th', en: 'info@ppplus.co.th' },
+  'location.line': { th: '@ppplus', en: '@ppplus' },
   'location.hours_title': { th: 'เวลาทำการ', en: 'Opening Hours' },
   'location.lunch': { th: 'จันทร์ - เสาร์: 08:00 - 18:00', en: 'Mon - Sat: 8:00 AM - 6:00 PM' },
   'location.dinner': { th: 'อาทิตย์: 09:00 - 15:00', en: 'Sun: 9:00 AM - 3:00 PM' },
@@ -291,7 +291,7 @@ export default function AdminLocationPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder={locale === 'th' ? 'ค้นหาสถานที่... เช่น PP+ กรุงเทพ' : 'Search location... e.g. PP+ Bangkok'}
+                placeholder={locale === 'th' ? 'ค้นหาสถานที่... เช่น PP Plus กรุงเทพ' : 'Search location... e.g. PP Plus Bangkok'}
                 className="w-full pl-9 pr-3 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none"
               />
             </div>

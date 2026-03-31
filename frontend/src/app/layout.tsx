@@ -2,7 +2,7 @@
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PP+ - ร้านขายสีครบวงจร",
+  title: "PP Plus - ร้านขายสีครบวงจร",
   description: "ร้านขายสีครบวงจรในกรุงเทพ สีทาบ้าน สีสเปรย์ สีรถยนต์ อุปกรณ์ทาสี ทุกแบรนด์ชั้นนำ",
   icons: {
     icon: "/logo.png",

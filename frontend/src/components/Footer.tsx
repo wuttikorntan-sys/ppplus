@@ -49,7 +49,7 @@ export default function Footer() {
               </div>
               <div>
                 <span className="text-xl font-bold text-[#2EC4B6] block" style={{ fontFamily: 'var(--font-heading)' }}>
-                  PP+
+                  PP Plus
                 </span>
               </div>
             </div>
@@ -126,7 +126,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-10 pt-6 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} PP+. {t('rights')}.
+          © {new Date().getFullYear()} PP Plus. {t('rights')}.
         </div>
       </div>
     </footer>

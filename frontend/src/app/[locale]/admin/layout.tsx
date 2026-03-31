@@ -136,7 +136,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {!collapsed && (
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-white truncate" style={{ fontFamily: 'var(--font-heading)' }}>
-                PP+
+                PP Plus
               </h2>
               <p className="text-[10px] text-gray-400">Admin Panel</p>
             </div>

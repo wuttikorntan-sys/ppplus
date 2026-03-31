@@ -303,7 +303,7 @@ export default function AdminSettingsPage() {
             <div className="space-y-3">
               <div>
                 <label className="text-xs font-medium text-gray-500 mb-1 block">{th ? 'อีเมลรับข้อความ (ส่งถึง)' : 'Receiving Email (To)'}</label>
-                <input type="email" value={smtp['smtp.to']?.th || ''} onChange={(e) => updateSmtpField('smtp.to', e.target.value)} placeholder="info@PP+.co.th" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#1E3A5F] transition" />
+                <input type="email" value={smtp['smtp.to']?.th || ''} onChange={(e) => updateSmtpField('smtp.to', e.target.value)} placeholder="info@ppplus.co.th" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#1E3A5F] transition" />
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-500 mb-1 block">SMTP Host</label>
@@ -315,7 +315,7 @@ export default function AdminSettingsPage() {
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-500 mb-1 block">{th ? 'อีเมลผู้ส่ง (SMTP User)' : 'Sender Email (SMTP User)'}</label>
-                <input type="email" value={smtp['smtp.user']?.th || ''} onChange={(e) => updateSmtpField('smtp.user', e.target.value)} placeholder="info@PP+.co.th" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#1E3A5F] transition" />
+                <input type="email" value={smtp['smtp.user']?.th || ''} onChange={(e) => updateSmtpField('smtp.user', e.target.value)} placeholder="info@ppplus.co.th" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#1E3A5F] transition" />
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-500 mb-1 block">{th ? 'รหัสผ่านแอป (App Password)' : 'App Password'}</label>

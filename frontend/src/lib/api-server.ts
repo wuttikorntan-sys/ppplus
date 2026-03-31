@@ -1,8 +1,8 @@
 ﻿import jwt from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret-key-PP+-2026';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-key-PP+-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret-key-ppplus-2026';
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-key-ppplus-2026';
 
 export function generateTokens(userId: number, role: string) {
   const accessToken = jwt.sign({ userId, role }, JWT_SECRET, { expiresIn: '1d' });
