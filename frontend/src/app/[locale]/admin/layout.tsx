@@ -26,6 +26,9 @@ import {
   BookOpen,
   Database,
   Handshake,
+  Palette,
+  Star,
+  MessageSquareQuote,
 } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 
@@ -43,6 +46,7 @@ const navSections = [
     items: [
       { key: 'menu', icon: Package, href: '/admin/menu' },
       { key: 'categories', icon: FolderOpen, href: '/admin/categories' },
+      { key: 'color-formulas', icon: Palette, href: '/admin/color-formulas' },
       { key: 'location', icon: MapPin, href: '/admin/location' },
     ],
   },
@@ -62,6 +66,8 @@ const navSections = [
     titleEn: 'Business',
     items: [
       { key: 'b2b', icon: Handshake, href: '/admin/b2b' },
+      { key: 'quotes', icon: MessageSquareQuote, href: '/admin/quotes' },
+      { key: 'reviews', icon: Star, href: '/admin/reviews' },
     ],
   },
   {
@@ -80,6 +86,7 @@ const labels: Record<string, Record<string, string>> = {
     dashboard: 'แดชบอร์ด',
     menu: 'จัดการสินค้า',
     categories: 'หมวดหมู่',
+    'color-formulas': 'สูตรสี',
     location: 'ตำแหน่งที่ตั้ง',
 
     homepage: 'เนื้อหาหน้าแรก',
@@ -88,6 +95,8 @@ const labels: Record<string, Record<string, string>> = {
     blog: 'บทความ',
     popups: 'ป๊อปอัพ',
     b2b: 'ตัวแทนจำหน่าย',
+    quotes: 'ใบเสนอราคา',
+    reviews: 'รีวิว',
     users: 'ผู้ใช้งาน',
     backup: 'สำรองข้อมูล',
     settings: 'ตั้งค่า',
@@ -96,6 +105,7 @@ const labels: Record<string, Record<string, string>> = {
     dashboard: 'Dashboard',
     menu: 'Products',
     categories: 'Categories',
+    'color-formulas': 'Color Formulas',
     location: 'Location',
 
     homepage: 'Homepage Content',
@@ -104,6 +114,8 @@ const labels: Record<string, Record<string, string>> = {
     blog: 'Blog',
     popups: 'Popups',
     b2b: 'B2B Applications',
+    quotes: 'Quote Requests',
+    reviews: 'Reviews',
     users: 'Users',
     backup: 'Backup & Import',
     settings: 'Settings',
