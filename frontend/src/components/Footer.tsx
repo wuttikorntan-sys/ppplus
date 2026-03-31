@@ -2,7 +2,7 @@
 
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { MapPin, Phone, Mail, Paintbrush } from 'lucide-react';
+import { MapPin, Phone, Mail, Paintbrush, Clock } from 'lucide-react';
 import { FaFacebookF, FaWhatsapp, FaLine, FaInstagram, FaTiktok, FaXTwitter } from 'react-icons/fa6';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
@@ -38,60 +38,70 @@ export default function Footer() {
   const socialUrl = (key: string) => sc[key]?.th || sc[key]?.en || '';
 
   return (
-    <footer className="bg-dark text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-[#1E3A5F] flex items-center justify-center">
-                <Paintbrush className="w-6 h-6 text-[#2EC4B6]" />
-              </div>
-              <div>
-                <span className="text-xl font-bold text-[#2EC4B6] block" style={{ fontFamily: 'var(--font-heading)' }}>
-                  PP Plus
-                </span>
-              </div>
+    <footer className="relative bg-[#0F1B2D] text-white overflow-hidden">
+      {/* Decorative top border */}
+      <div className="h-1 bg-gradient-to-r from-[#1E3A5F] via-[#2EC4B6] to-[#1E3A5F]" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
+        {/* Top Section - Brand + Newsletter-like CTA */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-10 border-b border-white/10">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1E3A5F] to-[#2EC4B6]/60 flex items-center justify-center shadow-lg shadow-[#2EC4B6]/10">
+              <Paintbrush className="w-6 h-6 text-white" />
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              {t('description')}
-            </p>
-            {/* Social Media */}
-            <div className="flex items-center gap-2.5 flex-wrap">
-              {[
-                { key: 'social.facebook', icon: FaFacebookF, title: 'Facebook', hoverBg: 'hover:bg-[#1877F2]', shadow: 'hover:shadow-[#1877F2]/30' },
-                { key: 'social.whatsapp', icon: FaWhatsapp, title: 'WhatsApp', hoverBg: 'hover:bg-[#25D366]', shadow: 'hover:shadow-[#25D366]/30' },
-                { key: 'social.line', icon: FaLine, title: 'LINE', hoverBg: 'hover:bg-[#06C755]', shadow: 'hover:shadow-[#06C755]/30' },
-                { key: 'social.instagram', icon: FaInstagram, title: 'Instagram', hoverBg: 'hover:bg-gradient-to-tr hover:from-[#F58529] hover:via-[#DD2A7B] hover:to-[#8134AF]', shadow: 'hover:shadow-[#DD2A7B]/30' },
-                { key: 'social.tiktok', icon: FaTiktok, title: 'TikTok', hoverBg: 'hover:bg-[#000000]', shadow: 'hover:shadow-white/10' },
-                { key: 'social.x', icon: FaXTwitter, title: 'X', hoverBg: 'hover:bg-[#000000]', shadow: 'hover:shadow-white/10' },
-              ].filter((s) => socialUrl(s.key)).map((s) => {
-                const Icon = s.icon;
-                return (
-                  <a key={s.key} href={socialUrl(s.key)} target="_blank" rel="noopener noreferrer" title={s.title}
-                    className={`w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center transition-all duration-300 ${s.hoverBg} hover:scale-110 hover:shadow-lg ${s.shadow} text-gray-400 hover:text-white`}>
-                    <Icon className="w-5 h-5" />
-                  </a>
-                );
-              })}
+            <div>
+              <span className="text-2xl font-bold text-white block" style={{ fontFamily: 'var(--font-heading)' }}>
+                PP Plus
+              </span>
+              <span className="text-xs text-[#2EC4B6] font-medium tracking-widest uppercase">Automotive Paint</span>
             </div>
           </div>
+          <p className="text-gray-400 text-sm max-w-md leading-relaxed">
+            {t('description')}
+          </p>
+        </div>
 
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 py-10">
           {/* Quick Links */}
           <div>
-            <h3 className="text-[#2EC4B6] font-semibold mb-4">{t('quick_links')}</h3>
-            <ul className="space-y-2">
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
+              <span className="w-6 h-px bg-[#2EC4B6]" />
+              {t('quick_links')}
+            </h3>
+            <ul className="space-y-3">
               {[
                 { href: '/' as const, label: nav('home') },
                 { href: '/menu' as const, label: nav('menu') },
                 { href: '/color-matching' as const, label: nav('color_matching') },
                 { href: '/b2b' as const, label: nav('b2b') },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-gray-400 hover:text-[#2EC4B6] text-sm transition-colors duration-200 flex items-center gap-2 group">
+                    <span className="w-0 group-hover:w-2 h-px bg-[#2EC4B6] transition-all duration-200" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* More Links */}
+          <div>
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
+              <span className="w-6 h-px bg-[#2EC4B6]" />
+              {lang === 'th' ? 'เพิ่มเติม' : 'More'}
+            </h3>
+            <ul className="space-y-3">
+              {[
                 { href: '/blog' as const, label: nav('blog') },
+                { href: '/gallery' as const, label: lang === 'th' ? 'แกลเลอรี่' : 'Gallery' },
                 { href: '/about' as const, label: nav('about') },
                 { href: '/contact' as const, label: nav('contact') },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-400 hover:text-[#2EC4B6] text-sm transition-colors">
+                  <Link href={link.href} className="text-gray-400 hover:text-[#2EC4B6] text-sm transition-colors duration-200 flex items-center gap-2 group">
+                    <span className="w-0 group-hover:w-2 h-px bg-[#2EC4B6] transition-all duration-200" />
                     {link.label}
                   </Link>
                 </li>
@@ -101,34 +111,85 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-[#2EC4B6] font-semibold mb-4">{t('contact')}</h3>
-            <ul className="space-y-3 text-sm text-gray-400">
-              <li className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 mt-0.5 text-[#2EC4B6] shrink-0" />
-                <span>{v('location.address') || contact('address')}</span>
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
+              <span className="w-6 h-px bg-[#2EC4B6]" />
+              {t('contact')}
+            </h3>
+            <ul className="space-y-3.5 text-sm text-gray-400">
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0 mt-0.5">
+                  <MapPin className="w-4 h-4 text-[#2EC4B6]" />
+                </div>
+                <span className="leading-relaxed">{v('location.address') || contact('address')}</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#2EC4B6] shrink-0" />
+              <li className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                  <Phone className="w-4 h-4 text-[#2EC4B6]" />
+                </div>
                 <span>{v('location.phone') || contact('phone')}</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#2EC4B6] shrink-0" />
+              <li className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                  <Mail className="w-4 h-4 text-[#2EC4B6]" />
+                </div>
                 <span>{v('location.email') || contact('email')}</span>
               </li>
             </ul>
-            <div className="mt-4 text-sm text-gray-400">
-              <p className="text-[#2EC4B6] font-medium mb-1">{v('location.hours_title') || contact('hours_title')}</p>
+          </div>
+
+          {/* Hours & Social */}
+          <div>
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
+              <span className="w-6 h-px bg-[#2EC4B6]" />
+              <Clock className="w-4 h-4" />
+              {lang === 'th' ? 'เวลาทำการ' : 'Hours'}
+            </h3>
+            <div className="text-sm text-gray-400 space-y-1.5 mb-6">
               <p>{v('location.lunch') || contact('lunch')}</p>
               <p>{v('location.dinner') || contact('dinner')}</p>
-              <p className="text-[#2EC4B6] font-medium mt-1">{v('location.closed') || contact('closed')}</p>
+              <p className="text-[#2EC4B6] font-medium text-xs mt-2">{v('location.closed') || contact('closed')}</p>
+            </div>
+
+            {/* Social Media */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {[
+                { key: 'social.facebook', icon: FaFacebookF, title: 'Facebook', color: '#1877F2' },
+                { key: 'social.whatsapp', icon: FaWhatsapp, title: 'WhatsApp', color: '#25D366' },
+                { key: 'social.line', icon: FaLine, title: 'LINE', color: '#06C755' },
+                { key: 'social.instagram', icon: FaInstagram, title: 'Instagram', color: '#E1306C' },
+                { key: 'social.tiktok', icon: FaTiktok, title: 'TikTok', color: '#FFFFFF' },
+                { key: 'social.x', icon: FaXTwitter, title: 'X', color: '#FFFFFF' },
+              ].filter((s) => socialUrl(s.key)).map((s) => {
+                const Icon = s.icon;
+                return (
+                  <a key={s.key} href={socialUrl(s.key)} target="_blank" rel="noopener noreferrer" title={s.title}
+                    className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center transition-all duration-300 hover:scale-110 text-gray-500 hover:text-white"
+                    style={{ ['--hover-bg' as string]: s.color }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = s.color + '20')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-10 pt-6 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} PP Plus. {t('rights')}.
+        {/* Bottom */}
+        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-gray-500">
+            © {new Date().getFullYear()} PP Plus. {t('rights')}.
+          </p>
+          <p className="text-xs text-gray-600">
+            {lang === 'th' ? 'ร้านขายสีรถยนต์ครบวงจร' : 'Complete Automotive Paint Solutions'}
+          </p>
         </div>
       </div>
+
+      {/* Decorative background elements */}
+      <div className="absolute top-20 right-0 w-64 h-64 bg-[#2EC4B6]/3 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#1E3A5F]/20 rounded-full blur-[80px] pointer-events-none" />
     </footer>
   );
 }

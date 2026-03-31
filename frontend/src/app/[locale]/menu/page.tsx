@@ -36,6 +36,108 @@ interface MenuItem {
   category: Category;
 }
 
+const defaultCategories: Category[] = [
+  { id: 1, nameTh: '2K Topcoat', nameEn: '2K Topcoat', sortOrder: 1 },
+  { id: 2, nameTh: 'Basecoat', nameEn: 'Basecoat', sortOrder: 2 },
+  { id: 3, nameTh: 'Clear Coat', nameEn: 'Clear Coat', sortOrder: 3 },
+  { id: 4, nameTh: 'Primer / Surfacer', nameEn: 'Primer / Surfacer', sortOrder: 4 },
+  { id: 5, nameTh: 'Epoxy Primer', nameEn: 'Epoxy Primer', sortOrder: 5 },
+  { id: 6, nameTh: 'ทินเนอร์', nameEn: 'Thinner', sortOrder: 6 },
+  { id: 7, nameTh: 'ฮาร์ดเดนเนอร์', nameEn: 'Hardener', sortOrder: 7 },
+  { id: 8, nameTh: 'สารเติมแต่ง', nameEn: 'Additives', sortOrder: 8 },
+  { id: 9, nameTh: 'ปืนพ่นสี', nameEn: 'Spray Gun', sortOrder: 9 },
+  { id: 10, nameTh: 'กระดาษทราย', nameEn: 'Sandpaper', sortOrder: 10 },
+  { id: 11, nameTh: 'เครื่องขัด', nameEn: 'Polisher', sortOrder: 11 },
+  { id: 12, nameTh: 'อุปกรณ์ป้องกัน (PPE)', nameEn: 'PPE', sortOrder: 12 },
+];
+
+const sampleProducts: MenuItem[] = [
+  {
+    id: 101, categoryId: 1, nameTh: 'PP Plus 2K Topcoat สีพ่นรถยนต์', nameEn: 'PP Plus 2K Topcoat Automotive Paint',
+    descriptionTh: 'สีพ่นรถยนต์ 2K คุณภาพสูง ทนทาน เงางาม', descriptionEn: 'High quality 2K automotive paint, durable and glossy finish',
+    price: 1250, image: 'https://images.unsplash.com/photo-1562259929-b4e1fd3aef09?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: '#C41E3A', colorName: 'Racing Red', finishType: 'Metallic', size: '1 Liter', mixingRatio: '2:1:10%', videoUrl: null, tdsFile: null,
+    category: { id: 1, nameTh: '2K Topcoat', nameEn: '2K Topcoat', sortOrder: 1 },
+  },
+  {
+    id: 102, categoryId: 1, nameTh: 'PP Plus 2K Topcoat สีขาวมุก', nameEn: 'PP Plus 2K Topcoat Pearl White',
+    descriptionTh: 'สีขาวมุกสำหรับเคลือบรถยนต์ เนื้อสี Pearl แวววาว', descriptionEn: 'Pearl white topcoat for automotive, pearl finish with brilliant shine',
+    price: 1450, image: 'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: '#F5F5F0', colorName: 'Pearl White', finishType: 'Pearl', size: '1 Liter', mixingRatio: '2:1:10%', videoUrl: null, tdsFile: null,
+    category: { id: 1, nameTh: '2K Topcoat', nameEn: '2K Topcoat', sortOrder: 1 },
+  },
+  {
+    id: 103, categoryId: 1, nameTh: '2K Topcoat สีน้ำเงินเข้ม', nameEn: '2K Topcoat Deep Blue',
+    descriptionTh: 'สี 2K น้ำเงินเข้ม เมทัลลิก เงาลึก สวยหรู', descriptionEn: '2K topcoat deep blue metallic, deep gloss premium look',
+    price: 1350, image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: '#1E3A5F', colorName: 'Deep Blue', finishType: 'Metallic', size: '1 Liter', mixingRatio: '2:1:10%', videoUrl: null, tdsFile: null,
+    category: { id: 1, nameTh: '2K Topcoat', nameEn: '2K Topcoat', sortOrder: 1 },
+  },
+  {
+    id: 104, categoryId: 2, nameTh: 'Basecoat สีเมทัลลิก ซิลเวอร์', nameEn: 'Basecoat Metallic Silver',
+    descriptionTh: 'สีเบสโค้ทเมทัลลิกซิลเวอร์ เนื้อละเอียด กลบมิด', descriptionEn: 'Metallic silver basecoat, fine particles, excellent coverage',
+    price: 980, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: '#C0C0C0', colorName: 'Silver', finishType: 'Metallic', size: '1 Liter', mixingRatio: '1:1', videoUrl: null, tdsFile: null,
+    category: { id: 2, nameTh: 'Basecoat', nameEn: 'Basecoat', sortOrder: 2 },
+  },
+  {
+    id: 105, categoryId: 2, nameTh: 'Basecoat สีเมทัลลิก ดำ', nameEn: 'Basecoat Metallic Black',
+    descriptionTh: 'สีเบสโค้ทดำเมทัลลิก เงาลึก คุณภาพสูง', descriptionEn: 'Metallic black basecoat, deep gloss, premium quality',
+    price: 980, image: 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: '#1A1A2E', colorName: 'Midnight Black', finishType: 'Metallic', size: '1 Liter', mixingRatio: '1:1', videoUrl: null, tdsFile: null,
+    category: { id: 2, nameTh: 'Basecoat', nameEn: 'Basecoat', sortOrder: 2 },
+  },
+  {
+    id: 106, categoryId: 3, nameTh: 'PP Plus Clear Coat 2K เคลียร์โค้ท', nameEn: 'PP Plus 2K Clear Coat',
+    descriptionTh: 'เคลียร์โค้ท 2K เงาสูง ทนรอยขีดข่วน UV Protection', descriptionEn: '2K clear coat with high gloss, scratch resistant and UV protection',
+    price: 1350, image: 'https://images.unsplash.com/photo-1603386329225-868f9b1ee6c9?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: null, colorName: null, finishType: 'High Gloss', size: '1 Liter', mixingRatio: '2:1', videoUrl: null, tdsFile: null,
+    category: { id: 3, nameTh: 'Clear Coat', nameEn: 'Clear Coat', sortOrder: 3 },
+  },
+  {
+    id: 107, categoryId: 3, nameTh: 'Clear Coat Matte เคลียร์โค้ทด้าน', nameEn: 'Matte Clear Coat',
+    descriptionTh: 'เคลียร์โค้ทด้าน สไตล์โมเดิร์น ไม่สะท้อนแสง', descriptionEn: 'Matte finish clear coat, modern style, non-reflective',
+    price: 1500, image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: null, colorName: null, finishType: 'Matte', size: '1 Liter', mixingRatio: '2:1', videoUrl: null, tdsFile: null,
+    category: { id: 3, nameTh: 'Clear Coat', nameEn: 'Clear Coat', sortOrder: 3 },
+  },
+  {
+    id: 108, categoryId: 4, nameTh: 'Primer Surfacer 2K สีรองพื้น', nameEn: '2K Primer Surfacer',
+    descriptionTh: 'สีรองพื้น 2K แห้งเร็ว เติมรอยบุ๋มได้ดี ขัดง่าย', descriptionEn: '2K primer surfacer, fast dry, excellent filling and easy sanding',
+    price: 850, image: 'https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: '#808080', colorName: 'Gray', finishType: 'Matte', size: '1 Liter', mixingRatio: '4:1', videoUrl: null, tdsFile: null,
+    category: { id: 4, nameTh: 'Primer / Surfacer', nameEn: 'Primer / Surfacer', sortOrder: 4 },
+  },
+  {
+    id: 109, categoryId: 5, nameTh: 'Epoxy Primer 2K อีพ๊อกซี่ไพรเมอร์', nameEn: '2K Epoxy Primer',
+    descriptionTh: 'อีพ๊อกซี่ไพรเมอร์ 2K ยึดเกาะดีเยี่ยม กันสนิม', descriptionEn: '2K Epoxy primer, excellent adhesion and corrosion protection',
+    price: 950, image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: '#4A5859', colorName: 'Epoxy Gray', finishType: 'Matte', size: '1 Liter', mixingRatio: '1:1', videoUrl: null, tdsFile: null,
+    category: { id: 5, nameTh: 'Epoxy Primer', nameEn: 'Epoxy Primer', sortOrder: 5 },
+  },
+  {
+    id: 110, categoryId: 6, nameTh: 'ทินเนอร์ PP Plus สำหรับสี 2K', nameEn: 'PP Plus 2K Thinner',
+    descriptionTh: 'ทินเนอร์คุณภาพสูง สำหรับผสมสี 2K ระเหยสม่ำเสมอ', descriptionEn: 'Premium thinner for 2K paint mixing, even evaporation rate',
+    price: 350, image: 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: null, colorName: null, finishType: null, size: '1 Liter', mixingRatio: null, videoUrl: null, tdsFile: null,
+    category: { id: 6, nameTh: 'ทินเนอร์', nameEn: 'Thinner', sortOrder: 6 },
+  },
+  {
+    id: 111, categoryId: 7, nameTh: 'ฮาร์ดเดนเนอร์ สำหรับ 2K', nameEn: '2K Hardener',
+    descriptionTh: 'ฮาร์ดเดนเนอร์สำหรับสี 2K แห้งเร็ว ผิวเรียบ', descriptionEn: 'Hardener for 2K paint system, fast cure, smooth finish',
+    price: 650, image: 'https://images.unsplash.com/photo-1605001011156-cbf0b0f67a51?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'PP Plus', colorCode: null, colorName: null, finishType: null, size: '500 ml', mixingRatio: null, videoUrl: null, tdsFile: null,
+    category: { id: 7, nameTh: 'ฮาร์ดเดนเนอร์', nameEn: 'Hardener', sortOrder: 7 },
+  },
+  {
+    id: 112, categoryId: 9, nameTh: 'ปืนพ่นสี HVLP 1.3mm', nameEn: 'HVLP Spray Gun 1.3mm',
+    descriptionTh: 'ปืนพ่นสี HVLP หัวฉีด 1.3mm พ่นละเอียด ประหยัดสี', descriptionEn: 'HVLP spray gun 1.3mm nozzle, fine atomization, paint saving',
+    price: 3500, image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=600&h=450&fit=crop', isAvailable: true,
+    brand: 'IWATA', colorCode: null, colorName: null, finishType: null, size: '1.3mm Nozzle', mixingRatio: null, videoUrl: null, tdsFile: null,
+    category: { id: 9, nameTh: 'ปืนพ่นสี', nameEn: 'Spray Gun', sortOrder: 9 },
+  },
+];
+
 export default function MenuPage() {
   const t = useTranslations('menu');
   const locale = useLocale();
@@ -52,24 +154,11 @@ export default function MenuPage() {
           api.get<{ success: boolean; data: MenuItem[] }>('/menu'),
           api.get<{ success: boolean; data: Category[] }>('/menu/categories'),
         ]);
-        setItems(menuRes.data);
-        setCategories(catRes.data);
+        setCategories(catRes.data?.length ? catRes.data : defaultCategories);
+        setItems(menuRes.data?.length ? menuRes.data : sampleProducts);
       } catch {
-        setCategories([
-          { id: 1, nameTh: '2K Topcoat', nameEn: '2K Topcoat', sortOrder: 1 },
-          { id: 2, nameTh: 'Basecoat', nameEn: 'Basecoat', sortOrder: 2 },
-          { id: 3, nameTh: 'Clear Coat', nameEn: 'Clear Coat', sortOrder: 3 },
-          { id: 4, nameTh: 'Primer / Surfacer', nameEn: 'Primer / Surfacer', sortOrder: 4 },
-          { id: 5, nameTh: 'Epoxy Primer', nameEn: 'Epoxy Primer', sortOrder: 5 },
-          { id: 6, nameTh: 'ทินเนอร์', nameEn: 'Thinner', sortOrder: 6 },
-          { id: 7, nameTh: 'ฮาร์ดเดนเนอร์', nameEn: 'Hardener', sortOrder: 7 },
-          { id: 8, nameTh: 'สารเติมแต่ง', nameEn: 'Additives', sortOrder: 8 },
-          { id: 9, nameTh: 'ปืนพ่นสี', nameEn: 'Spray Gun', sortOrder: 9 },
-          { id: 10, nameTh: 'กระดาษทราย', nameEn: 'Sandpaper', sortOrder: 10 },
-          { id: 11, nameTh: 'เครื่องขัด', nameEn: 'Polisher', sortOrder: 11 },
-          { id: 12, nameTh: 'อุปกรณ์ป้องกัน (PPE)', nameEn: 'PPE', sortOrder: 12 },
-        ]);
-        setItems([]);
+        setCategories(defaultCategories);
+        setItems(sampleProducts);
       } finally {
         setLoading(false);
       }
