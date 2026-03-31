@@ -24,6 +24,7 @@ import {
   FileText,
   MapPin,
   BookOpen,
+  Database,
 } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 
@@ -60,6 +61,7 @@ const navSections = [
     titleEn: 'System',
     items: [
       { key: 'users', icon: Users, href: '/admin/users' },
+      { key: 'backup', icon: Database, href: '/admin/backup' },
       { key: 'settings', icon: Settings, href: '/admin/settings' },
     ],
   },
@@ -78,6 +80,7 @@ const labels: Record<string, Record<string, string>> = {
     blog: 'บทความ',
     popups: 'ป๊อปอัพ',
     users: 'ผู้ใช้งาน',
+    backup: 'สำรองข้อมูล',
     settings: 'ตั้งค่า',
   },
   en: {
@@ -92,6 +95,7 @@ const labels: Record<string, Record<string, string>> = {
     blog: 'Blog',
     popups: 'Popups',
     users: 'Users',
+    backup: 'Backup & Import',
     settings: 'Settings',
   },
 };
