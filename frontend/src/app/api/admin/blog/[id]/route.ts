@@ -4,7 +4,8 @@ import { db } from '@/lib/db';
 import { requireAdmin, handleError, ApiError } from '@/lib/api-server';
 import { saveUploadedFile } from '@/lib/upload';
 
-function formatPost(post: Record<string, unknown>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatPost(post: any) {
   const tags = typeof post.tags === 'string' && post.tags
     ? post.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
     : [];

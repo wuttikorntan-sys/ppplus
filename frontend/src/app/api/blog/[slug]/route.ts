@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { handleError, ApiError } from '@/lib/api-server';
 
-function formatPost(post: Record<string, unknown>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatPost(post: any) {
   const tags = typeof post.tags === 'string' && post.tags
     ? post.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
     : [];
