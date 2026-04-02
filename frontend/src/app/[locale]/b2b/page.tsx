@@ -79,7 +79,7 @@ export default function B2BPage() {
             { icon: Users, title: th ? 'ราคาพิเศษ' : 'Special Pricing', desc: th ? 'ราคาส่งพิเศษสำหรับอู่สี ร้านอะไหล่ และตัวแทน' : 'Wholesale pricing for body shops, parts stores, and dealers' },
           ].map((item, idx) => (
             <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-              className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 border-l-4 border-l-[#F5841F] text-center">
+              className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
               <div className="w-14 h-14 rounded-xl bg-[#F5841F]/10 flex items-center justify-center mx-auto mb-4">
                 <item.icon className="w-7 h-7 text-[#F5841F]" />
               </div>
