@@ -160,9 +160,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Logo */}
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#1C1C1E] flex items-center justify-center shrink-0">
-            <span className="text-[#F5841F] font-bold text-sm" style={{ fontFamily: 'var(--font-heading)' }}>C</span>
-          </div>
+          <img src="/LOGO1.svg" alt="PP Plus" width={36} height={36} className="w-9 h-9 rounded-xl shrink-0" />
           {!collapsed && (
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-white truncate" style={{ fontFamily: 'var(--font-heading)' }}>

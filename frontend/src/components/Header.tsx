@@ -3,7 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { useState } from 'react';
-import { Menu, X, Globe, Sun, Moon, Paintbrush } from 'lucide-react';
+import { Menu, X, Globe, Sun, Moon } from 'lucide-react';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useTheme } from '@/lib/theme';
 
@@ -38,9 +39,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-[#1C1C1E] flex items-center justify-center">
-              <Paintbrush className="w-5 h-5 lg:w-6 lg:h-6 text-[#F5841F]" />
-            </div>
+            <Image src="/LOGO1.svg" alt="PP Plus" width={44} height={44} className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl" />
             <span className="text-xl lg:text-2xl font-bold text-[#1C1C1E]" style={{ fontFamily: 'var(--font-heading)' }}>
               PP Plus
             </span>

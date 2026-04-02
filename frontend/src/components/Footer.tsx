@@ -2,7 +2,8 @@
 
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { MapPin, Phone, Mail, Paintbrush, Clock } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import Image from 'next/image';
 import { FaFacebookF, FaWhatsapp, FaLine, FaInstagram, FaTiktok, FaXTwitter } from 'react-icons/fa6';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
@@ -46,9 +47,7 @@ export default function Footer() {
         {/* Top Section - Brand + Newsletter-like CTA */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-10 border-b border-white/10">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]/60 flex items-center justify-center shadow-lg shadow-[#F5841F]/10">
-              <Paintbrush className="w-6 h-6 text-white" />
-            </div>
+            <Image src="/LOGO1.svg" alt="PP Plus" width={48} height={48} className="w-12 h-12 rounded-2xl shadow-lg shadow-[#F5841F]/10" />
             <div>
               <span className="text-2xl font-bold text-white block" style={{ fontFamily: 'var(--font-heading)' }}>
                 PP Plus
