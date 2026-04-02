@@ -205,23 +205,27 @@ export default function MenuPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Search */}
-        <div className="relative max-w-lg mx-auto mb-8">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder={t('search')}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-base"
-          />
+        <div className="relative max-w-2xl mx-auto mb-10">
+          <div className="relative">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder={t('search')}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-14 pr-6 py-4 rounded-2xl border border-gray-200 bg-white shadow-lg shadow-black/5 focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-base"
+            />
+          </div>
         </div>
 
         {/* Categories */}
-        <div className="flex flex-wrap gap-2 justify-center mb-8 md:mb-12 px-1">
+        <div className="flex flex-wrap gap-2.5 justify-center mb-10 md:mb-14 px-1">
           <button
             onClick={() => setSelectedCategory(null)}
-            className={`px-4 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all ${
-              selectedCategory === null ? 'bg-[#1C1C1E] text-white shadow-md' : 'bg-white text-[#2D2D2D] hover:bg-[#1C1C1E]/5 border border-gray-200'
+            className={`px-5 md:px-7 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-semibold transition-all duration-200 ${
+              selectedCategory === null
+                ? 'bg-[#1C1C1E] text-white shadow-lg shadow-[#1C1C1E]/25'
+                : 'bg-white text-[#2D2D2D] hover:bg-gray-50 border border-gray-200 shadow-sm'
             }`}
           >
             {t('all')}
@@ -230,11 +234,14 @@ export default function MenuPage() {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`flex items-center gap-1.5 px-4 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all ${
-                selectedCategory === cat.id ? 'bg-[#1C1C1E] text-white shadow-md' : 'bg-white text-[#2D2D2D] hover:bg-[#1C1C1E]/5 border border-gray-200'
+              className={`flex items-center gap-2 px-5 md:px-7 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-semibold transition-all duration-200 ${
+                selectedCategory === cat.id
+                  ? 'bg-[#1C1C1E] text-white shadow-lg shadow-[#1C1C1E]/25'
+                  : 'bg-white text-[#2D2D2D] hover:bg-gray-50 border border-gray-200 shadow-sm'
               }`}
             >
-              {categoryIcons[cat.id]} {locale === 'th' ? cat.nameTh : cat.nameEn}
+              <span className={selectedCategory === cat.id ? 'text-white/80' : 'text-[#F5841F]'}>{categoryIcons[cat.id]}</span>
+              {locale === 'th' ? cat.nameTh : cat.nameEn}
             </button>
           ))}
         </div>
