@@ -14,19 +14,6 @@ export default function CartDrawer() {
 
   return (
     <>
-      {/* Floating Cart Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-24 right-5 z-40 w-14 h-14 bg-[#F5841F] text-white rounded-full shadow-lg shadow-[#F5841F]/30 flex items-center justify-center hover:bg-[#F5841F]/90 transition-all active:scale-95"
-      >
-        <ShoppingCart className="w-6 h-6" />
-        {totalItems > 0 && (
-          <span className="absolute -top-1 -right-1 w-6 h-6 bg-[#1C1C1E] text-white text-xs font-bold rounded-full flex items-center justify-center">
-            {totalItems > 99 ? '99+' : totalItems}
-          </span>
-        )}
-      </button>
-
       {/* Drawer Overlay */}
       <AnimatePresence>
         {isOpen && (

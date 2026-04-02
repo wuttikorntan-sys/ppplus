@@ -3,10 +3,11 @@
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { useState } from 'react';
-import { Menu, X, Globe, Sun, Moon } from 'lucide-react';
+import { Menu, X, Globe, Sun, Moon, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useTheme } from '@/lib/theme';
+import { useCart } from '@/lib/cart';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -17,6 +18,7 @@ export default function Header() {
   const currentLocale = (params.locale as string) || 'th';
   const otherLocale = currentLocale === 'th' ? 'en' : 'th';
   const { theme, toggleTheme } = useTheme();
+  const { totalItems, setIsOpen } = useCart();
 
   const navLinks = [
     { href: '/' as const, label: t('home') },
@@ -85,6 +87,20 @@ export default function Header() {
             >
               <Globe className="w-4 h-4" />
               <span className="uppercase font-medium text-xs">{currentLocale.toUpperCase()}</span>
+            </button>
+
+            {/* Cart */}
+            <button
+              onClick={() => setIsOpen(true)}
+              className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              title="Cart"
+            >
+              <ShoppingCart className="w-4.5 h-4.5 text-[#2D2D2D]" />
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#F5841F] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {totalItems > 99 ? '99+' : totalItems}
+                </span>
+              )}
             </button>
 
             {/* Mobile menu button */}
