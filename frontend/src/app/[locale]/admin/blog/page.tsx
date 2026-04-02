@@ -156,7 +156,7 @@ export default function AdminBlogPage() {
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">{filtered.length} {th ? 'บทความ' : 'posts'}</p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] text-white rounded-lg font-medium hover:bg-[#1E3A5F]/90 transition text-sm shadow-sm">
+        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-lg font-medium hover:bg-[#1C1C1E]/90 transition text-sm shadow-sm">
           <Plus className="w-4 h-4" /> {th ? 'เขียนบทความ' : 'New Post'}
         </button>
       </div>
@@ -165,7 +165,7 @@ export default function AdminBlogPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input type="text" placeholder={th ? 'ค้นหาบทความ...' : 'Search posts...'} value={search} onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition text-sm" />
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition text-sm" />
         </div>
       </div>
 
@@ -236,7 +236,7 @@ export default function AdminBlogPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">{th ? 'รูปปก' : 'Cover Image'}</label>
                 <div onClick={() => fileInputRef.current?.click()}
-                  className="relative border-2 border-dashed border-gray-200 rounded-xl h-40 flex items-center justify-center cursor-pointer hover:border-[#1E3A5F]/40 transition group overflow-hidden">
+                  className="relative border-2 border-dashed border-gray-200 rounded-xl h-40 flex items-center justify-center cursor-pointer hover:border-[#1C1C1E]/40 transition group overflow-hidden">
                   {imagePreview ? (
                     <>
                       <Image src={imagePreview} alt="" fill className="object-cover" />
@@ -257,59 +257,59 @@ export default function AdminBlogPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'หัวข้อ (ไทย)' : 'Title (Thai)'} *</label>
                   <input value={form.titleTh} onChange={(e) => setForm({ ...form, titleTh: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'หัวข้อ (อังกฤษ)' : 'Title (English)'} *</label>
                   <input value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Slug *</label>
                   <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="how-to-choose-paint"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm font-mono" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm font-mono" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'แท็ก (คั่นด้วย ,)' : 'Tags (comma separated)'}</label>
                   <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="paint, tips, interior"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'คำอธิบายสั้น (ไทย)' : 'Excerpt (Thai)'}</label>
                   <textarea value={form.excerptTh} onChange={(e) => setForm({ ...form, excerptTh: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm resize-none" rows={2} />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={2} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'คำอธิบายสั้น (อังกฤษ)' : 'Excerpt (English)'}</label>
                   <textarea value={form.excerptEn} onChange={(e) => setForm({ ...form, excerptEn: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm resize-none" rows={2} />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={2} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'เนื้อหา (ไทย)' : 'Content (Thai)'}</label>
                   <textarea value={form.contentTh} onChange={(e) => setForm({ ...form, contentTh: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm resize-none" rows={8} />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={8} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'เนื้อหา (อังกฤษ)' : 'Content (English)'}</label>
                   <textarea value={form.contentEn} onChange={(e) => setForm({ ...form, contentEn: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm resize-none" rows={8} />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={8} />
                 </div>
               </div>
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input type="checkbox" checked={form.isPublished} onChange={(e) => setForm({ ...form, isPublished: e.target.checked })}
-                  className="w-4 h-4 rounded border-gray-300 text-[#1E3A5F] focus:ring-[#1E3A5F]" />
+                  className="w-4 h-4 rounded border-gray-300 text-[#1C1C1E] focus:ring-[#1C1C1E]" />
                 <span className="text-sm font-medium text-gray-700">{th ? 'เผยแพร่ทันที' : 'Publish immediately'}</span>
               </label>
             </div>
             <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-100">
               <button onClick={() => setShowForm(false)} className="px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition font-medium">{th ? 'ยกเลิก' : 'Cancel'}</button>
-              <button onClick={handleSave} disabled={saving} className="px-5 py-2.5 bg-[#1E3A5F] text-white rounded-lg text-sm font-medium hover:bg-[#1E3A5F]/90 transition disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="px-5 py-2.5 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
                 {saving ? (th ? 'กำลังบันทึก...' : 'Saving...') : (th ? 'บันทึก' : 'Save')}
               </button>
             </div>

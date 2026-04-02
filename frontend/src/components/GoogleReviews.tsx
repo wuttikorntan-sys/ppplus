@@ -130,12 +130,12 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
             className="w-11 h-11 rounded-full object-cover ring-2 ring-gray-100"
           />
         ) : (
-          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#1E3A5F]/20 to-[#2EC4B6]/20 flex items-center justify-center ring-2 ring-gray-100">
-            <span className="text-[#1E3A5F] font-bold text-base">{review.authorName.charAt(0)}</span>
+          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#1C1C1E]/20 to-[#F5841F]/20 flex items-center justify-center ring-2 ring-gray-100">
+            <span className="text-[#1C1C1E] font-bold text-base">{review.authorName.charAt(0)}</span>
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-[#1E293B] font-semibold text-sm truncate">{review.authorName}</p>
+          <p className="text-[#2D2D2D] font-semibold text-sm truncate">{review.authorName}</p>
           <p className="text-gray-400 text-xs">{review.relativeTime}</p>
         </div>
         {/* Google "G" badge */}
@@ -153,7 +153,7 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
       {/* Review text */}
       {review.text && (
         <p className="text-gray-600 text-sm leading-relaxed mt-3 line-clamp-4 flex-1">
-          <Quote className="w-3.5 h-3.5 inline-block text-[#2EC4B6]/30 mr-1 -mt-0.5" />
+          <Quote className="w-3.5 h-3.5 inline-block text-[#F5841F]/30 mr-1 -mt-0.5" />
           {review.text}
         </p>
       )}
@@ -189,8 +189,8 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
   return (
     <section className="py-16 bg-gradient-to-b from-[#FAFAFA] to-white relative overflow-hidden">
       {/* Decorative */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-[#1E3A5F]/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-60 h-60 bg-[#2EC4B6]/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
+      <div className="absolute top-0 left-0 w-72 h-72 bg-[#1C1C1E]/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-60 h-60 bg-[#F5841F]/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
@@ -215,7 +215,7 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
           {/* Rating summary — show only when data loaded */}
           {data && (
             <div className="flex items-center justify-center gap-3 mb-3">
-              <span className="text-4xl font-bold text-[#1E293B]">{data.rating.toFixed(1)}</span>
+              <span className="text-4xl font-bold text-[#2D2D2D]">{data.rating.toFixed(1)}</span>
               <div>
                 <Stars rating={data.rating} size="md" />
                 <p className="text-gray-400 text-xs mt-0.5">
@@ -225,7 +225,7 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
             </div>
           )}
 
-          <h2 className="text-2xl md:text-3xl font-bold text-[#1E293B] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#2D2D2D] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
             {locale === 'th' ? 'รีวิวจากลูกค้า' : 'Customer Reviews'}
           </h2>
           <p className="text-gray-400 text-sm">Google Reviews</p>

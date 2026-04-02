@@ -73,7 +73,7 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <p className="text-gray-500">{locale === 'th' ? 'ไม่พบสินค้า' : 'Product not found'}</p>
-        <Link href="/menu" className="text-[#2EC4B6] hover:underline flex items-center gap-1">
+        <Link href="/menu" className="text-[#F5841F] hover:underline flex items-center gap-1">
           <ArrowLeft className="w-4 h-4" /> {locale === 'th' ? 'กลับหน้าสินค้า' : 'Back to Products'}
         </Link>
       </div>
@@ -98,7 +98,7 @@ export default function ProductDetailPage() {
       {/* Breadcrumb */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <Link href="/menu" className="text-sm text-[#2EC4B6] hover:underline flex items-center gap-1">
+          <Link href="/menu" className="text-sm text-[#F5841F] hover:underline flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" /> {locale === 'th' ? 'กลับหน้าสินค้า' : 'Back to Products'}
           </Link>
         </div>
@@ -116,7 +116,7 @@ export default function ProductDetailPage() {
               priority
             />
             {product.brand && (
-              <div className="absolute top-4 left-4 bg-[#2EC4B6] text-white text-sm font-semibold px-3 py-1 rounded-full">
+              <div className="absolute top-4 left-4 bg-[#F5841F] text-white text-sm font-semibold px-3 py-1 rounded-full">
                 {product.brand}
               </div>
             )}
@@ -131,13 +131,13 @@ export default function ProductDetailPage() {
           {/* Info */}
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
             <div>
-              <span className="text-sm text-[#2EC4B6] font-semibold uppercase">{categoryName}</span>
-              <h1 className="text-3xl md:text-4xl font-bold text-[#1E293B] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{name}</h1>
+              <span className="text-sm text-[#F5841F] font-semibold uppercase">{categoryName}</span>
+              <h1 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{name}</h1>
             </div>
 
             <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-3xl font-bold text-[#1E3A5F]">฿{Number(product.price).toLocaleString()}</span>
+                <span className="text-3xl font-bold text-[#1C1C1E]">฿{Number(product.price).toLocaleString()}</span>
                 {product.size && <span className="text-[#64748B] bg-gray-100 px-3 py-1 rounded-full text-sm">{product.size}</span>}
               </div>
               {product.finishType && (
@@ -158,14 +158,14 @@ export default function ProductDetailPage() {
 
             {features && (
               <div>
-                <h3 className="font-semibold text-[#1E293B] mb-2 flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-[#2EC4B6]" />
+                <h3 className="font-semibold text-[#2D2D2D] mb-2 flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-[#F5841F]" />
                   {locale === 'th' ? 'คุณสมบัติเด่น' : 'Key Features'}
                 </h3>
                 <ul className="space-y-1.5">
                   {features.split('\n').filter(Boolean).map((f, i) => (
                     <li key={i} className="text-[#64748B] text-sm flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#2EC4B6] mt-1.5 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#F5841F] mt-1.5 flex-shrink-0" />
                       {f}
                     </li>
                   ))}
@@ -175,7 +175,7 @@ export default function ProductDetailPage() {
 
             {applicationMethod && (
               <div>
-                <h3 className="font-semibold text-[#1E293B] mb-2">
+                <h3 className="font-semibold text-[#2D2D2D] mb-2">
                   {locale === 'th' ? 'วิธีใช้งาน' : 'Application Method'}
                 </h3>
                 <p className="text-[#64748B] text-sm whitespace-pre-line">{applicationMethod}</p>
@@ -186,7 +186,7 @@ export default function ProductDetailPage() {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link
                 href={`/quote?productId=${product.id}&productName=${encodeURIComponent(name)}`}
-                className="flex-1 text-center font-semibold py-3 rounded-xl bg-[#1E3A5F] text-white hover:bg-[#1E3A5F]/90 transition text-base"
+                className="flex-1 text-center font-semibold py-3 rounded-xl bg-[#1C1C1E] text-white hover:bg-[#1C1C1E]/90 transition text-base"
               >
                 {locale === 'th' ? 'ขอใบเสนอราคา' : 'Request Quote'}
               </Link>
@@ -195,7 +195,7 @@ export default function ProductDetailPage() {
                   href={product.tdsFile}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-[#1E3A5F] text-[#1E3A5F] hover:bg-[#1E3A5F]/5 transition font-medium"
+                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-[#1C1C1E] text-[#1C1C1E] hover:bg-[#1C1C1E]/5 transition font-medium"
                 >
                   <FileText className="w-5 h-5" />
                   {locale === 'th' ? 'ดาวน์โหลด TDS' : 'Download TDS'}
@@ -208,8 +208,8 @@ export default function ProductDetailPage() {
         {/* Video section */}
         {product.videoUrl && (
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-12">
-            <h2 className="text-2xl font-bold text-[#1E293B] mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
-              <Play className="w-6 h-6 text-[#2EC4B6]" /> {locale === 'th' ? 'วิดีโอสาธิต' : 'Demo Video'}
+            <h2 className="text-2xl font-bold text-[#2D2D2D] mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              <Play className="w-6 h-6 text-[#F5841F]" /> {locale === 'th' ? 'วิดีโอสาธิต' : 'Demo Video'}
             </h2>
             <div className="aspect-video rounded-2xl overflow-hidden bg-black shadow-lg">
               <iframe

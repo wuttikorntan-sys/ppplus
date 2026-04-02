@@ -60,7 +60,7 @@ export default function AdminReservationsPage() {
           <p className="text-sm text-gray-500 mt-0.5">{reservations.length} {th ? 'รายการ' : 'reservations'}</p>
         </div>
         <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm outline-none focus:border-[#1E3A5F]">
+          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm outline-none focus:border-[#1C1C1E]">
           <option value="">{th ? 'ทุกสถานะ' : 'All Status'}</option>
           <option value="PENDING">{th ? 'รอยืนยัน' : 'Pending'}</option>
           <option value="CONFIRMED">{th ? 'ยืนยันแล้ว' : 'Confirmed'}</option>

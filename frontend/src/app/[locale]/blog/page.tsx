@@ -58,7 +58,7 @@ export default function BlogPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative py-20 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A5F] to-[#2EC4B6]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -111,7 +111,7 @@ export default function BlogPage() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-[#1E3A5F] to-[#2EC4B6] flex items-center justify-center">
+                      <div className="w-full h-full bg-gradient-to-br from-[#1C1C1E] to-[#F5841F] flex items-center justify-center">
                         <Tag className="w-12 h-12 text-white/50" />
                       </div>
                     )}
@@ -121,7 +121,7 @@ export default function BlogPage() {
                       <Calendar className="w-4 h-4" />
                       <span>{formatDate(post.publishedAt || post.createdAt)}</span>
                     </div>
-                    <h2 className="text-lg font-bold text-[#1E293B] mb-2 group-hover:text-[#1E3A5F] transition-colors line-clamp-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                    <h2 className="text-lg font-bold text-[#2D2D2D] mb-2 group-hover:text-[#1C1C1E] transition-colors line-clamp-2" style={{ fontFamily: 'var(--font-heading)' }}>
                       {getTitle(post)}
                     </h2>
                     <p className="text-gray-500 text-sm line-clamp-3 mb-4">
@@ -130,13 +130,13 @@ export default function BlogPage() {
                     {post.tags && post.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mb-4">
                         {post.tags.slice(0, 3).map((tag) => (
-                          <span key={tag} className="px-2 py-0.5 text-xs rounded-full bg-[#2EC4B6]/10 text-[#2EC4B6] font-medium">
+                          <span key={tag} className="px-2 py-0.5 text-xs rounded-full bg-[#F5841F]/10 text-[#F5841F] font-medium">
                             {tag}
                           </span>
                         ))}
                       </div>
                     )}
-                    <div className="flex items-center gap-1 text-[#1E3A5F] text-sm font-medium group-hover:gap-2 transition-all">
+                    <div className="flex items-center gap-1 text-[#1C1C1E] text-sm font-medium group-hover:gap-2 transition-all">
                       {t('read_more')} <ArrowRight className="w-4 h-4" />
                     </div>
                   </div>

@@ -136,7 +136,7 @@ export default function AdminColorFormulasPage() {
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">{filtered.length} {th ? 'สูตร' : 'formulas'}</p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] text-white rounded-lg font-medium hover:bg-[#1E3A5F]/90 transition text-sm shadow-sm">
+        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-lg font-medium hover:bg-[#1C1C1E]/90 transition text-sm shadow-sm">
           <Plus className="w-4 h-4" /> {th ? 'เพิ่มสูตรสี' : 'Add Formula'}
         </button>
       </div>
@@ -145,10 +145,10 @@ export default function AdminColorFormulasPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input type="text" placeholder={th ? 'ค้นหายี่ห้อ, รหัสสี...' : 'Search brand, color code...'} value={search} onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition text-sm" />
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition text-sm" />
         </div>
         <select value={filterBrand} onChange={(e) => setFilterBrand(e.target.value)}
-          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm min-w-[160px]">
+          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none text-sm min-w-[160px]">
           <option value="">{th ? 'ทุกยี่ห้อ' : 'All Brands'}</option>
           {brands.map((b) => <option key={b} value={b}>{b}</option>)}
         </select>
@@ -174,7 +174,7 @@ export default function AdminColorFormulasPage() {
                 <tr key={f.id} className="hover:bg-gray-50/50 transition">
                   <td className="px-4 py-3">
                     <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                      {f.image ? <Image src={f.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <div className="w-full h-full bg-gradient-to-br from-[#1E3A5F] to-[#2EC4B6]" />}
+                      {f.image ? <Image src={f.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <div className="w-full h-full bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]" />}
                     </div>
                   </td>
                   <td className="px-4 py-3 font-medium text-gray-900">{f.carBrand}</td>
@@ -218,7 +218,7 @@ export default function AdminColorFormulasPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">{th ? 'รูปตัวอย่างสี' : 'Color Image'}</label>
                 <div onClick={() => fileInputRef.current?.click()}
-                  className="relative border-2 border-dashed border-gray-200 rounded-xl h-32 flex items-center justify-center cursor-pointer hover:border-[#1E3A5F]/40 transition group overflow-hidden">
+                  className="relative border-2 border-dashed border-gray-200 rounded-xl h-32 flex items-center justify-center cursor-pointer hover:border-[#1C1C1E]/40 transition group overflow-hidden">
                   {imagePreview ? (
                     <><Image src={imagePreview} alt="" fill className="object-cover" /><div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"><p className="text-white text-sm font-medium">{th ? 'เปลี่ยนรูป' : 'Change'}</p></div></>
                   ) : (
@@ -231,54 +231,54 @@ export default function AdminColorFormulasPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ยี่ห้อรถ' : 'Car Brand'} *</label>
                   <input value={form.carBrand} onChange={(e) => setForm({ ...form, carBrand: e.target.value })} placeholder="Toyota, Honda..."
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'รหัสสี' : 'Color Code'} *</label>
                   <input value={form.colorCode} onChange={(e) => setForm({ ...form, colorCode: e.target.value })} placeholder="1G3, 070..."
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm font-mono" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm font-mono" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อสี (ไทย)' : 'Color Name (TH)'}</label>
                   <input value={form.colorNameTh} onChange={(e) => setForm({ ...form, colorNameTh: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อสี (อังกฤษ)' : 'Color Name (EN)'}</label>
                   <input value={form.colorNameEn} onChange={(e) => setForm({ ...form, colorNameEn: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ปีรุ่น' : 'Year Range'}</label>
                   <input value={form.yearRange} onChange={(e) => setForm({ ...form, yearRange: e.target.value })} placeholder="2020-2025"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ประเภทสี' : 'Type'}</label>
                   <select value={form.formulaType} onChange={(e) => setForm({ ...form, formulaType: e.target.value as 'solid' | 'metallic' | 'pearl' })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm">
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm">
                     {formulaTypes.map((t) => <option key={t.value} value={t.value}>{th ? t.labelTh : t.labelEn}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">ΔE</label>
                   <input type="number" step="0.01" value={form.deltaE} onChange={(e) => setForm({ ...form, deltaE: e.target.value })} placeholder="0.50"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm font-mono" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm font-mono" />
                 </div>
               </div>
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                  className="w-4 h-4 rounded border-gray-300 text-[#1E3A5F] focus:ring-[#1E3A5F]" />
+                  className="w-4 h-4 rounded border-gray-300 text-[#1C1C1E] focus:ring-[#1C1C1E]" />
                 <span className="text-sm font-medium text-gray-700">{th ? 'เปิดใช้งาน' : 'Active'}</span>
               </label>
             </div>
             <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-100">
               <button onClick={() => setShowForm(false)} className="px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition font-medium">{th ? 'ยกเลิก' : 'Cancel'}</button>
-              <button onClick={handleSave} disabled={saving} className="px-5 py-2.5 bg-[#1E3A5F] text-white rounded-lg text-sm font-medium hover:bg-[#1E3A5F]/90 transition disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="px-5 py-2.5 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
                 {saving ? (th ? 'กำลังบันทึก...' : 'Saving...') : (th ? 'บันทึก' : 'Save')}
               </button>
             </div>

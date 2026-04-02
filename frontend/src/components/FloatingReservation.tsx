@@ -99,7 +99,7 @@ export default function FloatingReservation() {
         <div className="absolute bottom-20 right-0 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-200">
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 w-72">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-[#1E293B] text-base" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h3 className="font-semibold text-[#2D2D2D] text-base" style={{ fontFamily: 'var(--font-heading)' }}>
                 {locale === 'th' ? 'สอบถาม / ติดต่อ' : 'Contact Us'}
               </h3>
               <button onClick={() => setOpen(false)} className="p-1 rounded-full hover:bg-gray-100 transition-colors">
@@ -133,24 +133,24 @@ export default function FloatingReservation() {
       <button
         onClick={() => setOpen(!open)}
         className={`group relative w-16 h-16 rounded-full shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-110 ${
-          open ? 'bg-[#1E293B] rotate-0' : 'bg-[#1E3A5F]'
+          open ? 'bg-[#2D2D2D] rotate-0' : 'bg-[#1C1C1E]'
         }`}
         aria-label={locale === 'th' ? 'สอบถาม' : 'Contact Us'}
       >
         {open ? (
           <X className="w-7 h-7 text-white mx-auto" />
         ) : (
-          <MessageCircle className="w-8 h-8 text-[#2EC4B6] mx-auto" />
+          <MessageCircle className="w-8 h-8 text-[#F5841F] mx-auto" />
         )}
         {/* Pulse ring */}
         {!open && (
-          <span className="absolute inset-0 rounded-full animate-ping bg-[#2EC4B6]/20" />
+          <span className="absolute inset-0 rounded-full animate-ping bg-[#F5841F]/20" />
         )}
       </button>
 
       {/* Label below button */}
       {!open && (
-        <p className="text-center text-[10px] font-semibold text-[#1E3A5F] mt-1.5 tracking-wide">
+        <p className="text-center text-[10px] font-semibold text-[#1C1C1E] mt-1.5 tracking-wide">
           {locale === 'th' ? 'สอบถาม' : 'CONTACT'}
         </p>
       )}

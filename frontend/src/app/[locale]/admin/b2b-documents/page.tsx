@@ -119,14 +119,14 @@ export default function AdminB2bDocumentsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
             {th ? 'เอกสาร B2B' : 'B2B Documents'}
           </h1>
           <p className="text-sm text-[#64748B] mt-1">
             {th ? 'จัดการเอกสารดาวน์โหลดสำหรับหน้า B2B' : 'Manage downloadable documents for the B2B page'}
           </p>
         </div>
-        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] text-white rounded-xl text-sm font-medium hover:bg-[#1E3A5F]/90 transition">
+        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-xl text-sm font-medium hover:bg-[#1C1C1E]/90 transition">
           <Plus className="w-4 h-4" />
           {th ? 'เพิ่มเอกสาร' : 'Add Document'}
         </button>
@@ -158,7 +158,7 @@ export default function AdminB2bDocumentsPage() {
                   className="hover:bg-gray-50/50">
                   <td className="px-4 py-3 text-sm text-gray-400">{doc.sortOrder}</td>
                   <td className="px-4 py-3">
-                    <p className="text-sm font-medium text-[#1E293B]">{doc.nameTh}</p>
+                    <p className="text-sm font-medium text-[#2D2D2D]">{doc.nameTh}</p>
                   </td>
                   <td className="px-4 py-3">
                     <p className="text-sm text-[#64748B]">{doc.nameEn}</p>
@@ -202,7 +202,7 @@ export default function AdminB2bDocumentsPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-2xl w-full max-w-lg p-6" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-bold text-[#1E293B] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h3 className="text-lg font-bold text-[#2D2D2D] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
               {editingId ? (th ? 'แก้ไขเอกสาร' : 'Edit Document') : (th ? 'เพิ่มเอกสาร' : 'Add Document')}
             </h3>
 
@@ -211,18 +211,18 @@ export default function AdminB2bDocumentsPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (ไทย)' : 'Name (Thai)'} *</label>
                 <input value={form.nameTh} onChange={(e) => setForm({ ...form, nameTh: e.target.value })}
                   placeholder={th ? 'แคตตาล็อกสินค้า 2026' : 'Product Catalog 2026'}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 text-sm" />
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (อังกฤษ)' : 'Name (English)'} *</label>
                 <input value={form.nameEn} onChange={(e) => setForm({ ...form, nameEn: e.target.value })}
                   placeholder="Product Catalog 2026"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 text-sm" />
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ลำดับ' : 'Sort Order'}</label>
                 <input type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 text-sm" />
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -230,10 +230,10 @@ export default function AdminB2bDocumentsPage() {
                 </label>
                 <div
                   onClick={() => fileRef.current?.click()}
-                  className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center cursor-pointer hover:border-[#1E3A5F]/30 transition">
+                  className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center cursor-pointer hover:border-[#1C1C1E]/30 transition">
                   <Upload className="w-8 h-8 text-gray-300 mx-auto mb-2" />
                   {file ? (
-                    <p className="text-sm text-[#1E293B] font-medium">{file.name} ({(file.size / 1024 / 1024).toFixed(1)} MB)</p>
+                    <p className="text-sm text-[#2D2D2D] font-medium">{file.name} ({(file.size / 1024 / 1024).toFixed(1)} MB)</p>
                   ) : (
                     <p className="text-sm text-gray-400">{th ? 'คลิกเพื่อเลือกไฟล์ (PDF, Word, รูปภาพ)' : 'Click to select file (PDF, Word, Image)'}</p>
                   )}
@@ -242,7 +242,7 @@ export default function AdminB2bDocumentsPage() {
               </div>
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                  className="rounded border-gray-300 text-[#1E3A5F] focus:ring-[#1E3A5F]" />
+                  className="rounded border-gray-300 text-[#1C1C1E] focus:ring-[#1C1C1E]" />
                 <span className="text-sm font-medium text-gray-700">{th ? 'เปิดใช้งาน' : 'Active'}</span>
               </label>
             </div>
@@ -252,7 +252,7 @@ export default function AdminB2bDocumentsPage() {
                 {th ? 'ยกเลิก' : 'Cancel'}
               </button>
               <button onClick={handleSave} disabled={saving}
-                className="px-6 py-2 bg-[#1E3A5F] text-white rounded-lg text-sm font-medium hover:bg-[#1E3A5F]/90 transition disabled:opacity-50">
+                className="px-6 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
                 {saving ? (th ? 'กำลังบันทึก...' : 'Saving...') : (th ? 'บันทึก' : 'Save')}
               </button>
             </div>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocale } from 'next-intl';
@@ -235,7 +235,7 @@ export default function AdminLocationPage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#1E3A5F] border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" /></div>;
 
   const mapEmbedUrl = content['location.map_embed']?.th || content['location.map_embed']?.en || '';
   const currentLat = content['location.lat']?.th || content['location.lat']?.en || '';
@@ -245,7 +245,7 @@ export default function AdminLocationPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
             {locale === 'th' ? 'จัดการตำแหน่งที่ตั้งร้าน' : 'Store Location'}
           </h1>
           <p className="text-gray-500 text-sm mt-1">
@@ -256,7 +256,7 @@ export default function AdminLocationPage() {
           <button onClick={handleReset} className="flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium hover:bg-gray-50 transition">
             <RotateCcw className="w-4 h-4" /> {locale === 'th' ? 'รีเซ็ต' : 'Reset'}
           </button>
-          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#1E3A5F] text-white rounded-lg text-sm font-medium hover:bg-[#1E3A5F]/90 transition disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
             <Save className="w-4 h-4" /> {saving ? (locale === 'th' ? 'กำลังบันทึก...' : 'Saving...') : (locale === 'th' ? 'บันทึกทั้งหมด' : 'Save All')}
           </button>
         </div>
@@ -272,8 +272,8 @@ export default function AdminLocationPage() {
       <div className="mb-6 bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="px-5 py-3 border-b flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Map className="w-5 h-5 text-[#1E3A5F]" />
-            <span className="font-semibold text-[#1E293B]">{locale === 'th' ? 'กำหนดตำแหน่งร้าน' : 'Set Store Location'}</span>
+            <Map className="w-5 h-5 text-[#1C1C1E]" />
+            <span className="font-semibold text-[#2D2D2D]">{locale === 'th' ? 'กำหนดตำแหน่งร้าน' : 'Set Store Location'}</span>
           </div>
           <div className="flex items-center gap-2 text-xs text-gray-400">
             <MousePointerClick className="w-4 h-4" />
@@ -292,13 +292,13 @@ export default function AdminLocationPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder={locale === 'th' ? 'ค้นหาสถานที่... เช่น PP Plus กรุงเทพ' : 'Search location... e.g. PP Plus Bangkok'}
-                className="w-full pl-9 pr-3 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none"
+                className="w-full pl-9 pr-3 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none"
               />
             </div>
             <button
               onClick={handleSearch}
               disabled={searching}
-              className="px-4 py-2 bg-[#1E3A5F] text-white rounded-lg text-sm font-medium hover:bg-[#1E3A5F]/90 transition disabled:opacity-50 flex items-center gap-1.5"
+              className="px-4 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50 flex items-center gap-1.5"
             >
               <Search className="w-4 h-4" />
               {searching ? (locale === 'th' ? 'กำลังค้นหา...' : 'Searching...') : (locale === 'th' ? 'ค้นหา' : 'Search')}
@@ -313,10 +313,10 @@ export default function AdminLocationPage() {
         <div className="px-5 py-3 border-t bg-gray-50 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-[#1E3A5F]" />
+              <MapPin className="w-4 h-4 text-[#1C1C1E]" />
               <span className="text-gray-500">{locale === 'th' ? 'พิกัดปัจจุบัน:' : 'Current coordinates:'}</span>
             </div>
-            <span className="font-mono text-[#1E293B] font-medium">
+            <span className="font-mono text-[#2D2D2D] font-medium">
               {currentLat && currentLng ? `${currentLat}, ${currentLng}` : (locale === 'th' ? 'ยังไม่ได้กำหนด — คลิกบนแผนที่เพื่อวางหมุด' : 'Not set — click on the map to drop a pin')}
             </span>
           </div>
@@ -330,8 +330,8 @@ export default function AdminLocationPage() {
       {mapEmbedUrl && (
         <div className="mb-6 bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="px-5 py-3 border-b flex items-center gap-2">
-            <Map className="w-5 h-5 text-[#1E3A5F]" />
-            <span className="font-semibold text-[#1E293B]">{locale === 'th' ? 'ตัวอย่างแผนที่ Google Maps (ที่จะแสดงในเว็บไซต์)' : 'Google Maps Preview (shown on website)'}</span>
+            <Map className="w-5 h-5 text-[#1C1C1E]" />
+            <span className="font-semibold text-[#2D2D2D]">{locale === 'th' ? 'ตัวอย่างแผนที่ Google Maps (ที่จะแสดงในเว็บไซต์)' : 'Google Maps Preview (shown on website)'}</span>
           </div>
           <div className="h-64">
             <iframe
@@ -359,8 +359,8 @@ export default function AdminLocationPage() {
                 className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition"
               >
                 <div className="flex items-center gap-3">
-                  <Icon className="w-5 h-5 text-[#1E3A5F]" />
-                  <span className="font-semibold text-[#1E293B]">
+                  <Icon className="w-5 h-5 text-[#1C1C1E]" />
+                  <span className="font-semibold text-[#2D2D2D]">
                     {locale === 'th' ? section.titleTh : section.titleEn}
                   </span>
                   <span className="text-xs text-gray-400">{section.fields.length} {locale === 'th' ? 'ฟิลด์' : 'fields'}</span>
@@ -374,7 +374,7 @@ export default function AdminLocationPage() {
                     <div key={field.key} className="grid md:grid-cols-2 gap-4 pt-4">
                       <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1">
-                          {locale === 'th' ? field.labelTh : field.labelEn} — <span className="text-[#1E3A5F]">TH</span>
+                          {locale === 'th' ? field.labelTh : field.labelEn} — <span className="text-[#1C1C1E]">TH</span>
                         </label>
                         {field.multiline ? (
                           <textarea

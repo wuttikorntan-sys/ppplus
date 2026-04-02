@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
@@ -165,22 +165,22 @@ export default function HomePage() {
             )}
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A5F]/85 via-[#1E3A5F]/50 to-[#2EC4B6]/30 z-[2]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 via-[#1C1C1E]/50 to-[#F5841F]/30 z-[2]" />
         <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-all" aria-label="Previous"><ChevronLeft className="w-6 h-6" /></button>
         <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-all" aria-label="Next"><ChevronRight className="w-6 h-6" /></button>
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
           {heroSlides.map((_, idx) => (
-            <button key={idx} onClick={() => setCurrentSlide(idx)} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx === currentSlide ? 'bg-[#2EC4B6] w-8' : 'bg-white/50 hover:bg-white/80'}`} aria-label={`Slide ${idx + 1}`} />
+            <button key={idx} onClick={() => setCurrentSlide(idx)} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx === currentSlide ? 'bg-[#F5841F] w-8' : 'bg-white/50 hover:bg-white/80'}`} aria-label={`Slide ${idx + 1}`} />
           ))}
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{c('hero.title')}</h1>
-            <p className="text-xl md:text-2xl text-[#2EC4B6] font-medium mb-4 tracking-wide" style={{ fontFamily: 'var(--font-heading)' }}>{c('hero.subtitle')}</p>
+            <p className="text-xl md:text-2xl text-[#F5841F] font-medium mb-4 tracking-wide" style={{ fontFamily: 'var(--font-heading)' }}>{c('hero.subtitle')}</p>
             <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-10">{c('hero.description')}</p>
             <div className="flex flex-row gap-3 justify-center px-4">
-              <Link href="/menu" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 bg-[#2EC4B6] text-white font-semibold rounded-lg hover:bg-[#26a89c] transition-all transform hover:scale-105 text-sm sm:text-base">{c('hero.cta_menu')}</Link>
-              <Link href="/quote" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-[#1E3A5F] transition-all text-sm sm:text-base">{c('hero.cta_contact')}</Link>
+              <Link href="/menu" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 bg-[#F5841F] text-white font-semibold rounded-lg hover:bg-[#26a89c] transition-all transform hover:scale-105 text-sm sm:text-base">{c('hero.cta_menu')}</Link>
+              <Link href="/quote" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-[#1C1C1E] transition-all text-sm sm:text-base">{c('hero.cta_contact')}</Link>
             </div>
           </motion.div>
         </div>
@@ -190,7 +190,7 @@ export default function HomePage() {
       <section className="py-20 bg-[#FAFAFA] overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1E293B] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{c('featured.title')}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{c('featured.title')}</h2>
             <p className="text-[#64748B] text-lg">{c('featured.subtitle')}</p>
           </motion.div>
         </div>
@@ -203,8 +203,8 @@ export default function HomePage() {
                     <Image src={item.image} alt={item.nameEn} fill className="object-cover hover:scale-110 transition-transform duration-500" sizes="(max-width: 640px) 176px, 300px" />
                   </div>
                   <div className="p-3 sm:p-5">
-                    <h3 className="font-semibold text-[#1E293B] text-center mb-1 text-sm sm:text-base" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
-                    <p className="text-[#2EC4B6] font-bold text-center text-base sm:text-lg">฿{item.price.toLocaleString()}</p>
+                    <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-sm sm:text-base" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
+                    <p className="text-[#F5841F] font-bold text-center text-base sm:text-lg">฿{item.price.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -212,7 +212,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-10">
-          <Link href="/menu" className="inline-flex items-center gap-2 text-[#1E3A5F] hover:text-[#2EC4B6] font-medium transition-colors">
+          <Link href="/menu" className="inline-flex items-center gap-2 text-[#1C1C1E] hover:text-[#F5841F] font-medium transition-colors">
             {locale === 'th' ? 'ดูสินค้าทั้งหมด' : 'View All Products'} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -223,16 +223,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-              <p className="text-[#2EC4B6] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('welcome.tagline')}</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1E293B] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('welcome.title')}</h2>
+              <p className="text-[#F5841F] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('welcome.tagline')}</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('welcome.title')}</h2>
               <p className="text-[#64748B] leading-relaxed mb-8">{c('welcome.text')}</p>
-              <Link href="/about" className="inline-flex items-center gap-2 text-[#1E3A5F] hover:text-[#2EC4B6] font-medium transition-colors">{c('welcome.cta')} <ArrowRight className="w-4 h-4" /></Link>
+              <Link href="/about" className="inline-flex items-center gap-2 text-[#1C1C1E] hover:text-[#F5841F] font-medium transition-colors">{c('welcome.cta')} <ArrowRight className="w-4 h-4" /></Link>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
                 <Image src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&h=600&fit=crop" alt="Automotive paint" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               </div>
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1E3A5F] rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
                   <p className="text-3xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>{c('welcome.years')}</p>
                   <p className="text-xs uppercase tracking-wider">{c('welcome.years_label')}</p>
@@ -251,7 +251,7 @@ export default function HomePage() {
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
                 <Image src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&h=600&fit=crop" alt="Paint brands" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               </div>
-              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#2EC4B6] rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#F5841F] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
                   <p className="text-3xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>{c('brands.badge')}</p>
                   <p className="text-xs uppercase tracking-wider">{c('brands.badge_label')}</p>
@@ -259,11 +259,11 @@ export default function HomePage() {
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="order-2">
-              <p className="text-[#2EC4B6] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('brands.tagline')}</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1E293B] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('brands.title')}</h2>
+              <p className="text-[#F5841F] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('brands.tagline')}</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('brands.title')}</h2>
               <p className="text-[#64748B] leading-relaxed mb-4">{c('brands.text1')}</p>
               <p className="text-[#64748B] leading-relaxed mb-8">{c('brands.text2')}</p>
-              <Link href="/menu" className="inline-flex items-center gap-2 text-[#1E3A5F] hover:text-[#2EC4B6] font-medium transition-colors">{c('brands.cta')} <ArrowRight className="w-4 h-4" /></Link>
+              <Link href="/menu" className="inline-flex items-center gap-2 text-[#1C1C1E] hover:text-[#F5841F] font-medium transition-colors">{c('brands.cta')} <ArrowRight className="w-4 h-4" /></Link>
             </motion.div>
           </div>
         </div>
@@ -274,17 +274,17 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-              <p className="text-[#2EC4B6] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('services.tagline')}</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1E293B] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('services.title')}</h2>
+              <p className="text-[#F5841F] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('services.tagline')}</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('services.title')}</h2>
               <p className="text-[#64748B] leading-relaxed mb-4">{c('services.text1')}</p>
               <p className="text-[#64748B] leading-relaxed mb-8">{c('services.text2')}</p>
-              <Link href="/color-matching" className="inline-flex items-center gap-2 text-[#1E3A5F] hover:text-[#2EC4B6] font-medium transition-colors">{c('services.cta')} <ArrowRight className="w-4 h-4" /></Link>
+              <Link href="/color-matching" className="inline-flex items-center gap-2 text-[#1C1C1E] hover:text-[#F5841F] font-medium transition-colors">{c('services.cta')} <ArrowRight className="w-4 h-4" /></Link>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
                 <Image src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=600&fit=crop" alt="Paint service" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               </div>
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1E3A5F] rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
                   <p className="text-3xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>{c('services.badge')}</p>
                   <p className="text-xs uppercase tracking-wider">{c('services.badge_label')}</p>
@@ -299,8 +299,8 @@ export default function HomePage() {
       <section className="py-20 bg-[#FAFAFA] relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <p className="text-[#1E3A5F] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('experience.tagline')}</p>
-            <h2 className="text-3xl md:text-5xl font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>{c('experience.title')}</h2>
+            <p className="text-[#1C1C1E] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('experience.tagline')}</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>{c('experience.title')}</h2>
           </motion.div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
@@ -310,10 +310,10 @@ export default function HomePage() {
               { icon: Truck, titleKey: 'experience.card4_title', descKey: 'experience.card4_desc' },
             ].map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="text-center group bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 hover:shadow-md transition-all">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-5 rounded-2xl bg-[#1E3A5F]/10 border border-[#1E3A5F]/15 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <item.icon className="w-5 h-5 sm:w-7 sm:h-7 text-[#1E3A5F]" />
+                <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-5 rounded-2xl bg-[#1C1C1E]/10 border border-[#1C1C1E]/15 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <item.icon className="w-5 h-5 sm:w-7 sm:h-7 text-[#1C1C1E]" />
                 </div>
-                <h3 className="text-sm sm:text-lg font-semibold text-[#1E293B] mb-1 sm:mb-2" style={{ fontFamily: 'var(--font-heading)' }}>{c(item.titleKey)}</h3>
+                <h3 className="text-sm sm:text-lg font-semibold text-[#2D2D2D] mb-1 sm:mb-2" style={{ fontFamily: 'var(--font-heading)' }}>{c(item.titleKey)}</h3>
                 <p className="text-[#64748B] text-xs sm:text-sm leading-relaxed line-clamp-3">{c(item.descKey)}</p>
               </motion.div>
             ))}
@@ -328,7 +328,7 @@ export default function HomePage() {
       <section className="bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1E293B] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{c('contact.title')}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{c('contact.title')}</h2>
             <p className="text-[#64748B] text-lg">{c('contact.subtitle')}</p>
           </motion.div>
           <div className="grid lg:grid-cols-3 gap-6">
@@ -337,28 +337,28 @@ export default function HomePage() {
                 <iframe src={c('location.map_embed')} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="PP Plus" />
               </div>
               <div className="p-3 border-t border-gray-100 flex justify-end">
-                <a href={`https://www.google.com/maps/dir/?api=1&destination=${c('location.lat')},${c('location.lng')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1E3A5F] text-white font-medium rounded-lg hover:bg-[#2a4d75] transition-all text-sm">
+                <a href={`https://www.google.com/maps/dir/?api=1&destination=${c('location.lat')},${c('location.lng')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1C1C1E] text-white font-medium rounded-lg hover:bg-[#2a4d75] transition-all text-sm">
                   <Navigation className="w-4 h-4" />{locale === 'th' ? 'นำทางไปร้าน' : 'Get Directions'}
                 </a>
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="flex flex-col gap-4">
               <div className="bg-white rounded-2xl p-5 shadow-sm flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#1E3A5F]/10 rounded-xl flex items-center justify-center shrink-0"><MapPin className="w-6 h-6 text-[#1E3A5F]" /></div>
-                <div><h3 className="font-semibold text-[#1E293B] text-sm">{locale === 'th' ? 'ที่อยู่' : 'Address'}</h3><p className="text-[#64748B] text-sm">{c('location.address')}</p></div>
+                <div className="w-12 h-12 bg-[#1C1C1E]/10 rounded-xl flex items-center justify-center shrink-0"><MapPin className="w-6 h-6 text-[#1C1C1E]" /></div>
+                <div><h3 className="font-semibold text-[#2D2D2D] text-sm">{locale === 'th' ? 'ที่อยู่' : 'Address'}</h3><p className="text-[#64748B] text-sm">{c('location.address')}</p></div>
               </div>
               <div className="bg-white rounded-2xl p-5 shadow-sm flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#2EC4B6]/10 rounded-xl flex items-center justify-center shrink-0"><Phone className="w-6 h-6 text-[#2EC4B6]" /></div>
-                <div><h3 className="font-semibold text-[#1E293B] text-sm">{locale === 'th' ? 'โทรศัพท์' : 'Phone'}</h3><p className="text-[#64748B] text-sm">{c('location.phone')}</p></div>
+                <div className="w-12 h-12 bg-[#F5841F]/10 rounded-xl flex items-center justify-center shrink-0"><Phone className="w-6 h-6 text-[#F5841F]" /></div>
+                <div><h3 className="font-semibold text-[#2D2D2D] text-sm">{locale === 'th' ? 'โทรศัพท์' : 'Phone'}</h3><p className="text-[#64748B] text-sm">{c('location.phone')}</p></div>
               </div>
               <div className="bg-white rounded-2xl p-5 shadow-sm flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#1E3A5F]/10 rounded-xl flex items-center justify-center shrink-0"><Mail className="w-6 h-6 text-[#1E3A5F]" /></div>
-                <div><h3 className="font-semibold text-[#1E293B] text-sm">{locale === 'th' ? 'อีเมล' : 'Email'}</h3><p className="text-[#64748B] text-sm">{c('location.email')}</p></div>
+                <div className="w-12 h-12 bg-[#1C1C1E]/10 rounded-xl flex items-center justify-center shrink-0"><Mail className="w-6 h-6 text-[#1C1C1E]" /></div>
+                <div><h3 className="font-semibold text-[#2D2D2D] text-sm">{locale === 'th' ? 'อีเมล' : 'Email'}</h3><p className="text-[#64748B] text-sm">{c('location.email')}</p></div>
               </div>
               <div className="bg-white rounded-2xl p-5 shadow-sm flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#2EC4B6]/10 rounded-xl flex items-center justify-center shrink-0"><Clock className="w-6 h-6 text-[#2EC4B6]" /></div>
+                <div className="w-12 h-12 bg-[#F5841F]/10 rounded-xl flex items-center justify-center shrink-0"><Clock className="w-6 h-6 text-[#F5841F]" /></div>
                 <div>
-                  <h3 className="font-semibold text-[#1E293B] text-sm">{c('location.hours_title')}</h3>
+                  <h3 className="font-semibold text-[#2D2D2D] text-sm">{c('location.hours_title')}</h3>
                   <p className="text-[#64748B] text-sm">{c('location.hours1')}</p>
                   <p className="text-[#64748B] text-sm">{c('location.hours2')}</p>
                 </div>

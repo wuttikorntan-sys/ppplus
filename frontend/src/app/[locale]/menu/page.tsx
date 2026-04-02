@@ -70,7 +70,7 @@ const sampleProducts: MenuItem[] = [
     id: 103, categoryId: 1, nameTh: '2K Topcoat สีน้ำเงินเข้ม', nameEn: '2K Topcoat Deep Blue',
     descriptionTh: 'สี 2K น้ำเงินเข้ม เมทัลลิก เงาลึก สวยหรู', descriptionEn: '2K topcoat deep blue metallic, deep gloss premium look',
     price: 1350, image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=450&fit=crop', isAvailable: true,
-    brand: 'PP Plus', colorCode: '#1E3A5F', colorName: 'Deep Blue', finishType: 'Metallic', size: '1 Liter', mixingRatio: '2:1:10%', videoUrl: null, tdsFile: null,
+    brand: 'PP Plus', colorCode: '#1C1C1E', colorName: 'Deep Blue', finishType: 'Metallic', size: '1 Liter', mixingRatio: '2:1:10%', videoUrl: null, tdsFile: null,
     category: { id: 1, nameTh: '2K Topcoat', nameEn: '2K Topcoat', sortOrder: 1 },
   },
   {
@@ -193,7 +193,7 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       {/* Hero Header */}
-      <div className="relative bg-[#1E3A5F] py-16 overflow-hidden">
+      <div className="relative bg-[#1C1C1E] py-16 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <Image src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
         </div>
@@ -212,7 +212,7 @@ export default function MenuPage() {
             placeholder={t('search')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[#2EC4B6]/20 focus:border-[#2EC4B6] outline-none transition text-base"
+            className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-gray-200 bg-white shadow-sm focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-base"
           />
         </div>
 
@@ -221,7 +221,7 @@ export default function MenuPage() {
           <button
             onClick={() => setSelectedCategory(null)}
             className={`px-4 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all ${
-              selectedCategory === null ? 'bg-[#1E3A5F] text-white shadow-md' : 'bg-white text-[#1E293B] hover:bg-[#1E3A5F]/5 border border-gray-200'
+              selectedCategory === null ? 'bg-[#1C1C1E] text-white shadow-md' : 'bg-white text-[#2D2D2D] hover:bg-[#1C1C1E]/5 border border-gray-200'
             }`}
           >
             {t('all')}
@@ -231,7 +231,7 @@ export default function MenuPage() {
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               className={`flex items-center gap-1.5 px-4 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all ${
-                selectedCategory === cat.id ? 'bg-[#1E3A5F] text-white shadow-md' : 'bg-white text-[#1E293B] hover:bg-[#1E3A5F]/5 border border-gray-200'
+                selectedCategory === cat.id ? 'bg-[#1C1C1E] text-white shadow-md' : 'bg-white text-[#2D2D2D] hover:bg-[#1C1C1E]/5 border border-gray-200'
               }`}
             >
               {categoryIcons[cat.id]} {locale === 'th' ? cat.nameTh : cat.nameEn}
@@ -261,10 +261,10 @@ export default function MenuPage() {
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   <div className="absolute top-2 right-2 md:top-3 md:right-3 bg-white/95 backdrop-blur-sm rounded-full px-2.5 py-1 md:px-3.5 md:py-1.5 shadow-lg">
-                    <span className="text-[#1E3A5F] font-bold text-sm md:text-base">฿{Number(item.price).toLocaleString()}</span>
+                    <span className="text-[#1C1C1E] font-bold text-sm md:text-base">฿{Number(item.price).toLocaleString()}</span>
                   </div>
                   {item.brand && (
-                    <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-[#2EC4B6] text-white text-[10px] md:text-xs font-semibold px-2 py-0.5 rounded-full">
+                    <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-[#F5841F] text-white text-[10px] md:text-xs font-semibold px-2 py-0.5 rounded-full">
                       {item.brand}
                     </div>
                   )}
@@ -277,10 +277,10 @@ export default function MenuPage() {
                   <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/30 to-transparent" />
                 </div>
                 <div className="p-3 md:p-5">
-                  <span className="hidden md:inline-block text-xs text-[#2EC4B6] font-semibold tracking-wide uppercase mb-1">
+                  <span className="hidden md:inline-block text-xs text-[#F5841F] font-semibold tracking-wide uppercase mb-1">
                     {locale === 'th' ? item.category?.nameTh : item.category?.nameEn}
                   </span>
-                  <h3 className="font-semibold text-[#1E293B] text-sm md:text-lg leading-snug mb-0.5 md:mb-1.5 line-clamp-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <h3 className="font-semibold text-[#2D2D2D] text-sm md:text-lg leading-snug mb-0.5 md:mb-1.5 line-clamp-2" style={{ fontFamily: 'var(--font-heading)' }}>
                     {locale === 'th' ? item.nameTh : item.nameEn}
                   </h3>
                   {item.size && (
@@ -295,13 +295,13 @@ export default function MenuPage() {
                   <div className="mt-2 md:mt-3 flex gap-2">
                     <Link
                       href={`/quote?productId=${item.id}&productName=${encodeURIComponent(locale === 'th' ? item.nameTh : item.nameEn)}`}
-                      className="flex-1 text-center text-xs md:text-sm font-medium py-1.5 md:py-2 rounded-lg bg-[#1E3A5F] text-white hover:bg-[#1E3A5F]/90 transition"
+                      className="flex-1 text-center text-xs md:text-sm font-medium py-1.5 md:py-2 rounded-lg bg-[#1C1C1E] text-white hover:bg-[#1C1C1E]/90 transition"
                     >
                       {locale === 'th' ? 'ขอราคา' : 'Get Quote'}
                     </Link>
                     {item.tdsFile && (
                       <a href={item.tdsFile} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-gray-400 hover:text-[#1E3A5F] hover:border-[#1E3A5F] transition">
+                        className="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-gray-400 hover:text-[#1C1C1E] hover:border-[#1C1C1E] transition">
                         <FileText className="w-4 h-4" />
                       </a>
                     )}

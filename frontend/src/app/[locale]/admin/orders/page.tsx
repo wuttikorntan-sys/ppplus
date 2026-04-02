@@ -68,7 +68,7 @@ export default function AdminOrdersPage() {
           <p className="text-sm text-gray-500 mt-0.5">{orders.length} {th ? 'รายการ' : 'orders'}</p>
         </div>
         <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm outline-none focus:border-[#1E3A5F]">
+          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm outline-none focus:border-[#1C1C1E]">
           <option value="">{th ? 'ทุกสถานะ' : 'All Status'}</option>
           {statuses.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
@@ -90,7 +90,7 @@ export default function AdminOrdersPage() {
                   {order.user?.name} • {new Date(order.createdAt).toLocaleString(locale)}
                 </p>
               </div>
-              <p className="text-lg font-bold text-[#1E3A5F]">฿{Number(order.totalAmount).toLocaleString()}</p>
+              <p className="text-lg font-bold text-[#1C1C1E]">฿{Number(order.totalAmount).toLocaleString()}</p>
             </div>
 
             <div className="bg-gray-50 rounded-lg p-3 mb-3">

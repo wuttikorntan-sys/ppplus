@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { X, Star, CheckCircle2, Clock, MapPin, Paintbrush } from 'lucide-react';
@@ -116,7 +116,7 @@ export default function Popup({ locale }: { locale: string }) {
             <div className="px-6 pb-6 -mt-4 relative z-10">
               {/* Title row with badge */}
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1E3A5F] to-[#2EC4B6] flex items-center justify-center shadow-lg shadow-[#2EC4B6]/20">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1C1C1E] to-[#F5841F] flex items-center justify-center shadow-lg shadow-[#F5841F]/20">
                   <Paintbrush className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -134,7 +134,7 @@ export default function Popup({ locale }: { locale: string }) {
               {/* Stats row */}
               <div className="flex items-center gap-4 mb-4 text-sm">
                 <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 text-[#2EC4B6] fill-[#2EC4B6]" />
+                  <Star className="w-4 h-4 text-[#F5841F] fill-[#F5841F]" />
                   <span className="text-white font-semibold">{googleRating ? googleRating.toFixed(1) : '5.0'}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-gray-400">
@@ -172,7 +172,7 @@ export default function Popup({ locale }: { locale: string }) {
               {features.length > 0 && (
               <div className="mb-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-1 h-4 bg-[#2EC4B6] rounded-full" />
+                  <div className="w-1 h-4 bg-[#F5841F] rounded-full" />
                   <h4 className="text-white font-bold text-sm">{th ? 'จุดเด่น' : 'Key Features'}</h4>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -189,7 +189,7 @@ export default function Popup({ locale }: { locale: string }) {
               {/* CTA Button */}
               <button
                 onClick={close}
-                className="w-full py-3 bg-gradient-to-r from-[#1E3A5F] to-[#2EC4B6] hover:from-[#2EC4B6] hover:to-[#1E3A5F] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#1E3A5F]/25 text-sm"
+                className="w-full py-3 bg-gradient-to-r from-[#1C1C1E] to-[#F5841F] hover:from-[#F5841F] hover:to-[#1C1C1E] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#1C1C1E]/25 text-sm"
               >
                 {buttonLabel}
               </button>

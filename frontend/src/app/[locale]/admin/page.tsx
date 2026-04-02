@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useLocale } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -125,11 +125,11 @@ export default function AdminDashboard() {
             <Link
               key={i}
               href={link.href}
-              className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-[#1E3A5F]/30 hover:shadow-md transition-all group"
+              className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-[#1C1C1E]/30 hover:shadow-md transition-all group"
             >
               <div className="flex items-center justify-between mb-2">
-                <link.icon className="w-5 h-5 text-[#1E3A5F]" />
-                <ArrowUpRight className="w-4 h-4 text-gray-300 group-hover:text-[#1E3A5F] transition" />
+                <link.icon className="w-5 h-5 text-[#1C1C1E]" />
+                <ArrowUpRight className="w-4 h-4 text-gray-300 group-hover:text-[#1C1C1E] transition" />
               </div>
               <p className="font-medium text-gray-900 text-sm">{link.label}</p>
               <p className="text-xs text-gray-400 mt-0.5">{link.desc}</p>

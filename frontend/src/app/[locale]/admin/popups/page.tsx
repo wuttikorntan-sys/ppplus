@@ -159,10 +159,10 @@ export default function AdminPopupsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <Megaphone className="w-7 h-7 text-[#1E3A5F]" />
-          <h1 className="text-2xl font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>{t('title')}</h1>
+          <Megaphone className="w-7 h-7 text-[#1C1C1E]" />
+          <h1 className="text-2xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>{t('title')}</h1>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] text-white rounded-xl font-medium hover:bg-[#1E3A5F]-light transition-colors">
+        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-xl font-medium hover:bg-[#1C1C1E]-light transition-colors">
           <Plus className="w-4 h-4" /> {t('add')}
         </button>
       </div>
@@ -181,7 +181,7 @@ export default function AdminPopupsPage() {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-[#1E293B] truncate">{locale === 'th' ? p.titleTh || p.title : p.title}</h3>
+                <h3 className="font-semibold text-[#2D2D2D] truncate">{locale === 'th' ? p.titleTh || p.title : p.title}</h3>
                 <p className="text-sm text-gray-400 truncate">{locale === 'th' ? p.descriptionTh || p.description : p.description}</p>
               </div>
               <button onClick={() => toggleActive(p)} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${p.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
@@ -199,41 +199,41 @@ export default function AdminPopupsPage() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>{editingId ? t('edit') : t('add')}</h2>
+              <h2 className="text-xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>{editingId ? t('edit') : t('add')}</h2>
               <button onClick={() => setShowForm(false)} className="p-1 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#1E293B] mb-1">{t('form.title')}</label>
-                <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{t('form.title')}</label>
+                <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#1E293B] mb-1">{t('form.title_th')}</label>
-                <input type="text" value={form.titleTh} onChange={(e) => setForm({ ...form, titleTh: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{t('form.title_th')}</label>
+                <input type="text" value={form.titleTh} onChange={(e) => setForm({ ...form, titleTh: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#1E293B] mb-1">{t('form.description')}</label>
-                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition resize-none" />
+                <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{t('form.description')}</label>
+                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition resize-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#1E293B] mb-1">{t('form.description_th')}</label>
-                <textarea value={form.descriptionTh} onChange={(e) => setForm({ ...form, descriptionTh: e.target.value })} rows={3} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition resize-none" />
+                <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{t('form.description_th')}</label>
+                <textarea value={form.descriptionTh} onChange={(e) => setForm({ ...form, descriptionTh: e.target.value })} rows={3} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition resize-none" />
               </div>
 
               <div className="pt-2 border-t border-gray-100">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? '??????? Popup' : 'Popup Settings'}</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-1">{th ? 'Badge' : 'Badge'}</label>
-                    <input type="text" value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} placeholder="NEW" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'Badge' : 'Badge'}</label>
+                    <input type="text" value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} placeholder="NEW" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-1">{th ? '???? CTA' : 'Button Text'}</label>
-                    <input type="text" value={form.buttonText} onChange={(e) => setForm({ ...form, buttonText: e.target.value })} placeholder="Explore Menu" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '???? CTA' : 'Button Text'}</label>
+                    <input type="text" value={form.buttonText} onChange={(e) => setForm({ ...form, buttonText: e.target.value })} placeholder="Explore Menu" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                   <div className="col-span-2">
-                    <label className="block text-sm font-medium text-[#1E293B] mb-1">{th ? '???? CTA (???????)' : 'Button Text (Thai)'}</label>
-                    <input type="text" value={form.buttonTextTh} onChange={(e) => setForm({ ...form, buttonTextTh: e.target.value })} placeholder="?????????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '???? CTA (???????)' : 'Button Text (Thai)'}</label>
+                    <input type="text" value={form.buttonTextTh} onChange={(e) => setForm({ ...form, buttonTextTh: e.target.value })} placeholder="?????????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                 </div>
               </div>
@@ -242,12 +242,12 @@ export default function AdminPopupsPage() {
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? '???? (???????? ,)' : 'Tags (comma separated)'}</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-1">{th ? '???? (??????)' : 'Tags (EN)'}</label>
-                    <input type="text" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="Premium,Restaurant,Cafe & Bar" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '???? (??????)' : 'Tags (EN)'}</label>
+                    <input type="text" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="Premium,Restaurant,Cafe & Bar" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-1">{th ? '???? (???)' : 'Tags (TH)'}</label>
-                    <input type="text" value={form.tagsTh} onChange={(e) => setForm({ ...form, tagsTh: e.target.value })} placeholder="????????,?????????,????? & ????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '???? (???)' : 'Tags (TH)'}</label>
+                    <input type="text" value={form.tagsTh} onChange={(e) => setForm({ ...form, tagsTh: e.target.value })} placeholder="????????,?????????,????? & ????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                 </div>
               </div>
@@ -256,18 +256,18 @@ export default function AdminPopupsPage() {
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? '??????? (???????? ,)' : 'Features (comma separated)'}</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-1">{th ? '??????? (??????)' : 'Features (EN)'}</label>
-                    <input type="text" value={form.features} onChange={(e) => setForm({ ...form, features: e.target.value })} placeholder="Premium Quality,Great Ambience,Excellent Service" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '??????? (??????)' : 'Features (EN)'}</label>
+                    <input type="text" value={form.features} onChange={(e) => setForm({ ...form, features: e.target.value })} placeholder="Premium Quality,Great Ambience,Excellent Service" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-1">{th ? '??????? (???)' : 'Features (TH)'}</label>
-                    <input type="text" value={form.featuresTh} onChange={(e) => setForm({ ...form, featuresTh: e.target.value })} placeholder="???????????,??????????,????????????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '??????? (???)' : 'Features (TH)'}</label>
+                    <input type="text" value={form.featuresTh} onChange={(e) => setForm({ ...form, featuresTh: e.target.value })} placeholder="???????????,??????????,????????????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#1E293B] mb-1">{th ? '??????' : 'Image'}</label>
+                <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '??????' : 'Image'}</label>
                 <input type="file" ref={fileInputRef} accept="image/*" onChange={handleImageChange} className="hidden" />
                 {imagePreview ? (
                   <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-gray-200 mb-2">
@@ -277,7 +277,7 @@ export default function AdminPopupsPage() {
                     </button>
                   </div>
                 ) : (
-                  <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center gap-2 text-gray-400 hover:border-[#1E3A5F]/30 hover:text-[#1E3A5F] transition">
+                  <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center gap-2 text-gray-400 hover:border-[#1C1C1E]/30 hover:text-[#1C1C1E] transition">
                     <Upload className="w-6 h-6" />
                     <span className="text-sm">{th ? '??????????????????????' : 'Click to upload image'}</span>
                   </button>
@@ -285,9 +285,9 @@ export default function AdminPopupsPage() {
               </div>
               <div className="flex items-center gap-2">
                 <input type="checkbox" id="isActive" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="w-4 h-4 rounded" />
-                <label htmlFor="isActive" className="text-sm font-medium text-[#1E293B]">{t('form.active')}</label>
+                <label htmlFor="isActive" className="text-sm font-medium text-[#2D2D2D]">{t('form.active')}</label>
               </div>
-              <button type="submit" className="w-full py-3 bg-[#1E3A5F] text-white rounded-xl font-medium hover:bg-[#1E3A5F]-light transition-colors">
+              <button type="submit" className="w-full py-3 bg-[#1C1C1E] text-white rounded-xl font-medium hover:bg-[#1C1C1E]-light transition-colors">
                 {editingId ? (locale === 'th' ? '??????' : 'Save') : (locale === 'th' ? '?????' : 'Create')}
               </button>
             </form>

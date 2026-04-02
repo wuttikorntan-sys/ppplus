@@ -10,8 +10,8 @@ export default function AboutPage() {
   const locale = useLocale();
 
   const values = [
-    { icon: Target, key: 'quality' as const, color: 'bg-[#1E3A5F]' },
-    { icon: Beaker, key: 'variety' as const, color: 'bg-[#2EC4B6]' },
+    { icon: Target, key: 'quality' as const, color: 'bg-[#1C1C1E]' },
+    { icon: Beaker, key: 'variety' as const, color: 'bg-[#F5841F]' },
     { icon: ShieldCheck, key: 'service' as const, color: 'bg-[#64748B]' },
   ];
 
@@ -43,7 +43,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="relative py-20 text-white overflow-hidden">
         <Image src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=1920&h=600&fit=crop" alt="Automotive paint factory" fill className="object-cover" priority />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A5F]/85 to-[#2EC4B6]/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 to-[#F5841F]/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>{t('title')}</h1>
@@ -55,7 +55,7 @@ export default function AboutPage() {
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-3xl font-bold text-[#1E293B] mb-8 text-center" style={{ fontFamily: 'var(--font-heading)' }}>{t('story.title')}</h2>
+            <h2 className="text-3xl font-bold text-[#2D2D2D] mb-8 text-center" style={{ fontFamily: 'var(--font-heading)' }}>{t('story.title')}</h2>
             <div className="space-y-6 text-[#64748B] text-lg leading-relaxed">
               <p>{t('story.p1')}</p>
               <p>{t('story.p2')}</p>
@@ -66,7 +66,7 @@ export default function AboutPage() {
       </section>
 
       {/* Capabilities */}
-      <section className="py-20 bg-[#1E3A5F] text-white">
+      <section className="py-20 bg-[#1C1C1E] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold mb-12 text-center" style={{ fontFamily: 'var(--font-heading)' }}>
             {locale === 'th' ? 'ศักยภาพการผลิต' : 'Our Capabilities'}
@@ -74,7 +74,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {capabilities.map((cap, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
-                <div className="w-14 h-14 bg-[#2EC4B6] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 bg-[#F5841F] rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <cap.icon className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{cap.title}</h3>
@@ -88,14 +88,14 @@ export default function AboutPage() {
       {/* Values */}
       <section className="py-20 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[#1E293B] mb-12 text-center" style={{ fontFamily: 'var(--font-heading)' }}>{t('values.title')}</h2>
+          <h2 className="text-3xl font-bold text-[#2D2D2D] mb-12 text-center" style={{ fontFamily: 'var(--font-heading)' }}>{t('values.title')}</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {values.map((v, idx) => (
               <motion.div key={v.key} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="bg-white rounded-2xl p-8 text-center shadow-sm">
                 <div className={`w-16 h-16 ${v.color} rounded-2xl flex items-center justify-center mx-auto mb-5`}>
                   <v.icon className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-[#1E293B] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{t(`values.${v.key}.title`)}</h3>
+                <h3 className="text-xl font-semibold text-[#2D2D2D] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{t(`values.${v.key}.title`)}</h3>
                 <p className="text-[#64748B]">{t(`values.${v.key}.text`)}</p>
               </motion.div>
             ))}
@@ -107,10 +107,10 @@ export default function AboutPage() {
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-6 relative bg-[#1E3A5F]/10 flex items-center justify-center">
-              <Factory className="w-12 h-12 text-[#1E3A5F]" />
+            <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-6 relative bg-[#1C1C1E]/10 flex items-center justify-center">
+              <Factory className="w-12 h-12 text-[#1C1C1E]" />
             </div>
-            <h2 className="text-3xl font-bold text-[#1E293B] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>{t('team.title')}</h2>
+            <h2 className="text-3xl font-bold text-[#2D2D2D] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>{t('team.title')}</h2>
             <p className="text-[#64748B] text-lg">{t('team.text')}</p>
           </motion.div>
         </div>

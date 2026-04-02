@@ -41,10 +41,10 @@ export default function LoginPage() {
       >
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 bg-[#1E3A5F] rounded-xl flex items-center justify-center">
-              <Paintbrush className="w-8 h-8 text-[#2EC4B6]" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-[#1C1C1E] rounded-xl flex items-center justify-center">
+              <Paintbrush className="w-8 h-8 text-[#F5841F]" />
             </div>
-            <h1 className="text-2xl font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h1 className="text-2xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
               {t('login.title')}
             </h1>
             <p className="text-gray-400 text-sm mt-1">{t('login.subtitle')}</p>
@@ -52,7 +52,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-[#1E293B] mb-1.5">{t('login.email')}</label>
+              <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">{t('login.email')}</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
                 <input
@@ -61,13 +61,13 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="email@example.com"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#1E293B] mb-1.5">{t('login.password')}</label>
+              <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">{t('login.password')}</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" />
                 <input
@@ -75,7 +75,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition"
                 />
               </div>
             </div>
@@ -83,7 +83,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-[#1E3A5F] text-white rounded-xl font-semibold hover:bg-[#1E3A5F]/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-[#1C1C1E] text-white rounded-xl font-semibold hover:bg-[#1C1C1E]/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <LogIn className="w-5 h-5" />
               {loading ? '...' : t('login.submit')}

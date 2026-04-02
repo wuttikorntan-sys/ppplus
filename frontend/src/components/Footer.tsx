@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -38,22 +38,22 @@ export default function Footer() {
   const socialUrl = (key: string) => sc[key]?.th || sc[key]?.en || '';
 
   return (
-    <footer className="relative bg-[#0F1B2D] text-white overflow-hidden">
+    <footer className="relative bg-[#111111] text-white overflow-hidden">
       {/* Decorative top border */}
-      <div className="h-1 bg-gradient-to-r from-[#1E3A5F] via-[#2EC4B6] to-[#1E3A5F]" />
+      <div className="h-1 bg-gradient-to-r from-[#1C1C1E] via-[#F5841F] to-[#1C1C1E]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
         {/* Top Section - Brand + Newsletter-like CTA */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-10 border-b border-white/10">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1E3A5F] to-[#2EC4B6]/60 flex items-center justify-center shadow-lg shadow-[#2EC4B6]/10">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]/60 flex items-center justify-center shadow-lg shadow-[#F5841F]/10">
               <Paintbrush className="w-6 h-6 text-white" />
             </div>
             <div>
               <span className="text-2xl font-bold text-white block" style={{ fontFamily: 'var(--font-heading)' }}>
                 PP Plus
               </span>
-              <span className="text-xs text-[#2EC4B6] font-medium tracking-widest uppercase">Automotive Paint</span>
+              <span className="text-xs text-[#F5841F] font-medium tracking-widest uppercase">Automotive Paint</span>
             </div>
           </div>
           <p className="text-gray-400 text-sm max-w-md leading-relaxed">
@@ -66,7 +66,7 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
-              <span className="w-6 h-px bg-[#2EC4B6]" />
+              <span className="w-6 h-px bg-[#F5841F]" />
               {t('quick_links')}
             </h3>
             <ul className="space-y-3">
@@ -77,8 +77,8 @@ export default function Footer() {
                 { href: '/b2b' as const, label: nav('b2b') },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-400 hover:text-[#2EC4B6] text-sm transition-colors duration-200 flex items-center gap-2 group">
-                    <span className="w-0 group-hover:w-2 h-px bg-[#2EC4B6] transition-all duration-200" />
+                  <Link href={link.href} className="text-gray-400 hover:text-[#F5841F] text-sm transition-colors duration-200 flex items-center gap-2 group">
+                    <span className="w-0 group-hover:w-2 h-px bg-[#F5841F] transition-all duration-200" />
                     {link.label}
                   </Link>
                 </li>
@@ -89,7 +89,7 @@ export default function Footer() {
           {/* More Links */}
           <div>
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
-              <span className="w-6 h-px bg-[#2EC4B6]" />
+              <span className="w-6 h-px bg-[#F5841F]" />
               {lang === 'th' ? 'เพิ่มเติม' : 'More'}
             </h3>
             <ul className="space-y-3">
@@ -100,8 +100,8 @@ export default function Footer() {
                 { href: '/contact' as const, label: nav('contact') },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-400 hover:text-[#2EC4B6] text-sm transition-colors duration-200 flex items-center gap-2 group">
-                    <span className="w-0 group-hover:w-2 h-px bg-[#2EC4B6] transition-all duration-200" />
+                  <Link href={link.href} className="text-gray-400 hover:text-[#F5841F] text-sm transition-colors duration-200 flex items-center gap-2 group">
+                    <span className="w-0 group-hover:w-2 h-px bg-[#F5841F] transition-all duration-200" />
                     {link.label}
                   </Link>
                 </li>
@@ -112,25 +112,25 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
-              <span className="w-6 h-px bg-[#2EC4B6]" />
+              <span className="w-6 h-px bg-[#F5841F]" />
               {t('contact')}
             </h3>
             <ul className="space-y-3.5 text-sm text-gray-400">
               <li className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0 mt-0.5">
-                  <MapPin className="w-4 h-4 text-[#2EC4B6]" />
+                  <MapPin className="w-4 h-4 text-[#F5841F]" />
                 </div>
                 <span className="leading-relaxed">{v('location.address') || contact('address')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
-                  <Phone className="w-4 h-4 text-[#2EC4B6]" />
+                  <Phone className="w-4 h-4 text-[#F5841F]" />
                 </div>
                 <span>{v('location.phone') || contact('phone')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
-                  <Mail className="w-4 h-4 text-[#2EC4B6]" />
+                  <Mail className="w-4 h-4 text-[#F5841F]" />
                 </div>
                 <span>{v('location.email') || contact('email')}</span>
               </li>
@@ -140,14 +140,14 @@ export default function Footer() {
           {/* Hours & Social */}
           <div>
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
-              <span className="w-6 h-px bg-[#2EC4B6]" />
+              <span className="w-6 h-px bg-[#F5841F]" />
               <Clock className="w-4 h-4" />
               {lang === 'th' ? 'เวลาทำการ' : 'Hours'}
             </h3>
             <div className="text-sm text-gray-400 space-y-1.5 mb-6">
               <p>{v('location.lunch') || contact('lunch')}</p>
               <p>{v('location.dinner') || contact('dinner')}</p>
-              <p className="text-[#2EC4B6] font-medium text-xs mt-2">{v('location.closed') || contact('closed')}</p>
+              <p className="text-[#F5841F] font-medium text-xs mt-2">{v('location.closed') || contact('closed')}</p>
             </div>
 
             {/* Social Media */}
@@ -188,8 +188,8 @@ export default function Footer() {
       </div>
 
       {/* Decorative background elements */}
-      <div className="absolute top-20 right-0 w-64 h-64 bg-[#2EC4B6]/3 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#1E3A5F]/20 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute top-20 right-0 w-64 h-64 bg-[#F5841F]/3 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#1C1C1E]/20 rounded-full blur-[80px] pointer-events-none" />
     </footer>
   );
 }

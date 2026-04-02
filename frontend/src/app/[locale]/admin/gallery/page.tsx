@@ -94,18 +94,18 @@ export default function AdminGalleryPage() {
     } catch { /* ignore */ }
   };
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#1E3A5F] border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" /></div>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
             {locale === 'th' ? 'จัดการแกลเลอรี่' : 'Gallery Management'}
           </h1>
           <p className="text-gray-500 text-sm mt-1">{locale === 'th' ? 'เพิ่ม แก้ไข ลบรูปภาพในแกลเลอรี่' : 'Add, edit, delete gallery images'}</p>
         </div>
-        <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 bg-[#1E3A5F] text-white rounded-lg hover:bg-[#1E3A5F]/90 transition text-sm font-medium">
+        <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 bg-[#1C1C1E] text-white rounded-lg hover:bg-[#1C1C1E]/90 transition text-sm font-medium">
           <Plus className="w-4 h-4" /> {locale === 'th' ? 'เพิ่มรูปภาพ' : 'Add Image'}
         </button>
       </div>
@@ -131,12 +131,12 @@ export default function AdminGalleryPage() {
                 </div>
               </div>
               <div className="p-3">
-                <p className="text-sm font-medium text-[#1E293B] truncate">{locale === 'th' ? img.labelTh : img.labelEn || '-'}</p>
+                <p className="text-sm font-medium text-[#2D2D2D] truncate">{locale === 'th' ? img.labelTh : img.labelEn || '-'}</p>
                 <p className="text-xs text-gray-400">#{img.sortOrder}</p>
               </div>
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
                 <button onClick={() => openEdit(img)} className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition">
-                  <Pencil className="w-4 h-4 text-[#1E293B]" />
+                  <Pencil className="w-4 h-4 text-[#2D2D2D]" />
                 </button>
                 <button onClick={() => handleDelete(img.id)} className="p-2 bg-white rounded-full shadow hover:bg-red-50 transition">
                   <Trash2 className="w-4 h-4 text-red-500" />
@@ -152,7 +152,7 @@ export default function AdminGalleryPage() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
           <div className="bg-white rounded-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2 className="text-lg font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
                 {editing ? (locale === 'th' ? 'แก้ไขรูปภาพ' : 'Edit Image') : (locale === 'th' ? 'เพิ่มรูปภาพ' : 'Add Image')}
               </h2>
               <button onClick={() => setShowModal(false)} className="p-1 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5" /></button>
@@ -198,7 +198,7 @@ export default function AdminGalleryPage() {
 
               {/* Active */}
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={form.isActive} onChange={e => setForm({ ...form, isActive: e.target.checked })} className="w-4 h-4 rounded border-gray-300 text-[#1E3A5F] focus:ring-[#1E3A5F]" />
+                <input type="checkbox" checked={form.isActive} onChange={e => setForm({ ...form, isActive: e.target.checked })} className="w-4 h-4 rounded border-gray-300 text-[#1C1C1E] focus:ring-[#1C1C1E]" />
                 <span className="text-sm text-gray-700">{locale === 'th' ? 'แสดงผล' : 'Visible'}</span>
               </label>
 
@@ -206,7 +206,7 @@ export default function AdminGalleryPage() {
                 <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border rounded-lg text-sm font-medium hover:bg-gray-50 transition">
                   {locale === 'th' ? 'ยกเลิก' : 'Cancel'}
                 </button>
-                <button onClick={handleSave} disabled={!editing && !file} className="flex-1 px-4 py-2 bg-[#1E3A5F] text-white rounded-lg text-sm font-medium hover:bg-[#1E3A5F]/90 transition disabled:opacity-50">
+                <button onClick={handleSave} disabled={!editing && !file} className="flex-1 px-4 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
                   {locale === 'th' ? 'บันทึก' : 'Save'}
                 </button>
               </div>

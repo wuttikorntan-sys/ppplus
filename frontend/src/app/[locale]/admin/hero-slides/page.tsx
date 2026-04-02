@@ -148,7 +148,7 @@ export default function AdminHeroSlidesPage() {
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">{slides.length} {th ? 'สไลด์' : 'slides'}</p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] text-white rounded-lg font-medium hover:bg-[#1E3A5F]-light transition text-sm shadow-sm">
+        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-lg font-medium hover:bg-[#1C1C1E]-light transition text-sm shadow-sm">
           <Plus className="w-4 h-4" /> {th ? 'เพิ่มสไลด์' : 'Add Slide'}
         </button>
       </div>
@@ -233,11 +233,11 @@ export default function AdminHeroSlidesPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ประเภท' : 'Type'}</label>
                 <div className="flex gap-2">
                   <button onClick={() => setForm({ ...form, type: 'image' })}
-                    className={`flex-1 py-2 rounded-lg text-sm font-medium border transition ${form.type === 'image' ? 'bg-[#1E3A5F] text-white border-[#1E3A5F]' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}>
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium border transition ${form.type === 'image' ? 'bg-[#1C1C1E] text-white border-[#1C1C1E]' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}>
                     <ImageIcon className="w-4 h-4 inline mr-1.5" />{th ? 'รูปภาพ' : 'Image'}
                   </button>
                   <button onClick={() => setForm({ ...form, type: 'video' })}
-                    className={`flex-1 py-2 rounded-lg text-sm font-medium border transition ${form.type === 'video' ? 'bg-[#1E3A5F] text-white border-[#1E3A5F]' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}>
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium border transition ${form.type === 'video' ? 'bg-[#1C1C1E] text-white border-[#1C1C1E]' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}>
                     <Video className="w-4 h-4 inline mr-1.5" />{th ? 'วิดีโอ' : 'Video'}
                   </button>
                 </div>
@@ -249,7 +249,7 @@ export default function AdminHeroSlidesPage() {
                   {form.type === 'video' ? (th ? 'รูป Poster' : 'Poster Image') : (th ? 'รูปภาพ' : 'Image')}
                 </label>
                 <div onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-[#1E3A5F]/30 hover:bg-[#1E3A5F]/5 transition group">
+                  className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-[#1C1C1E]/30 hover:bg-[#1C1C1E]/5 transition group">
                   {imagePreview ? (
                     <div className="relative aspect-video rounded-lg overflow-hidden">
                       <Image src={imagePreview} alt="Preview" fill className="object-cover" sizes="400px" />
@@ -273,7 +273,7 @@ export default function AdminHeroSlidesPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ลิงก์วิดีโอ (mp4)' : 'Video URL (mp4)'}</label>
                   <input type="text" value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
                     placeholder="/hero-video.mp4"
-                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm" />
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none text-sm" />
                 </div>
               )}
 
@@ -282,13 +282,13 @@ export default function AdminHeroSlidesPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (TH)' : 'Title (TH)'}</label>
                   <input type="text" value={form.titleTh} onChange={(e) => setForm({ ...form, titleTh: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm"
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none text-sm"
                     placeholder={th ? 'ไม่บังคับ' : 'Optional'} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (EN)' : 'Title (EN)'}</label>
                   <input type="text" value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm"
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none text-sm"
                     placeholder={th ? 'ไม่บังคับ' : 'Optional'} />
                 </div>
               </div>
@@ -298,12 +298,12 @@ export default function AdminHeroSlidesPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ลำดับ' : 'Sort Order'}</label>
                   <input type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm" />
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none text-sm" />
                 </div>
                 <div className="flex items-end pb-1">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                      className="w-4 h-4 rounded border-gray-300 text-[#1E3A5F] focus:ring-[#1E3A5F]" />
+                      className="w-4 h-4 rounded border-gray-300 text-[#1C1C1E] focus:ring-[#1C1C1E]" />
                     <span className="text-sm text-gray-700">{th ? 'เปิดใช้งาน' : 'Active'}</span>
                   </label>
                 </div>
@@ -315,7 +315,7 @@ export default function AdminHeroSlidesPage() {
                 {th ? 'ยกเลิก' : 'Cancel'}
               </button>
               <button onClick={handleSave} disabled={saving}
-                className="px-5 py-2 bg-[#1E3A5F] text-white text-sm font-medium rounded-lg hover:bg-[#1E3A5F]-light transition disabled:opacity-50">
+                className="px-5 py-2 bg-[#1C1C1E] text-white text-sm font-medium rounded-lg hover:bg-[#1C1C1E]-light transition disabled:opacity-50">
                 {saving ? (th ? 'กำลังบันทึก...' : 'Saving...') : (th ? 'บันทึก' : 'Save')}
               </button>
             </div>

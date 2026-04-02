@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useAuth } from '@/lib/auth';
 import { useRouter, usePathname } from '@/i18n/navigation';
@@ -143,7 +143,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (loading || !user || !isAdmin) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-[#1E3A5F] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -160,8 +160,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Logo */}
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#1E3A5F] flex items-center justify-center shrink-0">
-            <span className="text-[#2EC4B6] font-bold text-sm" style={{ fontFamily: 'var(--font-heading)' }}>C</span>
+          <div className="w-9 h-9 rounded-xl bg-[#1C1C1E] flex items-center justify-center shrink-0">
+            <span className="text-[#F5841F] font-bold text-sm" style={{ fontFamily: 'var(--font-heading)' }}>C</span>
           </div>
           {!collapsed && (
             <div className="min-w-0">
@@ -193,7 +193,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-sm ${
                       active
-                        ? 'bg-[#1E3A5F] text-white shadow-sm'
+                        ? 'bg-[#1C1C1E] text-white shadow-sm'
                         : 'text-gray-400 hover:bg-white/5 hover:text-white'
                     }`}
                     title={l[item.key]}
@@ -296,7 +296,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Bell className="w-5 h-5 text-gray-500" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
             </button>
-            <div className="w-8 h-8 bg-[#1E3A5F] rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#1C1C1E] rounded-full flex items-center justify-center">
               <span className="text-white text-xs font-bold">{user.name.charAt(0).toUpperCase()}</span>
             </div>
           </div>

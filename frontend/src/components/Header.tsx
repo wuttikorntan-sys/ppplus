@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
@@ -38,10 +38,10 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-[#1E3A5F] flex items-center justify-center">
-              <Paintbrush className="w-5 h-5 lg:w-6 lg:h-6 text-[#2EC4B6]" />
+            <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-[#1C1C1E] flex items-center justify-center">
+              <Paintbrush className="w-5 h-5 lg:w-6 lg:h-6 text-[#F5841F]" />
             </div>
-            <span className="text-xl lg:text-2xl font-bold text-[#1E3A5F]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <span className="text-xl lg:text-2xl font-bold text-[#1C1C1E]" style={{ fontFamily: 'var(--font-heading)' }}>
               PP Plus
             </span>
           </Link>
@@ -54,8 +54,8 @@ export default function Header() {
                 href={link.href}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? 'text-[#1E3A5F] bg-[#1E3A5F]/5'
-                    : 'text-[#1E293B] hover:text-[#1E3A5F] hover:bg-[#1E3A5F]/5'
+                    ? 'text-[#1C1C1E] bg-[#1C1C1E]/5'
+                    : 'text-[#2D2D2D] hover:text-[#1C1C1E] hover:bg-[#1C1C1E]/5'
                 }`}
               >
                 {link.label}
@@ -72,9 +72,9 @@ export default function Header() {
               title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
             >
               {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-[#2EC4B6]" />
+                <Sun className="w-4 h-4 text-[#F5841F]" />
               ) : (
-                <Moon className="w-4 h-4 text-[#1E293B]" />
+                <Moon className="w-4 h-4 text-[#2D2D2D]" />
               )}
             </button>
 
@@ -108,8 +108,8 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
                 className={`block px-4 py-2.5 rounded-lg text-sm font-medium ${
                   pathname === link.href
-                    ? 'text-[#1E3A5F] bg-[#1E3A5F]/5'
-                    : 'text-[#1E293B] hover:bg-gray-50'
+                    ? 'text-[#1C1C1E] bg-[#1C1C1E]/5'
+                    : 'text-[#2D2D2D] hover:bg-gray-50'
                 }`}
               >
                 {link.label}

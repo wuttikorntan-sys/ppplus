@@ -188,7 +188,7 @@ export default function AdminMenuPage() {
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">{filtered.length} {th ? '??????' : 'items'}</p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] text-white rounded-lg font-medium hover:bg-[#1E3A5F]/90 transition text-sm shadow-sm">
+        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-lg font-medium hover:bg-[#1C1C1E]/90 transition text-sm shadow-sm">
           <Plus className="w-4 h-4" /> {th ? '???????????' : 'Add Product'}
         </button>
       </div>
@@ -197,10 +197,10 @@ export default function AdminMenuPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input type="text" placeholder={th ? '???????????...' : 'Search products...'} value={search} onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition text-sm" />
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition text-sm" />
         </div>
         <select value={filterCat} onChange={(e) => setFilterCat(e.target.value)}
-          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none transition text-sm">
+          className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition text-sm">
           <option value="">{th ? '???????????' : 'All Categories'}</option>
           {categories.map((c) => (<option key={c.id} value={c.id}>{th ? c.nameTh : c.nameEn}</option>))}
         </select>
@@ -238,7 +238,7 @@ export default function AdminMenuPage() {
                   <td className="px-4 py-3">
                     <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md">{th ? item.category?.nameTh : item.category?.nameEn}</span>
                   </td>
-                  <td className="px-4 py-3 font-semibold text-[#1E3A5F]">?{Number(item.price).toLocaleString()}</td>
+                  <td className="px-4 py-3 font-semibold text-[#1C1C1E]">?{Number(item.price).toLocaleString()}</td>
                   <td className="px-4 py-3">
                     <button onClick={() => toggleAvailable(item)}
                       className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition ${item.isAvailable ? 'bg-green-50 text-green-700 hover:bg-green-100' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}>
@@ -275,7 +275,7 @@ export default function AdminMenuPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">{th ? '??????' : 'Image'}</label>
                 <div onClick={() => fileInputRef.current?.click()}
-                  className="relative border-2 border-dashed border-gray-200 rounded-xl h-48 flex items-center justify-center cursor-pointer hover:border-[#1E3A5F]/40 transition group overflow-hidden">
+                  className="relative border-2 border-dashed border-gray-200 rounded-xl h-48 flex items-center justify-center cursor-pointer hover:border-[#1C1C1E]/40 transition group overflow-hidden">
                   {imagePreview ? (
                     <>
                       <Image src={imagePreview} alt="" fill className="object-cover" />
@@ -297,36 +297,36 @@ export default function AdminMenuPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '???? (???)' : 'Name (Thai)'} *</label>
                   <input value={form.nameTh} onChange={(e) => setForm({ ...form, nameTh: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '???? (??????)' : 'Name (English)'} *</label>
                   <input value={form.nameEn} onChange={(e) => setForm({ ...form, nameEn: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '?????????? (???)' : 'Description (Thai)'}</label>
                   <textarea value={form.descriptionTh} onChange={(e) => setForm({ ...form, descriptionTh: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm resize-none" rows={3} />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={3} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '?????????? (??????)' : 'Description (English)'}</label>
                   <textarea value={form.descriptionEn} onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm resize-none" rows={3} />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={3} />
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '???? (?)' : 'Price (?)'} *</label>
                   <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '????????' : 'Category'} *</label>
                   <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm">
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm">
                     <option value="">{th ? '?????' : 'Select'}</option>
                     {categories.map((c) => (<option key={c.id} value={c.id}>{th ? c.nameTh : c.nameEn}</option>))}
                   </select>
@@ -334,12 +334,12 @@ export default function AdminMenuPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '?????' : 'Sort Order'}</label>
                   <input type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
               </div>
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input type="checkbox" checked={form.isAvailable} onChange={(e) => setForm({ ...form, isAvailable: e.target.checked })}
-                  className="w-4 h-4 rounded border-gray-300 text-[#1E3A5F] focus:ring-[#1E3A5F]" />
+                  className="w-4 h-4 rounded border-gray-300 text-[#1C1C1E] focus:ring-[#1C1C1E]" />
                 <span className="text-sm font-medium text-gray-700">{th ? '????????' : 'Available for sale'}</span>
               </label>
               {/* Paint-specific fields */}
@@ -350,12 +350,12 @@ export default function AdminMenuPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '??????' : 'Brand'}</label>
                     <input value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })}
                       placeholder="TOA, Beger, Jotun..."
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '?????????' : 'Finish Type'}</label>
                     <select value={form.finishType} onChange={(e) => setForm({ ...form, finishType: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm">
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm">
                       <option value="">{th ? '?????' : 'Select'}</option>
                       <option value="Matte">Matte</option>
                       <option value="Satin">Satin</option>
@@ -370,27 +370,27 @@ export default function AdminMenuPage() {
                         className="w-10 h-10 rounded-lg border border-gray-200 cursor-pointer" />
                       <input value={form.colorCode} onChange={(e) => setForm({ ...form, colorCode: e.target.value })}
                         placeholder="#FFFFFF"
-                        className="flex-1 px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                        className="flex-1 px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '??????' : 'Color Name'}</label>
                     <input value={form.colorName} onChange={(e) => setForm({ ...form, colorName: e.target.value })}
                       placeholder={th ? '??????, ???????...' : 'Pearl White, Ocean Blue...'}
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '????????????? (m�/L)' : 'Coverage (m�/L)'}</label>
                     <input type="number" value={form.coverageArea} onChange={(e) => setForm({ ...form, coverageArea: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '????' : 'Size'}</label>
                     <div className="flex gap-2">
                       <input type="number" value={form.size} onChange={(e) => setForm({ ...form, size: e.target.value })}
-                        className="flex-1 px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm" />
+                        className="flex-1 px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                       <select value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}
-                        className="w-20 px-2 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1E3A5F] focus:ring-2 focus:ring-[#1E3A5F]/10 transition text-sm">
+                        className="w-20 px-2 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm">
                         <option value="L">L</option>
                         <option value="ml">ml</option>
                         <option value="gal">gal</option>
@@ -402,7 +402,7 @@ export default function AdminMenuPage() {
             </div>
             <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-100">
               <button onClick={() => setShowForm(false)} className="px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition font-medium">{th ? '??????' : 'Cancel'}</button>
-              <button onClick={handleSave} disabled={saving} className="px-5 py-2.5 bg-[#1E3A5F] text-white rounded-lg text-sm font-medium hover:bg-[#1E3A5F]/90 transition disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="px-5 py-2.5 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
                 {saving ? (th ? '???????????...' : 'Saving...') : (th ? '??????' : 'Save')}
               </button>
             </div>

@@ -74,7 +74,7 @@ export default function GalleryPage() {
     <div className="min-h-screen">
       <section className="relative py-20 text-white overflow-hidden">
         <Image src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=1920&h=600&fit=crop" alt="Gallery" fill className="object-cover" priority />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A5F]/85 to-[#2EC4B6]/50" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 to-[#F5841F]/50" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{t('title')}</h1>
@@ -87,7 +87,7 @@ export default function GalleryPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-2 justify-center mb-10">
             {categories.map((cat) => (
-              <button key={cat} onClick={() => setActiveCategory(cat)} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? 'bg-[#1E3A5F] text-white shadow-md' : 'bg-white text-[#1E293B] hover:bg-[#1E3A5F]/5 border border-gray-200'}`}>
+              <button key={cat} onClick={() => setActiveCategory(cat)} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? 'bg-[#1C1C1E] text-white shadow-md' : 'bg-white text-[#2D2D2D] hover:bg-[#1C1C1E]/5 border border-gray-200'}`}>
                 {t(`categories.${cat}`)}
               </button>
             ))}

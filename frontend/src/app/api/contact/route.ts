@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { db } from '@/lib/db';
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       subject: `[PP Plus] ข้อความจาก ${safeName}`,
       html: `
         <div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;padding:0;">
-          <div style="background:#1E3A5F;padding:24px 32px;border-radius:12px 12px 0 0;">
+          <div style="background:#1C1C1E;padding:24px 32px;border-radius:12px 12px 0 0;">
             <h2 style="color:#fff;margin:0;font-size:20px;">📩 ข้อความใหม่จากเว็บไซต์</h2>
             <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px;">PP Plus - ร้านขายสีครบวงจร</p>
           </div>
@@ -78,14 +78,14 @@ export async function POST(request: NextRequest) {
               </tr>
               <tr>
                 <td style="padding:12px 0;font-weight:600;color:#333;vertical-align:top;border-bottom:1px solid #f0f0f0;">อีเมล</td>
-                <td style="padding:12px 0;color:#555;border-bottom:1px solid #f0f0f0;"><a href="mailto:${safeEmail}" style="color:#1E3A5F;">${safeEmail}</a></td>
+                <td style="padding:12px 0;color:#555;border-bottom:1px solid #f0f0f0;"><a href="mailto:${safeEmail}" style="color:#1C1C1E;">${safeEmail}</a></td>
               </tr>
               ${safePhone ? `<tr>
                 <td style="padding:12px 0;font-weight:600;color:#333;vertical-align:top;border-bottom:1px solid #f0f0f0;">โทร</td>
-                <td style="padding:12px 0;color:#555;border-bottom:1px solid #f0f0f0;"><a href="tel:${safePhone}" style="color:#1E3A5F;">${safePhone}</a></td>
+                <td style="padding:12px 0;color:#555;border-bottom:1px solid #f0f0f0;"><a href="tel:${safePhone}" style="color:#1C1C1E;">${safePhone}</a></td>
               </tr>` : ''}
             </table>
-            <div style="margin-top:20px;padding:16px 20px;background:#f0f7ff;border-radius:10px;border-left:4px solid #1E3A5F;">
+            <div style="margin-top:20px;padding:16px 20px;background:#FFF5EB;border-radius:10px;border-left:4px solid #1C1C1E;">
               <p style="font-weight:600;color:#333;margin:0 0 8px;font-size:14px;">ข้อความ:</p>
               <p style="color:#555;white-space:pre-wrap;margin:0;line-height:1.6;font-size:14px;">${safeMessage}</p>
             </div>

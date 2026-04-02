@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
@@ -205,13 +205,13 @@ export default function AdminHomepageContentPage() {
     }
   };
 
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#1E3A5F] border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" /></div>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#1E293B]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
             {locale === 'th' ? 'จัดการเนื้อหาหน้าแรก' : 'Homepage Content'}
           </h1>
           <p className="text-gray-500 text-sm mt-1">
@@ -222,7 +222,7 @@ export default function AdminHomepageContentPage() {
           <button onClick={handleReset} className="flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium hover:bg-gray-50 transition">
             <RotateCcw className="w-4 h-4" /> {locale === 'th' ? 'รีเซ็ต' : 'Reset'}
           </button>
-          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#1E3A5F] text-white rounded-lg text-sm font-medium hover:bg-[#1E3A5F]/90 transition disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
             <Save className="w-4 h-4" /> {saving ? (locale === 'th' ? 'กำลังบันทึก...' : 'Saving...') : (locale === 'th' ? 'บันทึกทั้งหมด' : 'Save All')}
           </button>
         </div>
@@ -244,8 +244,8 @@ export default function AdminHomepageContentPage() {
                 className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition"
               >
                 <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-[#1E3A5F]" />
-                  <span className="font-semibold text-[#1E293B]">
+                  <FileText className="w-5 h-5 text-[#1C1C1E]" />
+                  <span className="font-semibold text-[#2D2D2D]">
                     {locale === 'th' ? section.titleTh : section.titleEn}
                   </span>
                   <span className="text-xs text-gray-400">{section.fields.length} {locale === 'th' ? 'ฟิลด์' : 'fields'}</span>
@@ -259,7 +259,7 @@ export default function AdminHomepageContentPage() {
                     <div key={field.key} className="grid md:grid-cols-2 gap-4 pt-4">
                       <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1">
-                          {locale === 'th' ? field.labelTh : field.labelEn} — <span className="text-[#1E3A5F]">TH</span>
+                          {locale === 'th' ? field.labelTh : field.labelEn} — <span className="text-[#1C1C1E]">TH</span>
                         </label>
                         {field.multiline ? (
                           <textarea

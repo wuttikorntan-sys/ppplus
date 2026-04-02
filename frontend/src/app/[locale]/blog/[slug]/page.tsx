@@ -83,7 +83,7 @@ export default function BlogPostPage() {
           <p className="text-gray-500 text-lg mb-4">{t('no_posts')}</p>
           <button
             onClick={() => router.push(`/${locale}/blog`)}
-            className="text-[#1E3A5F] font-medium hover:underline flex items-center gap-2 mx-auto"
+            className="text-[#1C1C1E] font-medium hover:underline flex items-center gap-2 mx-auto"
           >
             <ArrowLeft className="w-4 h-4" /> {t('back_to_list')}
           </button>
@@ -98,7 +98,7 @@ export default function BlogPostPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <button
           onClick={() => router.push(`/${locale}/blog`)}
-          className="text-[#1E3A5F] font-medium hover:underline flex items-center gap-2 text-sm"
+          className="text-[#1C1C1E] font-medium hover:underline flex items-center gap-2 text-sm"
         >
           <ArrowLeft className="w-4 h-4" /> {t('back_to_list')}
         </button>
@@ -129,7 +129,7 @@ export default function BlogPostPage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1E293B] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
             {getTitle(post)}
           </h1>
 
@@ -138,7 +138,7 @@ export default function BlogPostPage() {
             <div className="flex flex-wrap gap-2 mb-8">
               <Tag className="w-4 h-4 text-gray-400" />
               {post.tags.map((tag) => (
-                <span key={tag} className="px-3 py-1 text-xs rounded-full bg-[#2EC4B6]/10 text-[#2EC4B6] font-medium">
+                <span key={tag} className="px-3 py-1 text-xs rounded-full bg-[#F5841F]/10 text-[#F5841F] font-medium">
                   {tag}
                 </span>
               ))}
@@ -146,7 +146,7 @@ export default function BlogPostPage() {
           )}
 
           {/* Content */}
-          <div className="prose prose-lg max-w-none text-[#1E293B]/80 leading-relaxed whitespace-pre-line">
+          <div className="prose prose-lg max-w-none text-[#2D2D2D]/80 leading-relaxed whitespace-pre-line">
             {getContent(post)}
           </div>
         </motion.div>

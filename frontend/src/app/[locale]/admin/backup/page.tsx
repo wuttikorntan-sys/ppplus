@@ -129,7 +129,7 @@ export default function BackupPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <Database className="w-7 h-7 text-[#1E3A5F]" />
+          <Database className="w-7 h-7 text-[#1C1C1E]" />
           {th ? 'สำรองและนำเข้าข้อมูล' : 'Backup & Import'}
         </h1>
         <p className="text-gray-500 mt-1">

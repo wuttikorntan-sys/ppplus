@@ -96,10 +96,10 @@ export default function CalculatorPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative py-20 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A5F] to-[#2EC4B6]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Calculator className="w-12 h-12 mx-auto mb-4 text-[#2EC4B6]" />
+            <Calculator className="w-12 h-12 mx-auto mb-4 text-[#F5841F]" />
             <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
               {t('title')}
             </h1>
@@ -120,47 +120,47 @@ export default function CalculatorPage() {
             >
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-[#1E293B] mb-1.5">{t('room_width')}</label>
+                  <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">{t('room_width')}</label>
                   <input
                     type="number"
                     min="0"
                     step="0.1"
                     value={width}
                     onChange={(e) => { setWidth(e.target.value); setCalculated(false); }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 outline-none transition text-[#1E293B]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#F5841F] focus:ring-2 focus:ring-[#F5841F]/20 outline-none transition text-[#2D2D2D]"
                     placeholder="0.0"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#1E293B] mb-1.5">{t('room_length')}</label>
+                  <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">{t('room_length')}</label>
                   <input
                     type="number"
                     min="0"
                     step="0.1"
                     value={length}
                     onChange={(e) => { setLength(e.target.value); setCalculated(false); }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 outline-none transition text-[#1E293B]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#F5841F] focus:ring-2 focus:ring-[#F5841F]/20 outline-none transition text-[#2D2D2D]"
                     placeholder="0.0"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#1E293B] mb-1.5">{t('room_height')}</label>
+                  <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">{t('room_height')}</label>
                   <input
                     type="number"
                     min="0"
                     step="0.1"
                     value={height}
                     onChange={(e) => { setHeight(e.target.value); setCalculated(false); }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 outline-none transition text-[#1E293B]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#F5841F] focus:ring-2 focus:ring-[#F5841F]/20 outline-none transition text-[#2D2D2D]"
                     placeholder="0.0"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#1E293B] mb-1.5">{t('coats')}</label>
+                  <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">{t('coats')}</label>
                   <select
                     value={coats}
                     onChange={(e) => { setCoats(e.target.value); setCalculated(false); }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 outline-none transition text-[#1E293B]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#F5841F] focus:ring-2 focus:ring-[#F5841F]/20 outline-none transition text-[#2D2D2D]"
                   >
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -168,23 +168,23 @@ export default function CalculatorPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#1E293B] mb-1.5">{t('doors')}</label>
+                  <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">{t('doors')}</label>
                   <input
                     type="number"
                     min="0"
                     value={doors}
                     onChange={(e) => { setDoors(e.target.value); setCalculated(false); }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 outline-none transition text-[#1E293B]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#F5841F] focus:ring-2 focus:ring-[#F5841F]/20 outline-none transition text-[#2D2D2D]"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#1E293B] mb-1.5">{t('windows')}</label>
+                  <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">{t('windows')}</label>
                   <input
                     type="number"
                     min="0"
                     value={windows}
                     onChange={(e) => { setWindows(e.target.value); setCalculated(false); }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 outline-none transition text-[#1E293B]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#F5841F] focus:ring-2 focus:ring-[#F5841F]/20 outline-none transition text-[#2D2D2D]"
                   />
                 </div>
               </div>
@@ -192,7 +192,7 @@ export default function CalculatorPage() {
               {/* Product Selector */}
               {products.length > 0 && (
                 <div className="mt-5">
-                  <label className="block text-sm font-medium text-[#1E293B] mb-1.5">
+                  <label className="block text-sm font-medium text-[#2D2D2D] mb-1.5">
                     {t('result.select_product')}
                   </label>
                   <select
@@ -202,7 +202,7 @@ export default function CalculatorPage() {
                       setSelectedProduct(p || null);
                       setCalculated(false);
                     }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2EC4B6] focus:ring-2 focus:ring-[#2EC4B6]/20 outline-none transition text-[#1E293B]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#F5841F] focus:ring-2 focus:ring-[#F5841F]/20 outline-none transition text-[#2D2D2D]"
                   >
                     <option value="">--</option>
                     {products.filter((p) => p.coverageArea).map((p) => (
@@ -217,7 +217,7 @@ export default function CalculatorPage() {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleCalculate}
-                  className="flex-1 bg-[#1E3A5F] text-white py-3 rounded-xl font-medium hover:bg-[#1E3A5F]/90 transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 bg-[#1C1C1E] text-white py-3 rounded-xl font-medium hover:bg-[#1C1C1E]/90 transition-colors flex items-center justify-center gap-2"
                 >
                   <Calculator className="w-4 h-4" /> {t('calculate')}
                 </button>
@@ -236,7 +236,7 @@ export default function CalculatorPage() {
               animate={{ opacity: 1, x: 0 }}
               className="bg-white rounded-2xl shadow-sm p-6 md:p-8"
             >
-              <h2 className="text-xl font-bold text-[#1E293B] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2 className="text-xl font-bold text-[#2D2D2D] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
                 {t('result.title')}
               </h2>
 
@@ -270,9 +270,9 @@ export default function CalculatorPage() {
 
 function ResultRow({ label, value, highlight, accent }: { label: string; value: string; highlight?: boolean; accent?: boolean }) {
   return (
-    <div className={`flex items-center justify-between p-4 rounded-xl ${highlight ? 'bg-[#1E3A5F]/5' : 'bg-gray-50'}`}>
+    <div className={`flex items-center justify-between p-4 rounded-xl ${highlight ? 'bg-[#1C1C1E]/5' : 'bg-gray-50'}`}>
       <span className="text-sm text-gray-500">{label}</span>
-      <span className={`text-lg font-bold ${accent ? 'text-[#2EC4B6]' : 'text-[#1E293B]'}`}>{value}</span>
+      <span className={`text-lg font-bold ${accent ? 'text-[#F5841F]' : 'text-[#2D2D2D]'}`}>{value}</span>
     </div>
   );
 }
