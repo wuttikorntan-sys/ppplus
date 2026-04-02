@@ -102,9 +102,9 @@ export default function ColorMatchingPage() {
             { icon: Award, title: th ? 'สูตรสีครบทุกยี่ห้อ' : 'All Car Brands', desc: th ? 'รองรับ Toyota, Honda, Nissan, Mazda, Isuzu และอื่นๆ' : 'Toyota, Honda, Nissan, Mazda, Isuzu and more' },
           ].map((item, idx) => (
             <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
-              className="bg-white rounded-xl p-5 shadow-lg border border-gray-100">
-              <div className="w-10 h-10 rounded-lg bg-[#1C1C1E]/10 flex items-center justify-center mb-3">
-                <item.icon className="w-5 h-5 text-[#1C1C1E]" />
+              className="bg-white rounded-xl p-5 shadow-lg border border-gray-100 border-l-4 border-l-[#F5841F]">
+              <div className="w-10 h-10 rounded-lg bg-[#F5841F]/10 flex items-center justify-center mb-3">
+                <item.icon className="w-5 h-5 text-[#F5841F]" />
               </div>
               <h3 className="font-semibold text-[#2D2D2D] mb-1">{item.title}</h3>
               <p className="text-sm text-[#64748B]">{item.desc}</p>
