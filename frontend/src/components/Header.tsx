@@ -3,11 +3,12 @@
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { useState } from 'react';
-import { Menu, X, Globe, Sun, Moon, ShoppingCart } from 'lucide-react';
+import { Menu, X, Globe, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useTheme } from '@/lib/theme';
 import { useCart } from '@/lib/cart';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -65,19 +66,9 @@ export default function Header() {
           </nav>
 
           {/* Right side */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {/* Dark mode toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
-              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-[#F5841F]" />
-              ) : (
-                <Moon className="w-4 h-4 text-[#2D2D2D]" />
-              )}
-            </button>
+            <ThemeToggle />
 
             {/* Language switcher */}
             <button
