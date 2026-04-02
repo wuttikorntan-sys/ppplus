@@ -3,10 +3,12 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Paintbrush, Droplets, SprayCan, Car, Layers, Wrench, Factory, Beaker, Shield, Disc, HardHat, FileText } from 'lucide-react';
+import { Search, Paintbrush, Droplets, SprayCan, Car, Layers, Wrench, Factory, Beaker, Shield, Disc, HardHat, FileText, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
+import { useCart } from '@/lib/cart';
+import toast from 'react-hot-toast';
 
 interface Category {
   id: number;
@@ -146,6 +148,21 @@ export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const { addItem } = useCart();
+  const th = locale === 'th';
+
+  const handleAddToCart = (item: MenuItem) => {
+    addItem({
+      id: item.id,
+      nameTh: item.nameTh,
+      nameEn: item.nameEn,
+      price: item.price,
+      image: item.image,
+      size: item.size,
+      brand: item.brand,
+    });
+    toast.success(th ? 'เพิ่มลงตะกร้าแล้ว' : 'Added to cart');
+  };
 
   useEffect(() => {
     async function fetchMenu() {
@@ -300,12 +317,13 @@ export default function MenuPage() {
                     <p className="text-[#64748B] text-xs hidden md:block">{locale === 'th' ? 'เนื้อสี: ' : 'Finish: '}{item.finishType}</p>
                   )}
                   <div className="mt-2 md:mt-3 flex gap-2">
-                    <Link
-                      href={`/quote?productId=${item.id}&productName=${encodeURIComponent(locale === 'th' ? item.nameTh : item.nameEn)}`}
-                      className="flex-1 text-center text-xs md:text-sm font-medium py-1.5 md:py-2 rounded-lg bg-[#1C1C1E] text-white hover:bg-[#1C1C1E]/90 transition"
+                    <button
+                      onClick={() => handleAddToCart(item)}
+                      className="flex-1 flex items-center justify-center gap-1.5 text-xs md:text-sm font-medium py-1.5 md:py-2 rounded-lg bg-[#F5841F] text-white hover:bg-[#F5841F]/90 transition"
                     >
-                      {locale === 'th' ? 'ขอราคา' : 'Get Quote'}
-                    </Link>
+                      <ShoppingCart className="w-3.5 h-3.5" />
+                      {th ? 'เพิ่มลงตะกร้า' : 'Add to Cart'}
+                    </button>
                     {item.tdsFile && (
                       <a href={item.tdsFile} target="_blank" rel="noopener noreferrer"
                         className="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-gray-400 hover:text-[#1C1C1E] hover:border-[#1C1C1E] transition">

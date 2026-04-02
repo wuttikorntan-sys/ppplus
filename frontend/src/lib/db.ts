@@ -207,6 +207,7 @@ export interface QuoteRequestRecord {
   productName: string | null;
   quantity: string | null;
   message: string | null;
+  cartItems: string | null;
   status: 'pending' | 'quoted' | 'closed';
   createdAt: string;
   updatedAt: string;
@@ -824,8 +825,8 @@ export const db = {
     async create(data: Omit<QuoteRequestRecord, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<QuoteRequestRecord> {
       const ts = now();
       const [res] = await pool.query(
-        'INSERT INTO quote_requests (name, phone, email, company, productId, productName, quantity, message, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [data.name, data.phone, data.email, data.company, data.productId, data.productName, data.quantity, data.message, ts, ts],
+        'INSERT INTO quote_requests (name, phone, email, company, productId, productName, quantity, message, cartItems, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [data.name, data.phone, data.email, data.company, data.productId, data.productName, data.quantity, data.message, data.cartItems, ts, ts],
       );
       const id = (res as mysql.ResultSetHeader).insertId;
       const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);

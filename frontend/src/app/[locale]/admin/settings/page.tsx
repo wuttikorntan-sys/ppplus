@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { Palette, MapPin, Share2, Save, ExternalLink, Mail, Eye, EyeOff, MessageCircle, Globe, Plus, Trash2 } from 'lucide-react';
+import { Palette, MapPin, Share2, Save, ExternalLink, Mail, Eye, EyeOff, MessageCircle, Globe, Plus, Trash2, Bell } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
@@ -49,6 +49,7 @@ export default function AdminSettingsPage() {
   const [smtp, setSmtp] = useState<ContentMap>({});
   const [chat, setChat] = useState<ContentMap>({});
   const [seo, setSeo] = useState<ContentMap>({});
+  const [notify, setNotify] = useState<ContentMap>({});
   const [sitemapPages, setSitemapPages] = useState<SitemapPage[]>(defaultSitemapPages);
   const [robotsDisallow, setRobotsDisallow] = useState<string[]>(['/api/', '/admin/']);
 
@@ -65,12 +66,14 @@ export default function AdminSettingsPage() {
         const filteredSmtp: ContentMap = {};
         const filteredChat: ContentMap = {};
         const filteredSeo: ContentMap = {};
+        const filteredNotify: ContentMap = {};
 
         Object.entries(res.data).forEach(([key, val]) => {
           if (key.startsWith('social.')) filteredSocial[key] = val;
           if (key.startsWith('smtp.')) filteredSmtp[key] = val;
           if (key.startsWith('chat.')) filteredChat[key] = val;
           if (key.startsWith('seo.')) filteredSeo[key] = val;
+          if (key.startsWith('notify.')) filteredNotify[key] = val;
         });
         // Ensure enabled keys exist with defaults
         for (const f of chatFields) {
@@ -83,6 +86,7 @@ export default function AdminSettingsPage() {
         setSmtp(filteredSmtp);
         setChat(filteredChat);
         setSeo(filteredSeo);
+        setNotify(filteredNotify);
         try {
           const sp = filteredSeo['seo.sitemap.pages'];
           if (sp?.th) {
@@ -138,6 +142,13 @@ export default function AdminSettingsPage() {
     }));
   };
 
+  const updateNotifyField = (key: string, value: string) => {
+    setNotify((prev) => ({
+      ...prev,
+      [key]: { th: value, en: value },
+    }));
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -169,7 +180,13 @@ export default function AdminSettingsPage() {
       seoItems.push({ key: 'seo.sitemap.pages', valueTh: sitemapJson, valueEn: sitemapJson, type: 'text' });
       const robotsJson = JSON.stringify(robotsDisallow);
       seoItems.push({ key: 'seo.robots.disallow', valueTh: robotsJson, valueEn: robotsJson, type: 'text' });
-      await api.put('/admin/site-content', [...socialItems, ...smtpItems, ...chatItems, ...seoItems]);
+      const notifyItems = Object.entries(notify).map(([key, val]) => ({
+        key,
+        valueTh: val.th,
+        valueEn: val.en,
+        type: 'text',
+      }));
+      await api.put('/admin/site-content', [...socialItems, ...smtpItems, ...chatItems, ...seoItems, ...notifyItems]);
       setSavedMsg(true);
       setTimeout(() => setSavedMsg(false), 3000);
     } catch { /* ignore */ }
@@ -386,6 +403,44 @@ export default function AdminSettingsPage() {
               <p className="text-xs text-gray-400 mt-2">
                 {th ? '* สำหรับ Gmail ให้ใช้ App Password (ไม่ใช่รหัสผ่านปกติ) — ไปที่ Google Account → Security → App passwords' : '* For Gmail, use App Password (not your regular password) — Go to Google Account → Security → App passwords'}
               </p>
+            </div>
+          )}
+        </div>
+
+        {/* LINE Notify */}
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                <Bell className="w-5 h-5 text-green-600" />
+              </div>
+              <div>
+                <h2 className="font-semibold text-gray-900">{th ? 'การแจ้งเตือน LINE Notify' : 'LINE Notify Alerts'}</h2>
+                <p className="text-xs text-gray-400">{th ? 'รับแจ้งเตือนใบเสนอราคาผ่าน LINE' : 'Receive quote alerts via LINE'}</p>
+              </div>
+            </div>
+            <button onClick={handleSave} disabled={saving || loading} className="flex items-center gap-2 px-4 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
+              <Save className="w-4 h-4" /> {saving ? (th ? 'กำลังบันทึก...' : 'Saving...') : (th ? 'บันทึก' : 'Save')}
+            </button>
+          </div>
+          {loading ? (
+            <div className="flex justify-center py-8"><div className="w-6 h-6 border-3 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" /></div>
+          ) : (
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-medium text-gray-500 mb-1 block">LINE Notify Token</label>
+                <input type="text" value={notify['notify.line.token']?.th || ''} onChange={(e) => updateNotifyField('notify.line.token', e.target.value)} placeholder="xxxxxxxxxxxxxxxxxxxx" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#1C1C1E] transition font-mono" />
+              </div>
+              <div className="p-3 bg-green-50 rounded-lg">
+                <p className="text-xs text-green-700 font-medium mb-1">{th ? 'วิธีขอ Token:' : 'How to get a token:'}</p>
+                <ol className="text-xs text-green-600 space-y-0.5 list-decimal list-inside">
+                  <li>{th ? 'ไปที่ notify-bot.line.me' : 'Go to notify-bot.line.me'}</li>
+                  <li>{th ? 'ล็อกอินด้วย LINE account' : 'Login with your LINE account'}</li>
+                  <li>{th ? 'กด "Generate token" เลือกห้องแชทที่ต้องการรับแจ้งเตือน' : 'Click "Generate token" and select a chat room'}</li>
+                  <li>{th ? 'คัดลอก Token มาวางที่นี่' : 'Copy the token and paste it here'}</li>
+                </ol>
+              </div>
+              <p className="text-xs text-gray-400">{th ? '* เมื่อมีลูกค้าขอใบเสนอราคา ระบบจะส่งแจ้งเตือนไปยัง LINE ของคุณทันที' : '* When a customer requests a quote, you will receive an instant LINE notification'}</p>
             </div>
           )}
         </div>

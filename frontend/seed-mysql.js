@@ -185,6 +185,7 @@ async function main() {
       productName VARCHAR(255) NULL,
       quantity VARCHAR(100) NULL,
       message TEXT NULL,
+      cartItems JSON NULL,
       status ENUM('pending','quoted','closed') NOT NULL DEFAULT 'pending',
       createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

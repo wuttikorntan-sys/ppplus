@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { AuthProvider } from '@/lib/auth';
 import { ThemeProvider } from '@/lib/theme';
+import { CartProvider } from '@/lib/cart';
 import { Toaster } from 'react-hot-toast';
 import LayoutShell from '@/components/LayoutShell';
 
@@ -35,8 +36,10 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <AuthProvider>
-              <LayoutShell>{children}</LayoutShell>
-              <Toaster position="top-right" />
+              <CartProvider>
+                <LayoutShell>{children}</LayoutShell>
+                <Toaster position="top-right" />
+              </CartProvider>
             </AuthProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
