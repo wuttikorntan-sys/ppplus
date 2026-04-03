@@ -43,18 +43,13 @@ html.dark body {
 
 .dark .bg-gray-50,
 .dark .bg-gray-100 {
-  background-color: #252525 !important;
-}
-
-.dark .bg-\[\#F8FAFC\] {
-  background-color: #181818 !important;
+  background-color: #1E1E1E !important;
 }
 
 .dark .text-\[\#1C1C1E\],
-.dark .text-\[\#2D2D2D\],
 .dark .text-gray-900,
 .dark .text-gray-800 {
-  color: #E0E0E0 !important;
+  color: #E8E8E8 !important;
 }
 
 .dark .text-gray-700 {
@@ -137,6 +132,92 @@ html.dark body {
 .dark .rounded-xl.border.border-gray-100.shadow-sm {
   background-color: #1E1E1E !important;
   border-color: #2A2A2A !important;
+}
+
+/* Dark mode — section backgrounds */
+.dark .bg-\[\#FAFAFA\] {
+  background-color: #161616 !important;
+}
+
+.dark .bg-\[\#F8FAFC\] {
+  background-color: #181818 !important;
+}
+
+/* Dark mode — text colors */
+.dark .text-\[\#2D2D2D\] {
+  color: #F0F0F0 !important;
+}
+
+.dark .text-\[\#64748B\] {
+  color: #9CA3AF !important;
+}
+
+.dark .text-\[\#1C1C1E\] {
+  color: #E8E8E8 !important;
+}
+
+/* Dark mode — cards and containers */
+.dark .bg-white.rounded-2xl,
+.dark .rounded-2xl.bg-white {
+  background-color: #1E1E1E !important;
+}
+
+.dark .bg-white.rounded-2xl.shadow-sm,
+.dark .bg-white.rounded-xl {
+  background-color: #1E1E1E !important;
+  border-color: #2A2A2A !important;
+}
+
+/* Dark mode — icon containers */
+.dark .bg-\[\#1C1C1E\]\/10 {
+  background-color: rgba(245, 132, 31, 0.12) !important;
+}
+
+.dark .bg-\[\#1C1C1E\]\/10 .text-\[\#1C1C1E\] {
+  color: #F5841F !important;
+}
+
+.dark .border-\[\#1C1C1E\]\/15 {
+  border-color: rgba(245, 132, 31, 0.2) !important;
+}
+
+/* Dark mode — "Why PP Plus" experience cards */
+.dark .group.bg-white.rounded-2xl.border.border-gray-100 {
+  background-color: #1E1E1E !important;
+  border-color: #2A2A2A !important;
+}
+
+.dark .group.bg-white.rounded-2xl.border.border-gray-100:hover {
+  border-color: rgba(245, 132, 31, 0.3) !important;
+}
+
+/* Dark mode — product cards in marquee */
+.dark .bg-white.rounded-2xl.overflow-hidden.shadow-sm {
+  background-color: #1E1E1E !important;
+}
+
+/* Dark mode — links */
+.dark a.text-\[\#1C1C1E\] {
+  color: #D0D0D0 !important;
+}
+
+.dark a.text-\[\#1C1C1E\]:hover {
+  color: #F5841F !important;
+}
+
+/* Dark mode — buttons */
+.dark .bg-\[\#1C1C1E\] {
+  background-color: #2A2A2A !important;
+}
+
+/* Dark mode — map & contact section */
+.dark .border-t.border-gray-100 {
+  border-color: #2A2A2A !important;
+}
+
+/* Dark mode — footer and misc shadows */
+.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
