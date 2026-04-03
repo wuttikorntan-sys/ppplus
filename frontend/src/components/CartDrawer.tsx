@@ -21,19 +21,18 @@ export default function CartDrawer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
+            className="fixed inset-0 bg-black/40 z-[60]"
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Popup Card */}
+          {/* Slide Drawer */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-none"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+            className="fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-[#23232a] z-[60] shadow-2xl flex flex-col"
           >
-            <div className="bg-white dark:bg-[#23232a] rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden border border-gray-100 dark:border-white/10">
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/10">
                 <div className="flex items-center gap-2.5">
@@ -131,8 +130,7 @@ export default function CartDrawer() {
                   <p className="text-[10px] text-gray-400 text-center">{th ? '* ราคาอาจเปลี่ยนแปลงตามปริมาณและโปรโมชั่น' : '* Prices may vary based on quantity and promotions'}</p>
                 </div>
               )}
-            </div>
-          </motion.div>
+            </motion.div>
         </>
       )}
     </AnimatePresence>
