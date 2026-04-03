@@ -13,84 +13,96 @@ export default function CartDrawer() {
   const th = locale === 'th';
 
   return (
-    <>
-      {/* Drawer Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 z-50"
-              onClick={() => setIsOpen(false)}
-            />
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl flex flex-col"
-            >
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Popup Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 30 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-none"
+          >
+            <div className="bg-white dark:bg-[#23232a] rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden border border-gray-100 dark:border-white/10">
               {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/10">
                 <div className="flex items-center gap-2.5">
-                  <ShoppingCart className="w-5 h-5 text-[#F5841F]" />
-                  <h2 className="text-lg font-bold text-[#1C1C1E]" style={{ fontFamily: 'var(--font-heading)' }}>
-                    {th ? 'ตะกร้าขอราคา' : 'Quote Cart'}
-                  </h2>
-                  {totalItems > 0 && (
-                    <span className="bg-[#F5841F]/10 text-[#F5841F] text-xs font-semibold px-2 py-0.5 rounded-full">
-                      {totalItems} {th ? 'รายการ' : 'items'}
-                    </span>
-                  )}
+                  <div className="w-9 h-9 rounded-xl bg-[#F5841F]/10 flex items-center justify-center">
+                    <ShoppingCart className="w-[18px] h-[18px] text-[#F5841F]" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-[#1C1C1E] dark:text-white leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                      {th ? 'ตะกร้าขอราคา' : 'Quote Cart'}
+                    </h2>
+                    {totalItems > 0 && (
+                      <p className="text-xs text-[#F5841F] font-medium mt-0.5">
+                        {totalItems} {th ? 'รายการ' : totalItems === 1 ? 'item' : 'items'}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition">
-                  <X className="w-5 h-5 text-gray-500" />
+                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition">
+                  <X className="w-5 h-5 text-gray-400" />
                 </button>
               </div>
 
               {/* Items */}
-              <div className="flex-1 overflow-y-auto px-5 py-4">
+              <div className="flex-1 overflow-y-auto px-5 py-4 overscroll-contain">
                 {items.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-center">
-                    <ShoppingCart className="w-16 h-16 text-gray-200 mb-4" />
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <div className="w-16 h-16 rounded-2xl bg-gray-50 dark:bg-white/5 flex items-center justify-center mb-4">
+                      <ShoppingCart className="w-8 h-8 text-gray-300 dark:text-gray-600" />
+                    </div>
                     <p className="text-gray-400 font-medium">{th ? 'ยังไม่มีสินค้าในตะกร้า' : 'Your cart is empty'}</p>
-                    <p className="text-gray-300 text-sm mt-1">{th ? 'เพิ่มสินค้าจากหน้าสินค้า' : 'Add products from the products page'}</p>
+                    <p className="text-gray-300 dark:text-gray-500 text-sm mt-1">{th ? 'เพิ่มสินค้าจากหน้าสินค้า' : 'Add products from the products page'}</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {items.map((item) => (
-                      <div key={item.id} className="flex gap-3 bg-gray-50 rounded-xl p-3">
-                        <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200">
+                      <div key={item.id} className="flex gap-3 bg-gray-50 dark:bg-white/5 rounded-xl p-3 group">
+                        <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-gray-200 dark:bg-white/10">
                           <Image
                             src={item.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=200&h=200&fit=crop'}
                             alt={th ? item.nameTh : item.nameEn}
                             fill
                             className="object-cover"
-                            sizes="80px"
+                            sizes="64px"
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-[#1C1C1E] line-clamp-2 leading-snug">{th ? item.nameTh : item.nameEn}</p>
-                          <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-400">
-                            {item.brand && <span>{item.brand}</span>}
-                            {item.size && <span>· {item.size}</span>}
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <p className="text-sm font-semibold text-[#1C1C1E] dark:text-white line-clamp-1 leading-snug">{th ? item.nameTh : item.nameEn}</p>
+                              <div className="flex items-center gap-1.5 mt-0.5 text-xs text-gray-400">
+                                {item.brand && <span>{item.brand}</span>}
+                                {item.size && <span>· {item.size}</span>}
+                              </div>
+                            </div>
+                            <button onClick={() => removeItem(item.id)} className="p-1 text-gray-300 hover:text-red-500 transition shrink-0 opacity-0 group-hover:opacity-100">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
                           </div>
-                          <p className="text-sm font-bold text-[#F5841F] mt-1">฿{Number(item.price).toLocaleString()}</p>
                           <div className="flex items-center justify-between mt-2">
-                            <div className="flex items-center gap-1 bg-white rounded-lg border border-gray-200">
-                              <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1.5 hover:bg-gray-50 rounded-l-lg transition">
-                                <Minus className="w-3.5 h-3.5 text-gray-500" />
+                            <p className="text-sm font-bold text-[#F5841F]">฿{Number(item.price).toLocaleString()}</p>
+                            <div className="flex items-center gap-0.5 bg-white dark:bg-white/10 rounded-lg border border-gray-200 dark:border-white/10">
+                              <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1.5 hover:bg-gray-50 dark:hover:bg-white/10 rounded-l-lg transition">
+                                <Minus className="w-3 h-3 text-gray-500 dark:text-gray-400" />
                               </button>
-                              <span className="w-8 text-center text-sm font-semibold text-[#1C1C1E]">{item.quantity}</span>
-                              <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1.5 hover:bg-gray-50 rounded-r-lg transition">
-                                <Plus className="w-3.5 h-3.5 text-gray-500" />
+                              <span className="w-7 text-center text-xs font-semibold text-[#1C1C1E] dark:text-white">{item.quantity}</span>
+                              <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1.5 hover:bg-gray-50 dark:hover:bg-white/10 rounded-r-lg transition">
+                                <Plus className="w-3 h-3 text-gray-500 dark:text-gray-400" />
                               </button>
                             </div>
-                            <button onClick={() => removeItem(item.id)} className="p-1.5 text-gray-400 hover:text-red-500 transition">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
                           </div>
                         </div>
                       </div>
@@ -101,17 +113,17 @@ export default function CartDrawer() {
 
               {/* Footer */}
               {items.length > 0 && (
-                <div className="border-t border-gray-100 px-5 py-4 space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">{th ? 'ราคารวมโดยประมาณ' : 'Estimated Total'}</span>
-                    <span className="text-lg font-bold text-[#1C1C1E]">
+                <div className="border-t border-gray-100 dark:border-white/10 px-5 py-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{th ? 'ราคารวมโดยประมาณ' : 'Estimated Total'}</span>
+                    <span className="text-xl font-bold text-[#1C1C1E] dark:text-white">
                       ฿{items.reduce((sum, i) => sum + i.price * i.quantity, 0).toLocaleString()}
                     </span>
                   </div>
                   <Link
                     href="/quote"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#F5841F] text-white rounded-xl font-semibold hover:bg-[#F5841F]/90 transition text-sm"
+                    className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#F5841F] text-white rounded-xl font-semibold hover:bg-[#F5841F]/90 active:scale-[0.98] transition text-sm shadow-lg shadow-[#F5841F]/20"
                   >
                     <FileText className="w-4 h-4" />
                     {th ? 'ขอใบเสนอราคา' : 'Request a Quote'}
@@ -119,10 +131,10 @@ export default function CartDrawer() {
                   <p className="text-[10px] text-gray-400 text-center">{th ? '* ราคาอาจเปลี่ยนแปลงตามปริมาณและโปรโมชั่น' : '* Prices may vary based on quantity and promotions'}</p>
                 </div>
               )}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }

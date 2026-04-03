@@ -7,16 +7,24 @@ type Theme = 'light' | 'dark';
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  isTransitioning: boolean;
+  transitionTarget: Theme;
+  startTransition: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'light',
   toggleTheme: () => {},
+  isTransitioning: false,
+  transitionTarget: 'dark',
+  startTransition: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionTarget, setTransitionTarget] = useState<Theme>('dark');
 
   useEffect(() => {
     const saved = localStorage.getItem('ppplus-theme') as Theme | null;
@@ -43,8 +51,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
+  const startTransition = useCallback(() => {
+    if (isTransitioning) return;
+    const next = theme === 'light' ? 'dark' : 'light';
+    setTransitionTarget(next);
+    setIsTransitioning(true);
+
+    // Apply theme at animation peak
+    setTimeout(() => {
+      setTheme(next);
+    }, 800);
+
+    // End animation
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 2000);
+  }, [theme, isTransitioning]);
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, isTransitioning, transitionTarget, startTransition }}>
       {children}
     </ThemeContext.Provider>
   );

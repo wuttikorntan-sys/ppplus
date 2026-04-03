@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingReservation from '@/components/FloatingReservation';
 import CartDrawer from '@/components/CartDrawer';
+import ThemeTransitionOverlay from '@/components/ThemeTransitionOverlay';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -21,6 +22,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       <Footer />
       <CartDrawer />
       <FloatingReservation />
+      <ThemeTransitionOverlay />
     </>
   );
 }

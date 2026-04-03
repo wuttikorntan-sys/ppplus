@@ -18,7 +18,7 @@ export default function Header() {
   const router = useRouter();
   const currentLocale = (params.locale as string) || 'th';
   const otherLocale = currentLocale === 'th' ? 'en' : 'th';
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const { totalItems, setIsOpen } = useCart();
 
   const navLinks = [
