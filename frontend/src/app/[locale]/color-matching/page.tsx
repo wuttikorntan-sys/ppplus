@@ -75,7 +75,7 @@ export default function ColorMatchingPage() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       {/* Hero */}
-      <div className="relative bg-[#1C1C1E] py-20 overflow-hidden">
+      <div className="relative bg-[#1C1C1E] pt-24 pb-20 overflow-hidden">
         <div className="absolute inset-0 opacity-15">
           <Image src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
         </div>
