@@ -40,17 +40,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme, mounted]);
 
   const toggleTheme = useCallback(() => {
-    const next = theme === 'light' ? 'dark' : 'light';
-
-    // Use View Transitions API if available for smooth animation
-    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
-      (document as any).startViewTransition(() => {
-        setTheme(next);
-      });
-    } else {
-      setTheme(next);
-    }
-  }, [theme]);
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

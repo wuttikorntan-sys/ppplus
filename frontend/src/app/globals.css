@@ -171,27 +171,9 @@ html, body {
   animation-play-state: paused;
 }
 
-/* Theme transition with View Transitions API */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.5s;
-  animation-timing-function: ease-in-out;
-}
-
-::view-transition-old(root) {
-  animation-name: theme-fade-out;
-}
-
-::view-transition-new(root) {
-  animation-name: theme-fade-in;
-}
-
-@keyframes theme-fade-out {
-  0% { opacity: 1; filter: brightness(1); }
-  100% { opacity: 0; filter: brightness(0.5); }
-}
-
-@keyframes theme-fade-in {
-  0% { opacity: 0; filter: brightness(0.5); }
-  100% { opacity: 1; filter: brightness(1); }
+/* Theme transition smoothing */
+* {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
