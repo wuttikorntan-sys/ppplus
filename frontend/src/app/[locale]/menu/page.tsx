@@ -276,7 +276,7 @@ export default function MenuPage() {
                 transition={{ delay: idx * 0.04, duration: 0.4 }}
                 className="bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group"
               >
-                <div className="relative aspect-square md:aspect-[4/3] w-full overflow-hidden">
+                <Link href={`/menu/${item.id}` as '/menu/[id]'} className="relative aspect-square md:aspect-[4/3] w-full overflow-hidden block cursor-pointer">
                   <Image
                     src={item.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&h=450&fit=crop'}
                     alt={locale === 'th' ? item.nameTh : item.nameEn}
@@ -299,14 +299,16 @@ export default function MenuPage() {
                     </div>
                   )}
                   <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/30 to-transparent" />
-                </div>
+                </Link>
                 <div className="p-3 md:p-5">
                   <span className="hidden md:inline-block text-xs text-[#F5841F] font-semibold tracking-wide uppercase mb-1">
                     {locale === 'th' ? item.category?.nameTh : item.category?.nameEn}
                   </span>
-                  <h3 className="font-semibold text-[#2D2D2D] text-sm md:text-lg leading-snug mb-0.5 md:mb-1.5 line-clamp-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                    {locale === 'th' ? item.nameTh : item.nameEn}
-                  </h3>
+                  <Link href={`/menu/${item.id}` as '/menu/[id]'} className="block">
+                    <h3 className="font-semibold text-[#2D2D2D] text-sm md:text-lg leading-snug mb-0.5 md:mb-1.5 line-clamp-2 hover:text-[#F5841F] transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
+                      {locale === 'th' ? item.nameTh : item.nameEn}
+                    </h3>
+                  </Link>
                   {item.size && (
                     <p className="text-[#64748B] text-xs md:text-sm">{item.size}</p>
                   )}
