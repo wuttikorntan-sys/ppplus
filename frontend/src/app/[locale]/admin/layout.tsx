@@ -31,6 +31,8 @@ import {
   MessageSquareQuote,
   FileDown,
   Globe,
+  ShoppingCart,
+  CalendarDays,
 } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 
@@ -67,6 +69,8 @@ const navSections = [
     titleTh: 'ธุรกิจ',
     titleEn: 'Business',
     items: [
+      { key: 'orders', icon: ShoppingCart, href: '/admin/orders' },
+      { key: 'reservations', icon: CalendarDays, href: '/admin/reservations' },
       { key: 'b2b', icon: Handshake, href: '/admin/b2b' },
       { key: 'b2b-documents', icon: FileDown, href: '/admin/b2b-documents' },
       { key: 'quotes', icon: MessageSquareQuote, href: '/admin/quotes' },
@@ -98,6 +102,8 @@ const labels: Record<string, Record<string, string>> = {
     gallery: 'แกลเลอรี่',
     blog: 'บทความ',
     popups: 'ป๊อปอัพ',
+    orders: 'ออเดอร์',
+    reservations: 'การจอง',
     b2b: 'ตัวแทนจำหน่าย',
     'b2b-documents': 'เอกสาร B2B',
     quotes: 'ใบเสนอราคา',
@@ -119,6 +125,8 @@ const labels: Record<string, Record<string, string>> = {
     gallery: 'Gallery',
     blog: 'Blog',
     popups: 'Popups',
+    orders: 'Orders',
+    reservations: 'Reservations',
     b2b: 'B2B Applications',
     'b2b-documents': 'B2B Documents',
     quotes: 'Quote Requests',

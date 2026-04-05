@@ -213,6 +213,49 @@ export interface QuoteRequestRecord {
   updatedAt: string;
 }
 
+export interface OrderRecord {
+  id: number;
+  userId: number | null;
+  status: 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED';
+  totalAmount: string;
+  orderType: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OrderItemRecord {
+  id: number;
+  orderId: number;
+  menuItemId: number;
+  quantity: number;
+  price: string;
+  createdAt: string;
+}
+
+export interface PaymentRecord {
+  id: number;
+  orderId: number;
+  method: string;
+  status: 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReservationRecord {
+  id: number;
+  userId: number | null;
+  name: string;
+  email: string | null;
+  phone: string;
+  date: string;
+  time: string;
+  guests: number;
+  notes: string | null;
+  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface B2bDocumentRecord {
   id: number;
   nameTh: string;
@@ -846,6 +889,129 @@ export const db = {
       await pool.query(`UPDATE quote_requests SET ${fields.join(', ')} WHERE id = ?`, vals);
       const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);
       return mapRow((rows as any[])[0]) as QuoteRequestRecord;
+    },
+  },
+
+  /* ── orders ── */
+  orders: {
+    async findMany(opts?: { where?: { status?: string } }): Promise<any[]> {
+      let sql = `SELECT o.*, u.name as userName, u.email as userEmail FROM orders o LEFT JOIN users u ON o.userId = u.id`;
+      const conditions: string[] = [];
+      const vals: unknown[] = [];
+      if (opts?.where?.status) {
+        conditions.push('o.status = ?');
+        vals.push(opts.where.status);
+      }
+      if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
+      sql += ' ORDER BY o.createdAt DESC';
+      const [rows] = await pool.query(sql, vals);
+      const orders = (rows as any[]).map(mapRow);
+
+      // attach items and payment for each order
+      for (const order of orders) {
+        const [itemRows] = await pool.query(
+          `SELECT oi.*, mi.nameTh, mi.nameEn FROM order_items oi LEFT JOIN menu_items mi ON oi.menuItemId = mi.id WHERE oi.orderId = ?`,
+          [order.id],
+        );
+        order.items = (itemRows as any[]).map((r: any) => ({
+          id: r.id,
+          quantity: r.quantity,
+          price: r.price?.toString() ?? '0',
+          menuItem: { nameTh: r.nameTh || '', nameEn: r.nameEn || '' },
+        }));
+
+        const [payRows] = await pool.query('SELECT * FROM payments WHERE orderId = ? LIMIT 1', [order.id]);
+        const pays = payRows as any[];
+        order.payment = pays.length ? { method: pays[0].method, status: pays[0].status } : null;
+        order.user = order.userName ? { name: order.userName, email: order.userEmail } : null;
+        order.totalAmount = order.totalAmount?.toString() ?? '0';
+        delete order.userName;
+        delete order.userEmail;
+      }
+      return orders;
+    },
+    async findById(id: number): Promise<OrderRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM orders WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as OrderRecord) : undefined;
+    },
+    async create(data: { userId?: number | null; totalAmount: number; orderType?: string; items: { menuItemId: number; quantity: number; price: number }[]; paymentMethod?: string }): Promise<OrderRecord> {
+      const ts = now();
+      const [res] = await pool.query(
+        'INSERT INTO orders (userId, totalAmount, orderType, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)',
+        [data.userId ?? null, data.totalAmount, data.orderType || 'ONLINE', ts, ts],
+      );
+      const orderId = (res as mysql.ResultSetHeader).insertId;
+      for (const item of data.items) {
+        await pool.query(
+          'INSERT INTO order_items (orderId, menuItemId, quantity, price, createdAt) VALUES (?, ?, ?, ?, ?)',
+          [orderId, item.menuItemId, item.quantity, item.price, ts],
+        );
+      }
+      if (data.paymentMethod) {
+        await pool.query(
+          'INSERT INTO payments (orderId, method, createdAt, updatedAt) VALUES (?, ?, ?, ?)',
+          [orderId, data.paymentMethod, ts, ts],
+        );
+      }
+      return (await this.findById(orderId))!;
+    },
+    async updateStatus(id: number, status: string): Promise<OrderRecord | undefined> {
+      const [check] = await pool.query('SELECT id FROM orders WHERE id = ?', [id]);
+      if (!(check as any[]).length) return undefined;
+      await pool.query('UPDATE orders SET status = ?, updatedAt = ? WHERE id = ?', [status, now(), id]);
+      return (await this.findById(id))!;
+    },
+    async count(): Promise<number> {
+      const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM orders');
+      return (rows as any[])[0].cnt;
+    },
+  },
+
+  /* ── reservations ── */
+  reservations: {
+    async findMany(opts?: { where?: { status?: string } }): Promise<any[]> {
+      let sql = `SELECT r.*, u.name as userName, u.email as userEmail FROM reservations r LEFT JOIN users u ON r.userId = u.id`;
+      const conditions: string[] = [];
+      const vals: unknown[] = [];
+      if (opts?.where?.status) {
+        conditions.push('r.status = ?');
+        vals.push(opts.where.status);
+      }
+      if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
+      sql += ' ORDER BY r.date DESC, r.time DESC';
+      const [rows] = await pool.query(sql, vals);
+      return (rows as any[]).map((row: any) => {
+        const mapped = mapRow(row);
+        mapped.user = mapped.userName ? { name: mapped.userName, email: mapped.userEmail } : null;
+        delete mapped.userName;
+        delete mapped.userEmail;
+        return mapped;
+      });
+    },
+    async findById(id: number): Promise<ReservationRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM reservations WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as ReservationRecord) : undefined;
+    },
+    async create(data: Omit<ReservationRecord, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<ReservationRecord> {
+      const ts = now();
+      const [res] = await pool.query(
+        'INSERT INTO reservations (userId, name, email, phone, date, time, guests, notes, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [data.userId, data.name, data.email, data.phone, data.date, data.time, data.guests, data.notes, ts, ts],
+      );
+      const id = (res as mysql.ResultSetHeader).insertId;
+      return (await this.findById(id))!;
+    },
+    async updateStatus(id: number, status: string): Promise<ReservationRecord | undefined> {
+      const [check] = await pool.query('SELECT id FROM reservations WHERE id = ?', [id]);
+      if (!(check as any[]).length) return undefined;
+      await pool.query('UPDATE reservations SET status = ?, updatedAt = ? WHERE id = ?', [status, now(), id]);
+      return (await this.findById(id))!;
+    },
+    async count(): Promise<number> {
+      const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM reservations');
+      return (rows as any[])[0].cnt;
     },
   },
 
