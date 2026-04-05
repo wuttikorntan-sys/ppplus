@@ -72,23 +72,23 @@ const MOCK_REVIEWS: GoogleReviewsData = {
 // ─── Skeleton loader for individual card ───
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 animate-pulse">
+    <div className="bg-white dark:bg-white/5 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-white/10 animate-pulse">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-full bg-gray-200" />
+        <div className="w-11 h-11 rounded-full bg-gray-200 dark:bg-white/10" />
         <div className="flex-1">
-          <div className="h-3.5 bg-gray-200 rounded w-28 mb-2" />
-          <div className="h-2.5 bg-gray-200 rounded w-20" />
+          <div className="h-3.5 bg-gray-200 dark:bg-white/10 rounded w-28 mb-2" />
+          <div className="h-2.5 bg-gray-200 dark:bg-white/10 rounded w-20" />
         </div>
       </div>
       <div className="flex gap-1 mb-3">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="w-4 h-4 rounded bg-gray-200" />
+          <div key={i} className="w-4 h-4 rounded bg-gray-200 dark:bg-white/10" />
         ))}
       </div>
       <div className="space-y-2">
-        <div className="h-3 bg-gray-200 rounded w-full" />
-        <div className="h-3 bg-gray-200 rounded w-full" />
-        <div className="h-3 bg-gray-200 rounded w-3/4" />
+        <div className="h-3 bg-gray-200 dark:bg-white/10 rounded w-full" />
+        <div className="h-3 bg-gray-200 dark:bg-white/10 rounded w-full" />
+        <div className="h-3 bg-gray-200 dark:bg-white/10 rounded w-3/4" />
       </div>
     </div>
   );
@@ -117,7 +117,7 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.07, duration: 0.4 }}
-      className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300 flex flex-col"
+      className="bg-white dark:bg-white/5 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-white/10 hover:shadow-md transition-shadow duration-300 flex flex-col"
     >
       {/* Author */}
       <div className="flex items-center gap-3 mb-3">
@@ -130,13 +130,13 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
             className="w-11 h-11 rounded-full object-cover ring-2 ring-gray-100"
           />
         ) : (
-          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#1C1C1E]/20 to-[#F5841F]/20 flex items-center justify-center ring-2 ring-gray-100">
-            <span className="text-[#1C1C1E] font-bold text-base">{review.authorName.charAt(0)}</span>
+          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#1C1C1E]/20 to-[#F5841F]/20 dark:from-[#F5841F]/20 dark:to-[#F5841F]/10 flex items-center justify-center ring-2 ring-gray-100 dark:ring-white/10">
+            <span className="text-[#1C1C1E] dark:text-white font-bold text-base">{review.authorName.charAt(0)}</span>
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-[#2D2D2D] font-semibold text-sm truncate">{review.authorName}</p>
-          <p className="text-gray-400 text-xs">{review.relativeTime}</p>
+          <p className="text-[#2D2D2D] dark:text-white font-semibold text-sm truncate">{review.authorName}</p>
+          <p className="text-gray-400 dark:text-gray-500 text-xs">{review.relativeTime}</p>
         </div>
         {/* Google "G" badge */}
         <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0 opacity-40">
@@ -152,7 +152,7 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
 
       {/* Review text */}
       {review.text && (
-        <p className="text-gray-600 text-sm leading-relaxed mt-3 line-clamp-4 flex-1">
+        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mt-3 line-clamp-4 flex-1">
           <Quote className="w-3.5 h-3.5 inline-block text-[#F5841F]/30 mr-1 -mt-0.5" />
           {review.text}
         </p>
@@ -187,7 +187,7 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
   const defaultReviewUrl = reviewUrl || 'https://g.page/r/CU2GmSihx5JtEBM/review';
 
   return (
-    <section className="py-16 bg-gradient-to-b from-[#FAFAFA] to-white relative overflow-hidden">
+    <section className="py-16 bg-gradient-to-b from-[#FAFAFA] to-white dark:from-[#121212] dark:to-[#1a1a1a] relative overflow-hidden">
       {/* Decorative */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-[#1C1C1E]/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
       <div className="absolute bottom-0 right-0 w-60 h-60 bg-[#F5841F]/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
@@ -202,7 +202,7 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
         >
           {/* Google logo */}
           <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center">
+            <div className="w-12 h-12 bg-white dark:bg-white/10 rounded-xl shadow-md dark:shadow-none flex items-center justify-center">
               <svg viewBox="0 0 24 24" className="w-7 h-7">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -215,7 +215,7 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
           {/* Rating summary — show only when data loaded */}
           {data && (
             <div className="flex items-center justify-center gap-3 mb-3">
-              <span className="text-4xl font-bold text-[#2D2D2D]">{data.rating.toFixed(1)}</span>
+              <span className="text-4xl font-bold text-[#2D2D2D] dark:text-white">{data.rating.toFixed(1)}</span>
               <div>
                 <Stars rating={data.rating} size="md" />
                 <p className="text-gray-400 text-xs mt-0.5">
@@ -225,7 +225,7 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
             </div>
           )}
 
-          <h2 className="text-2xl md:text-3xl font-bold text-[#2D2D2D] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#2D2D2D] dark:text-white mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
             {locale === 'th' ? 'รีวิวจากลูกค้า' : 'Customer Reviews'}
           </h2>
           <p className="text-gray-400 text-sm">Google Reviews</p>
