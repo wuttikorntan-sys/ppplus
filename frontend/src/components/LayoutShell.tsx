@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import FloatingReservation from '@/components/FloatingReservation';
 import CartDrawer from '@/components/CartDrawer';
 import ThemeTransitionOverlay from '@/components/ThemeTransitionOverlay';
+import InstallPWA from '@/components/InstallPWA';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,6 +24,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       <CartDrawer />
       <FloatingReservation />
       <ThemeTransitionOverlay />
+      <InstallPWA />
     </>
   );
 }
