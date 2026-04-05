@@ -2,8 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
-import { useState } from 'react';
-import { Menu, X, Globe, ShoppingCart } from 'lucide-react';
+import { Globe, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useTheme } from '@/lib/theme';
@@ -12,7 +11,6 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   const t = useTranslations('nav');
-  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const params = useParams();
   const router = useRouter();
@@ -94,35 +92,11 @@ export default function Header() {
               )}
             </button>
 
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
-            >
-              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+
           </div>
         </div>
 
-        {/* Mobile nav */}
-        {menuOpen && (
-          <div className="lg:hidden border-t py-4 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-lg text-sm font-medium ${
-                  pathname === link.href
-                    ? 'text-[#1C1C1E] bg-[#1C1C1E]/5'
-                    : 'text-[#2D2D2D] hover:bg-gray-50'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        )}
+
       </div>
     </header>
   );
