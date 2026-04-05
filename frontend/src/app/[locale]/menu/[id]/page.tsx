@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText, Play, Beaker, ShieldCheck, Layers, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, FileText, Play, Beaker, ShieldCheck, Layers, ShoppingCart, Download, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { useParams } from 'next/navigation';
@@ -200,31 +200,35 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            {/* Video / TDS icon buttons */}
-            <div className="flex items-center gap-3 pt-2">
-              {product.videoUrl && (
-                <a
-                  href={product.videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 flex items-center justify-center rounded-xl border-2 border-[#1C1C1E] dark:border-white/20 text-[#1C1C1E] dark:text-white hover:bg-[#1C1C1E]/5 dark:hover:bg-white/10 transition"
-                  title={th ? 'ดูวิดีโอ' : 'Watch Video'}
-                >
-                  <Play className="w-5 h-5" />
-                </a>
-              )}
-              {product.tdsFile && (
-                <a
-                  href={product.tdsFile}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 flex items-center justify-center rounded-xl border-2 border-[#1C1C1E] dark:border-white/20 text-[#1C1C1E] dark:text-white hover:bg-[#1C1C1E]/5 dark:hover:bg-white/10 transition"
-                  title={th ? 'ดาวน์โหลด TDS' : 'Download TDS'}
-                >
-                  <FileText className="w-5 h-5" />
-                </a>
-              )}
-            </div>
+            {/* Video / TDS buttons */}
+            {(product.videoUrl || product.tdsFile) && (
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                {product.videoUrl && (
+                  <a
+                    href={product.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-[#1C1C1E] dark:border-white/20 text-[#1C1C1E] dark:text-white hover:bg-[#1C1C1E]/5 dark:hover:bg-white/10 transition font-medium"
+                  >
+                    <Play className="w-5 h-5 text-[#F5841F]" />
+                    {th ? 'ดูวิดีโอสาธิต' : 'Watch Demo Video'}
+                    <ExternalLink className="w-3.5 h-3.5 opacity-50" />
+                  </a>
+                )}
+                {product.tdsFile && (
+                  <a
+                    href={product.tdsFile}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-[#1C1C1E] dark:border-white/20 text-[#1C1C1E] dark:text-white hover:bg-[#1C1C1E]/5 dark:hover:bg-white/10 transition font-medium"
+                  >
+                    <FileText className="w-5 h-5 text-[#F5841F]" />
+                    {th ? 'ดาวน์โหลด TDS' : 'Download TDS'}
+                    <Download className="w-3.5 h-3.5 opacity-50" />
+                  </a>
+                )}
+              </div>
+            )}
 
             {/* Add to Cart */}
             <button
