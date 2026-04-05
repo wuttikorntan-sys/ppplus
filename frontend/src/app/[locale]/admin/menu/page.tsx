@@ -291,8 +291,8 @@ export default function AdminMenuPage() {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center p-4 pt-[5vh] overflow-y-auto" onClick={() => setShowForm(false)}>
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-xl w-full max-w-2xl shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center p-4 pt-[5vh] overflow-y-auto">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-xl w-full max-w-2xl shadow-xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'var(--font-heading)' }}>
                 {editingId ? (th ? '???????????' : 'Edit Product') : (th ? '???????????????' : 'New Product')}
@@ -408,7 +408,7 @@ export default function AdminMenuPage() {
                       className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '????????????? (m�/L)' : 'Coverage (m�/L)'}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'พื้นที่ครอบคลุม (m²/L)' : 'Coverage (m²/L)'}</label>
                     <input type="number" value={form.coverageArea} onChange={(e) => setForm({ ...form, coverageArea: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
