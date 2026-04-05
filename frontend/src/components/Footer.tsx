@@ -43,8 +43,68 @@ export default function Footer() {
       {/* Decorative top border */}
       <div className="h-1 bg-gradient-to-r from-[#1C1C1E] via-[#F5841F] to-[#1C1C1E]" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
-        {/* Top Section - Brand + Newsletter-like CTA */}
+      {/* ===== MOBILE: Compact Footer ===== */}
+      <div className="lg:hidden px-4 py-8">
+        {/* Brand */}
+        <div className="flex items-center gap-3 mb-5">
+          <Image src="/LOGO1.svg" alt="PP Plus" width={40} height={40} className="w-10 h-10 rounded-xl" />
+          <div>
+            <span className="text-lg font-bold text-white block" style={{ fontFamily: 'var(--font-heading)' }}>PP Plus</span>
+            <span className="text-[10px] text-[#F5841F] font-medium tracking-widest uppercase">Automotive Paint</span>
+          </div>
+        </div>
+
+        {/* Opening Hours */}
+        <div className="bg-white/5 rounded-xl p-4 mb-5">
+          <div className="flex items-center gap-2 mb-2">
+            <Clock className="w-4 h-4 text-[#F5841F]" />
+            <span className="text-xs font-semibold uppercase tracking-wider">{lang === 'th' ? 'เวลาทำการ' : 'Hours'}</span>
+          </div>
+          <div className="text-xs text-gray-400 space-y-1">
+            <p>{v('location.lunch') || contact('lunch')}</p>
+            <p>{v('location.dinner') || contact('dinner')}</p>
+          </div>
+        </div>
+
+        {/* Contact row */}
+        <div className="flex items-center gap-4 mb-5 text-xs text-gray-400">
+          <a href={`tel:${v('location.phone') || contact('phone')}`} className="flex items-center gap-1.5 hover:text-[#F5841F]">
+            <Phone className="w-3.5 h-3.5 text-[#F5841F]" />
+            <span>{v('location.phone') || contact('phone')}</span>
+          </a>
+        </div>
+
+        {/* Social */}
+        <div className="flex items-center gap-2 mb-6">
+          {[
+            { key: 'social.facebook', icon: FaFacebookF, title: 'Facebook' },
+            { key: 'social.whatsapp', icon: FaWhatsapp, title: 'WhatsApp' },
+            { key: 'social.line', icon: FaLine, title: 'LINE' },
+            { key: 'social.instagram', icon: FaInstagram, title: 'Instagram' },
+            { key: 'social.tiktok', icon: FaTiktok, title: 'TikTok' },
+            { key: 'social.x', icon: FaXTwitter, title: 'X' },
+          ].filter((s) => socialUrl(s.key)).map((s) => {
+            const Icon = s.icon;
+            return (
+              <a key={s.key} href={socialUrl(s.key)} target="_blank" rel="noopener noreferrer" title={s.title}
+                className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 hover:text-white transition-colors">
+                <Icon className="w-3.5 h-3.5" />
+              </a>
+            );
+          })}
+        </div>
+
+        {/* Copyright */}
+        <div className="border-t border-white/5 pt-4">
+          <p className="text-[10px] text-gray-600 text-center">
+            © {new Date().getFullYear()} PP Plus. {t('rights')}.
+          </p>
+        </div>
+      </div>
+
+      {/* ===== DESKTOP: Full Footer ===== */}
+      <div className="hidden lg:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
+        {/* Top Section - Brand */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-10 border-b border-white/10">
           <div className="flex items-center gap-4">
             <Image src="/LOGO1.svg" alt="PP Plus" width={48} height={48} className="w-12 h-12 rounded-2xl shadow-lg shadow-[#F5841F]/10" />
@@ -61,7 +121,7 @@ export default function Footer() {
         </div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 py-10">
+        <div className="grid grid-cols-4 gap-12 py-10">
           {/* Quick Links */}
           <div>
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-5 flex items-center gap-2">
@@ -176,7 +236,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="border-t border-white/5 pt-6 flex flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-500">
             © {new Date().getFullYear()} PP Plus. {t('rights')}.
           </p>
