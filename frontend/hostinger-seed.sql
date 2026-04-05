@@ -231,11 +231,11 @@ CREATE TABLE IF NOT EXISTS quote_requests (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 2. ADMIN USER (admin@ppplus.co.th / admin123)
-INSERT INTO users (email, password, name, role, locale) VALUES
+INSERT IGNORE INTO users (email, password, name, role, locale) VALUES
 ('admin@ppplus.co.th', '$2b$10$BCTdQ7Nvr5UtgAGQYsDcBeXbgQOvlIrEmEy8YPPHYXQAXhHp2TAgS', 'Admin', 'ADMIN', 'th');
 
 -- 3. SITE CONTENTS
-INSERT INTO site_contents (`key`, valueTh, valueEn, type) VALUES
+INSERT IGNORE INTO site_contents (`key`, valueTh, valueEn, type) VALUES
 ('store_name', 'PP Plus', 'PP Plus', 'text'),
 ('store_phone', '02-XXX-XXXX', '02-XXX-XXXX', 'text'),
 ('store_email', 'info@ppplus.co.th', 'info@ppplus.co.th', 'text'),
@@ -243,7 +243,7 @@ INSERT INTO site_contents (`key`, valueTh, valueEn, type) VALUES
 ('store_hours', 'จันทร์-เสาร์ 08:00-17:00', 'Mon-Sat 08:00-17:00', 'text');
 
 -- 4. CATEGORIES (12 automotive paint categories)
-INSERT INTO categories (nameTh, nameEn, sortOrder) VALUES
+INSERT IGNORE INTO categories (nameTh, nameEn, sortOrder) VALUES
 ('2K Topcoat', '2K Topcoat', 1),
 ('Basecoat', 'Basecoat', 2),
 ('Clear Coat', 'Clear Coat', 3),
@@ -258,7 +258,7 @@ INSERT INTO categories (nameTh, nameEn, sortOrder) VALUES
 ('อุปกรณ์ป้องกัน (PPE)', 'PPE', 12);
 
 -- 5. SAMPLE COLOR FORMULAS
-INSERT INTO color_formulas (carBrand, colorCode, colorNameTh, colorNameEn, yearRange, formulaType, deltaE) VALUES
+INSERT IGNORE INTO color_formulas (carBrand, colorCode, colorNameTh, colorNameEn, yearRange, formulaType, deltaE) VALUES
 ('TOYOTA', '040', 'ซุปเปอร์ไวท์', 'Super White', '2015-2026', 'solid', 0.35),
 ('TOYOTA', '1G3', 'เกร์ เมทัลลิก', 'Grey Metallic', '2018-2026', 'metallic', 0.42),
 ('TOYOTA', '3R3', 'เรด ไมก้า เมทัลลิก', 'Red Mica Metallic', '2017-2025', 'metallic', 0.38),
