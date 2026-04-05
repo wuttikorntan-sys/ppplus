@@ -3,11 +3,13 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText, Play, Beaker, ShieldCheck, Layers } from 'lucide-react';
+import { ArrowLeft, FileText, Play, Beaker, ShieldCheck, Layers, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { useParams } from 'next/navigation';
 import { api } from '@/lib/api';
+import { useCart } from '@/lib/cart';
+import toast from 'react-hot-toast';
 
 interface Category {
   id: number;
@@ -46,6 +48,8 @@ export default function ProductDetailPage() {
   const params = useParams();
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const { addItem } = useCart();
+  const th = locale === 'th';
 
   useEffect(() => {
     async function fetchProduct() {
@@ -93,13 +97,27 @@ export default function ProductDetailPage() {
     return url;
   };
 
+  const handleAddToCart = () => {
+    if (!product) return;
+    addItem({
+      id: product.id,
+      nameTh: product.nameTh,
+      nameEn: product.nameEn,
+      price: product.price,
+      image: product.image,
+      size: product.size,
+      brand: product.brand,
+    });
+    toast.success(th ? 'เพิ่มลงตะกร้าแล้ว' : 'Added to cart');
+  };
+
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
+    <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#1C1C1E]">
       {/* Breadcrumb */}
-      <div className="bg-white border-b">
+      <div className="bg-white dark:bg-[#2D2D2D] border-b dark:border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <Link href="/menu" className="text-sm text-[#F5841F] hover:underline flex items-center gap-1">
-            <ArrowLeft className="w-4 h-4" /> {locale === 'th' ? 'กลับหน้าสินค้า' : 'Back to Products'}
+            <ArrowLeft className="w-4 h-4" /> {th ? 'กลับหน้าสินค้า' : 'Back to Products'}
           </Link>
         </div>
       </div>
@@ -107,7 +125,7 @@ export default function ProductDetailPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Image */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-lg">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="relative aspect-square rounded-2xl overflow-hidden bg-white dark:bg-[#2D2D2D] shadow-lg">
             <Image
               src={product.image || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=800&fit=crop'}
               alt={name}
@@ -132,39 +150,39 @@ export default function ProductDetailPage() {
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
             <div>
               <span className="text-sm text-[#F5841F] font-semibold uppercase">{categoryName}</span>
-              <h1 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{name}</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] dark:text-white mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{name}</h1>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-[#2D2D2D] rounded-2xl p-6 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-3xl font-bold text-[#1C1C1E]">฿{Number(product.price).toLocaleString()}</span>
-                {product.size && <span className="text-[#64748B] bg-gray-100 px-3 py-1 rounded-full text-sm">{product.size}</span>}
+                <span className="text-3xl font-bold text-[#1C1C1E] dark:text-white">฿{Number(product.price).toLocaleString()}</span>
+                {product.size && <span className="text-[#64748B] dark:text-gray-400 bg-gray-100 dark:bg-white/10 px-3 py-1 rounded-full text-sm">{product.size}</span>}
               </div>
               {product.finishType && (
-                <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                <div className="flex items-center gap-2 text-sm text-[#64748B] dark:text-gray-400">
                   <Layers className="w-4 h-4" />
-                  <span>{locale === 'th' ? 'เนื้อสี: ' : 'Finish: '}{product.finishType}</span>
+                  <span>{th ? 'เนื้อสี: ' : 'Finish: '}{product.finishType}</span>
                 </div>
               )}
               {product.mixingRatio && (
-                <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                <div className="flex items-center gap-2 text-sm text-[#64748B] dark:text-gray-400">
                   <Beaker className="w-4 h-4" />
-                  <span>{locale === 'th' ? 'สัดส่วนผสม: ' : 'Mix Ratio: '}{product.mixingRatio}</span>
+                  <span>{th ? 'สัดส่วนผสม: ' : 'Mix Ratio: '}{product.mixingRatio}</span>
                 </div>
               )}
             </div>
 
-            <p className="text-[#64748B] leading-relaxed">{description}</p>
+            <p className="text-[#64748B] dark:text-gray-300 leading-relaxed">{description}</p>
 
             {features && (
               <div>
-                <h3 className="font-semibold text-[#2D2D2D] mb-2 flex items-center gap-2">
+                <h3 className="font-semibold text-[#2D2D2D] dark:text-white mb-2 flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-[#F5841F]" />
-                  {locale === 'th' ? 'คุณสมบัติเด่น' : 'Key Features'}
+                  {th ? 'คุณสมบัติเด่น' : 'Key Features'}
                 </h3>
                 <ul className="space-y-1.5">
                   {features.split('\n').filter(Boolean).map((f, i) => (
-                    <li key={i} className="text-[#64748B] text-sm flex items-start gap-2">
+                    <li key={i} className="text-[#64748B] dark:text-gray-400 text-sm flex items-start gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#F5841F] mt-1.5 flex-shrink-0" />
                       {f}
                     </li>
@@ -175,41 +193,55 @@ export default function ProductDetailPage() {
 
             {applicationMethod && (
               <div>
-                <h3 className="font-semibold text-[#2D2D2D] mb-2">
-                  {locale === 'th' ? 'วิธีใช้งาน' : 'Application Method'}
+                <h3 className="font-semibold text-[#2D2D2D] dark:text-white mb-2">
+                  {th ? 'วิธีใช้งาน' : 'Application Method'}
                 </h3>
-                <p className="text-[#64748B] text-sm whitespace-pre-line">{applicationMethod}</p>
+                <p className="text-[#64748B] dark:text-gray-400 text-sm whitespace-pre-line">{applicationMethod}</p>
               </div>
             )}
 
-            {/* Action buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Link
-                href={`/quote?productId=${product.id}&productName=${encodeURIComponent(name)}`}
-                className="flex-1 text-center font-semibold py-3 rounded-xl bg-[#1C1C1E] text-white hover:bg-[#1C1C1E]/90 transition text-base"
-              >
-                {locale === 'th' ? 'ขอใบเสนอราคา' : 'Request Quote'}
-              </Link>
+            {/* Video / TDS icon buttons */}
+            <div className="flex items-center gap-3 pt-2">
+              {product.videoUrl && (
+                <a
+                  href={product.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-11 h-11 flex items-center justify-center rounded-xl border-2 border-[#1C1C1E] dark:border-white/20 text-[#1C1C1E] dark:text-white hover:bg-[#1C1C1E]/5 dark:hover:bg-white/10 transition"
+                  title={th ? 'ดูวิดีโอ' : 'Watch Video'}
+                >
+                  <Play className="w-5 h-5" />
+                </a>
+              )}
               {product.tdsFile && (
                 <a
                   href={product.tdsFile}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-[#1C1C1E] text-[#1C1C1E] hover:bg-[#1C1C1E]/5 transition font-medium"
+                  className="w-11 h-11 flex items-center justify-center rounded-xl border-2 border-[#1C1C1E] dark:border-white/20 text-[#1C1C1E] dark:text-white hover:bg-[#1C1C1E]/5 dark:hover:bg-white/10 transition"
+                  title={th ? 'ดาวน์โหลด TDS' : 'Download TDS'}
                 >
                   <FileText className="w-5 h-5" />
-                  {locale === 'th' ? 'ดาวน์โหลด TDS' : 'Download TDS'}
                 </a>
               )}
             </div>
+
+            {/* Add to Cart */}
+            <button
+              onClick={handleAddToCart}
+              className="w-full flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl bg-[#F5841F] text-white hover:bg-[#e0741a] transition text-lg shadow-md cursor-pointer"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {th ? 'เพิ่มลงตะกร้า' : 'Add to Cart'}
+            </button>
           </motion.div>
         </div>
 
         {/* Video section */}
         {product.videoUrl && (
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-12">
-            <h2 className="text-2xl font-bold text-[#2D2D2D] mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
-              <Play className="w-6 h-6 text-[#F5841F]" /> {locale === 'th' ? 'วิดีโอสาธิต' : 'Demo Video'}
+            <h2 className="text-2xl font-bold text-[#2D2D2D] dark:text-white mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              <Play className="w-6 h-6 text-[#F5841F]" /> {th ? 'วิดีโอสาธิต' : 'Demo Video'}
             </h2>
             <div className="aspect-video rounded-2xl overflow-hidden bg-black shadow-lg">
               <iframe
