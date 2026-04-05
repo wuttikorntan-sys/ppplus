@@ -66,19 +66,19 @@ export default function AboutPage() {
       </section>
 
       {/* Capabilities */}
-      <section className="py-20 bg-[#1C1C1E] text-white">
+      <section className="py-20 bg-white dark:bg-[#1C1C1E] text-[#2D2D2D] dark:text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-12 text-center" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h2 className="text-3xl font-bold mb-12 text-center text-[#2D2D2D] dark:text-white" style={{ fontFamily: 'var(--font-heading)' }}>
             {locale === 'th' ? 'ศักยภาพการผลิต' : 'Our Capabilities'}
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {capabilities.map((cap, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="bg-gray-50 dark:bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-gray-100 dark:border-transparent">
                 <div className="w-14 h-14 bg-[#F5841F] rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <cap.icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{cap.title}</h3>
-                <p className="text-white/70 text-sm">{cap.text}</p>
+                <h3 className="text-lg font-semibold mb-2 text-[#2D2D2D] dark:text-white">{cap.title}</h3>
+                <p className="text-gray-500 dark:text-white/70 text-sm">{cap.text}</p>
               </motion.div>
             ))}
           </div>
