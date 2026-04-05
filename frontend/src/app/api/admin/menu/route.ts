@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { requireAdmin, handleError } from '@/lib/api-server';
-import { saveUploadedFile } from '@/lib/upload';
+import { saveUploadedFile, saveUploadedDocument } from '@/lib/upload';
 
 const menuItemSchema = z.object({
   categoryId: z.number().int(),
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     });
 
     const imagePath = await saveUploadedFile(formData, 'image');
-    const tdsPath = await saveUploadedFile(formData, 'tdsFile');
+    const tdsPath = await saveUploadedDocument(formData, 'tdsFile');
 
     const item = await db.menuItems.create({
       ...data,

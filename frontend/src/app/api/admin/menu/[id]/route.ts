@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { requireAdmin, handleError, ApiError } from '@/lib/api-server';
-import { saveUploadedFile } from '@/lib/upload';
+import { saveUploadedFile, saveUploadedDocument } from '@/lib/upload';
 
 const menuItemSchema = z.object({
   categoryId: z.number().int(),
@@ -64,7 +64,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const updateData: Record<string, unknown> = { ...data };
     const imagePath = await saveUploadedFile(formData, 'image');
     if (imagePath) updateData.image = imagePath;
-    const tdsPath = await saveUploadedFile(formData, 'tdsFile');
+    const tdsPath = await saveUploadedDocument(formData, 'tdsFile');
     if (tdsPath) updateData.tdsFile = tdsPath;
 
     const item = await db.menuItems.update(id, updateData);
