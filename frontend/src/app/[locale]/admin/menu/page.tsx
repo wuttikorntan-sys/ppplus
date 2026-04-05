@@ -27,6 +27,13 @@ interface MenuItem {
   coverageArea: number | null;
   size: number | null;
   unit: string | null;
+  mixingRatio: string | null;
+  featuresTh: string | null;
+  featuresEn: string | null;
+  applicationMethodTh: string | null;
+  applicationMethodEn: string | null;
+  videoUrl: string | null;
+  tdsFile: string | null;
 }
 
 interface Category {
@@ -38,6 +45,7 @@ interface Category {
 const emptyForm = {
   nameTh: '', nameEn: '', descriptionTh: '', descriptionEn: '', price: '', categoryId: '', isAvailable: true, sortOrder: '0',
   brand: '', colorCode: '', colorName: '', finishType: '', coverageArea: '', size: '', unit: 'L',
+  mixingRatio: '', featuresTh: '', featuresEn: '', applicationMethodTh: '', applicationMethodEn: '', videoUrl: '',
 };
 
 export default function AdminMenuPage() {
@@ -52,8 +60,11 @@ export default function AdminMenuPage() {
   const [form, setForm] = useState(emptyForm);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [tdsFile, setTdsFile] = useState<File | null>(null);
+  const [tdsPreview, setTdsPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const tdsInputRef = useRef<HTMLInputElement>(null);
 
   const fetchItems = () => {
     api.get<{ success: boolean; data: MenuItem[] }>('/admin/menu')
@@ -79,6 +90,8 @@ export default function AdminMenuPage() {
     setForm(emptyForm);
     setImageFile(null);
     setImagePreview(null);
+    setTdsFile(null);
+    setTdsPreview(null);
     setShowForm(true);
   };
 
@@ -100,9 +113,17 @@ export default function AdminMenuPage() {
       coverageArea: item.coverageArea?.toString() || '',
       size: item.size?.toString() || '',
       unit: item.unit || 'L',
+      mixingRatio: item.mixingRatio || '',
+      featuresTh: item.featuresTh || '',
+      featuresEn: item.featuresEn || '',
+      applicationMethodTh: item.applicationMethodTh || '',
+      applicationMethodEn: item.applicationMethodEn || '',
+      videoUrl: item.videoUrl || '',
     });
     setImageFile(null);
     setImagePreview(item.image || null);
+    setTdsFile(null);
+    setTdsPreview(item.tdsFile || null);
     setShowForm(true);
   };
 
@@ -139,7 +160,14 @@ export default function AdminMenuPage() {
       if (form.coverageArea) formData.append('coverageArea', form.coverageArea);
       if (form.size) formData.append('size', form.size);
       if (form.unit) formData.append('unit', form.unit);
+      if (form.mixingRatio) formData.append('mixingRatio', form.mixingRatio);
+      if (form.featuresTh) formData.append('featuresTh', form.featuresTh);
+      if (form.featuresEn) formData.append('featuresEn', form.featuresEn);
+      if (form.applicationMethodTh) formData.append('applicationMethodTh', form.applicationMethodTh);
+      if (form.applicationMethodEn) formData.append('applicationMethodEn', form.applicationMethodEn);
+      if (form.videoUrl) formData.append('videoUrl', form.videoUrl);
       if (imageFile) formData.append('image', imageFile);
+      if (tdsFile) formData.append('tdsFile', tdsFile);
 
       if (editingId) {
         await api.upload(`/admin/menu/${editingId}`, formData, 'PUT');
@@ -396,6 +424,67 @@ export default function AdminMenuPage() {
                         <option value="gal">gal</option>
                       </select>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Technical Details */}
+              <div className="border-t border-gray-100 pt-4 mt-2">
+                <p className="text-sm font-semibold text-gray-600 mb-3">{th ? 'ข้อมูลทางเทคนิค' : 'Technical Details'}</p>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'สัดส่วนผสม' : 'Mixing Ratio'}</label>
+                    <input value={form.mixingRatio} onChange={(e) => setForm({ ...form, mixingRatio: e.target.value })}
+                      placeholder={th ? 'เช่น 2:1:10%' : 'e.g. 2:1:10%'}
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'คุณสมบัติเด่น (ไทย)' : 'Key Features (Thai)'}</label>
+                      <textarea value={form.featuresTh} onChange={(e) => setForm({ ...form, featuresTh: e.target.value })}
+                        placeholder={th ? 'แต่ละข้อขึ้นบรรทัดใหม่' : 'Each feature on a new line'}
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={4} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'คุณสมบัติเด่น (อังกฤษ)' : 'Key Features (English)'}</label>
+                      <textarea value={form.featuresEn} onChange={(e) => setForm({ ...form, featuresEn: e.target.value })}
+                        placeholder={th ? 'แต่ละข้อขึ้นบรรทัดใหม่' : 'Each feature on a new line'}
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={4} />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'วิธีใช้งาน (ไทย)' : 'Application Method (Thai)'}</label>
+                      <textarea value={form.applicationMethodTh} onChange={(e) => setForm({ ...form, applicationMethodTh: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={4} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'วิธีใช้งาน (อังกฤษ)' : 'Application Method (English)'}</label>
+                      <textarea value={form.applicationMethodEn} onChange={(e) => setForm({ ...form, applicationMethodEn: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={4} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ลิงก์วิดีโอ YouTube' : 'YouTube Video URL'}</label>
+                    <input value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'เอกสาร TDS (PDF)' : 'TDS Document (PDF)'}</label>
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => tdsInputRef.current?.click()}
+                        className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition flex items-center gap-2">
+                        <Upload className="w-4 h-4" />
+                        {th ? 'เลือกไฟล์ TDS' : 'Choose TDS File'}
+                      </button>
+                      {(tdsFile || tdsPreview) && (
+                        <span className="text-xs text-green-600 font-medium">
+                          {tdsFile ? tdsFile.name : (th ? 'มีไฟล์ TDS แล้ว' : 'TDS file uploaded')}
+                        </span>
+                      )}
+                    </div>
+                    <input ref={tdsInputRef} type="file" accept=".pdf" onChange={(e) => { const f = e.target.files?.[0]; if (f) setTdsFile(f); }} className="hidden" />
                   </div>
                 </div>
               </div>
