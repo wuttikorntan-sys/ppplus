@@ -8,14 +8,22 @@
 
 -- ลบข้อมูลเก่า (ถ้ามี) เพื่อเริ่มใหม่
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE menu_items;
-TRUNCATE TABLE categories;
-TRUNCATE TABLE popups;
-TRUNCATE TABLE blog_posts;
-TRUNCATE TABLE hero_slides;
-TRUNCATE TABLE gallery_images;
-TRUNCATE TABLE color_formulas;
-TRUNCATE TABLE site_contents;
+DELETE FROM menu_items;
+DELETE FROM categories;
+DELETE FROM popups;
+DELETE FROM blog_posts;
+DELETE FROM hero_slides;
+DELETE FROM gallery_images;
+DELETE FROM color_formulas;
+DELETE FROM site_contents;
+ALTER TABLE menu_items AUTO_INCREMENT = 1;
+ALTER TABLE categories AUTO_INCREMENT = 1;
+ALTER TABLE popups AUTO_INCREMENT = 1;
+ALTER TABLE blog_posts AUTO_INCREMENT = 1;
+ALTER TABLE hero_slides AUTO_INCREMENT = 1;
+ALTER TABLE gallery_images AUTO_INCREMENT = 1;
+ALTER TABLE color_formulas AUTO_INCREMENT = 1;
+ALTER TABLE site_contents AUTO_INCREMENT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================================
