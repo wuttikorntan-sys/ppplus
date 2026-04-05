@@ -25,7 +25,7 @@ interface MenuItem {
   colorName: string | null;
   finishType: string | null;
   coverageArea: number | null;
-  size: number | null;
+  size: string | null;
   unit: string | null;
   mixingRatio: string | null;
   featuresTh: string | null;
