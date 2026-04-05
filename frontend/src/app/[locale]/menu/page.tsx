@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Paintbrush, Droplets, SprayCan, Car, Layers, Wrench, Factory, Beaker, Shield, Disc, HardHat, FileText, ShoppingCart } from 'lucide-react';
+import { Search, ChevronDown, Paintbrush, Droplets, SprayCan, Car, Layers, Wrench, Factory, Beaker, Shield, Disc, HardHat, FileText, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { api } from '@/lib/api';
@@ -221,46 +221,42 @@ export default function MenuPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Search */}
-        <div className="relative max-w-2xl mx-auto mb-10">
-          <div className="relative">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder={t('search')}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-14 pr-6 py-4 rounded-2xl border border-gray-200 bg-white shadow-lg shadow-black/5 focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-base"
-            />
-          </div>
-        </div>
-
-        {/* Categories */}
-        <div className="flex flex-wrap gap-2.5 justify-center mb-10 md:mb-14 px-1">
-          <button
-            onClick={() => setSelectedCategory(null)}
-            className={`px-5 md:px-7 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-semibold transition-all duration-200 ${
-              selectedCategory === null
-                ? 'bg-[#1C1C1E] text-white shadow-lg shadow-[#1C1C1E]/25'
-                : 'bg-white text-[#2D2D2D] hover:bg-gray-50 border border-gray-200 shadow-sm'
-            }`}
-          >
-            {t('all')}
-          </button>
-          {categories.map((cat) => (
+        {/* Search & Filter */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-10 md:mb-14">
+          <h2 className="text-xl font-bold text-[#2D2D2D] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+            {th ? 'ค้นหาสินค้า' : 'Search Products'}
+          </h2>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative">
+              <select
+                value={selectedCategory === null ? '' : String(selectedCategory)}
+                onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
+                className="appearance-none w-full sm:w-56 pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-sm"
+              >
+                <option value="">{t('all')}</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>{locale === 'th' ? cat.nameTh : cat.nameEn}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            </div>
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder={t('search')}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-sm"
+              />
+            </div>
             <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`flex items-center gap-2 px-5 md:px-7 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-semibold transition-all duration-200 ${
-                selectedCategory === cat.id
-                  ? 'bg-[#1C1C1E] text-white shadow-lg shadow-[#1C1C1E]/25'
-                  : 'bg-white text-[#2D2D2D] hover:bg-gray-50 border border-gray-200 shadow-sm'
-              }`}
+              onClick={() => setSearch(search)}
+              className="px-6 py-3 bg-[#1C1C1E] text-white rounded-xl font-medium hover:bg-[#1C1C1E]/90 transition text-sm"
             >
-              <span className={selectedCategory === cat.id ? 'text-white/80' : 'text-[#F5841F]'}>{categoryIcons[cat.id]}</span>
-              {locale === 'th' ? cat.nameTh : cat.nameEn}
+              {th ? 'ค้นหา' : 'Search'}
             </button>
-          ))}
+          </div>
         </div>
 
         {/* Product Grid */}
