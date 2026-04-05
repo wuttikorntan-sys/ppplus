@@ -133,8 +133,9 @@ export default function ThemeTransitionOverlay() {
                     width: 380, height: 380,
                     background: 'radial-gradient(circle, rgba(254,249,195,0.25) 0%, rgba(148,163,184,0.15) 30%, rgba(99,102,241,0.08) 50%, transparent 70%)',
                   }}
-                  animate={{ scale: [0.6, 1.3, 1.1, 1.2] }}
-                  transition={{ duration: 2, ease: 'easeInOut' }}
+                  initial={{ opacity: 0, scale: 0.4 }}
+                  animate={{ opacity: [0, 0.3, 0.8, 1, 1], scale: [0.4, 0.8, 1.2, 1.1, 1.2] }}
+                  transition={{ duration: 2, times: [0, 0.2, 0.4, 0.6, 1], ease: 'easeOut' }}
                 />
                 {/* Moon body */}
                 <motion.div
@@ -142,10 +143,20 @@ export default function ThemeTransitionOverlay() {
                   style={{
                     width: 150, height: 150,
                     background: 'radial-gradient(circle at 45% 40%, #FEFCE8 0%, #FEF9C3 20%, #E2E8F0 55%, #CBD5E1 85%, #94A3B8 100%)',
-                    boxShadow: '0 0 60px rgba(254,249,195,0.5), 0 0 120px rgba(203,213,225,0.3), 0 0 200px rgba(148,163,184,0.2)',
                   }}
-                  animate={{ scale: [0.3, 1.15, 1] }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                  initial={{ opacity: 0, scale: 0.2 }}
+                  animate={{
+                    opacity: [0, 0.2, 0.6, 1, 1],
+                    scale: [0.2, 0.5, 0.9, 1.15, 1],
+                    boxShadow: [
+                      '0 0 0px rgba(254,249,195,0)', 
+                      '0 0 20px rgba(254,249,195,0.2)',
+                      '0 0 40px rgba(254,249,195,0.4), 0 0 80px rgba(203,213,225,0.2)',
+                      '0 0 60px rgba(254,249,195,0.5), 0 0 120px rgba(203,213,225,0.3), 0 0 200px rgba(148,163,184,0.2)',
+                      '0 0 60px rgba(254,249,195,0.5), 0 0 120px rgba(203,213,225,0.3), 0 0 200px rgba(148,163,184,0.2)',
+                    ],
+                  }}
+                  transition={{ duration: 1.2, times: [0, 0.15, 0.4, 0.7, 1], ease: 'easeOut' }}
                 >
                   <div className="absolute w-8 h-8 rounded-full bg-[#CBD5E1]/40 top-5 left-9" />
                   <div className="absolute w-5 h-5 rounded-full bg-[#CBD5E1]/30 bottom-7 left-4" />
