@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 
-// Persistent uploads directory outside the git-managed area
-// On Hostinger: ~/uploads/ persists across deploys
-// Locally: ./uploads/ in project root
+// Persistent uploads directory OUTSIDE the git-managed project
+// On Hostinger: /home/u626866170/uploads  (set via UPLOADS_DIR env var)
+// Locally: ../uploads  (one level up from frontend/, outside git)
 const UPLOADS_DIR = process.env.UPLOADS_DIR
-  || path.join(process.cwd(), 'uploads');
+  || path.resolve(process.cwd(), '..', 'uploads');
 
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
