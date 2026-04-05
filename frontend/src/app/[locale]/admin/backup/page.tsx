@@ -14,6 +14,8 @@ import {
   AlertTriangle,
   HardDrive,
   Clock,
+  ImageIcon,
+  FolderArchive,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -21,12 +23,19 @@ export default function BackupPage() {
   const locale = useLocale();
   const th = locale === 'th';
   const fileRef = useRef<HTMLInputElement>(null);
+  const imgFileRef = useRef<HTMLInputElement>(null);
 
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [importResult, setImportResult] = useState<{ success: boolean; message: string } | null>(null);
   const [backupHistory, setBackupHistory] = useState<{ name: string; date: string; size: string }[]>([]);
+
+  // Image backup states
+  const [exportingImages, setExportingImages] = useState(false);
+  const [importingImages, setImportingImages] = useState(false);
+  const [selectedImgFile, setSelectedImgFile] = useState<File | null>(null);
+  const [imgImportResult, setImgImportResult] = useState<{ success: boolean; message: string } | null>(null);
 
   /* ── Export / Backup ── */
   const handleExport = async () => {
@@ -121,6 +130,93 @@ export default function BackupPage() {
       toast.error(msg);
     } finally {
       setImporting(false);
+    }
+  };
+
+  /* ── Image Export ── */
+  const handleExportImages = async () => {
+    setExportingImages(true);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await fetch('/api/admin/backup/images', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Image export failed');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const timestamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `ppplus-images-${timestamp}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success(th ? 'สำรองรูปภาพสำเร็จ' : 'Image backup exported successfully');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : th ? 'สำรองรูปภาพล้มเหลว' : 'Image backup failed');
+    } finally {
+      setExportingImages(false);
+    }
+  };
+
+  /* ── Image Import ── */
+  const handleImgFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (file && !file.name.endsWith('.zip')) {
+      toast.error(th ? 'กรุณาเลือกไฟล์ .zip เท่านั้น' : 'Please select a .zip file only');
+      return;
+    }
+    setSelectedImgFile(file);
+    setImgImportResult(null);
+  };
+
+  const handleImportImages = async () => {
+    if (!selectedImgFile) return;
+
+    const confirm = window.confirm(
+      th
+        ? '⚠️ การนำเข้ารูปภาพจากไฟล์ ZIP จะเขียนทับไฟล์ที่มีชื่อซ้ำกัน ต้องการดำเนินการต่อหรือไม่?'
+        : '⚠️ Importing images will overwrite files with the same name. Continue?'
+    );
+    if (!confirm) return;
+
+    setImportingImages(true);
+    setImgImportResult(null);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const formData = new FormData();
+      formData.append('file', selectedImgFile);
+
+      const res = await fetch('/api/admin/backup/images', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setImgImportResult({ success: true, message: data.data.message });
+        toast.success(th ? 'นำเข้ารูปภาพสำเร็จ' : 'Image import successful');
+        setSelectedImgFile(null);
+        if (imgFileRef.current) imgFileRef.current.value = '';
+      } else {
+        setImgImportResult({ success: false, message: data.error });
+        toast.error(data.error);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Import failed';
+      setImgImportResult({ success: false, message: msg });
+      toast.error(msg);
+    } finally {
+      setImportingImages(false);
     }
   };
 
@@ -313,6 +409,177 @@ export default function BackupPage() {
                 )}
                 <p className={`text-sm ${importResult.success ? 'text-green-800' : 'text-red-800'}`}>
                   {importResult.message}
+                </p>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </div>
+
+      {/* ── Image Backup Section ── */}
+      <div>
+        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-4">
+          <ImageIcon className="w-6 h-6 text-[#1C1C1E]" />
+          {th ? 'สำรองรูปภาพ' : 'Image Backup'}
+        </h2>
+        <p className="text-gray-500 mb-4">
+          {th ? 'สำรองและนำเข้ารูปภาพที่อัพโหลดทั้งหมดเป็นไฟล์ ZIP' : 'Export and import all uploaded images as a ZIP file'}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* ── Image Export Card ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
+              <FolderArchive className="w-6 h-6 text-purple-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800">
+                {th ? 'สำรองรูปภาพ (Export)' : 'Export Images'}
+              </h2>
+              <p className="text-sm text-gray-500">
+                {th ? 'ดาวน์โหลดรูปภาพทั้งหมดเป็นไฟล์ .zip' : 'Download all images as .zip file'}
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-purple-50 rounded-xl p-4 mb-4">
+            <div className="flex items-start gap-2">
+              <ImageIcon className="w-5 h-5 text-purple-600 mt-0.5" />
+              <div className="text-sm text-purple-800">
+                <p className="font-medium">{th ? 'รวมไฟล์ทั้งหมด:' : 'Includes all files:'}</p>
+                <ul className="mt-1 space-y-0.5 text-purple-700">
+                  <li>• {th ? 'รูปสินค้า, แกลเลอรี่' : 'Product images, Gallery'}</li>
+                  <li>• {th ? 'รูป Hero Slides, บทความ' : 'Hero slides, Blog images'}</li>
+                  <li>• {th ? 'ไฟล์ TDS (PDF)' : 'TDS files (PDF)'}</li>
+                  <li>• {th ? 'รูปภาพอื่นๆ ที่อัพโหลด' : 'Other uploaded images'}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={handleExportImages}
+            disabled={exportingImages}
+            className="w-full py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {exportingImages ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                {th ? 'กำลังสำรองรูปภาพ...' : 'Exporting images...'}
+              </>
+            ) : (
+              <>
+                <Download className="w-5 h-5" />
+                {th ? 'ดาวน์โหลด Backup รูปภาพ' : 'Download Image Backup'}
+              </>
+            )}
+          </button>
+        </motion.div>
+
+        {/* ── Image Import Card ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
+              <Upload className="w-6 h-6 text-orange-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800">
+                {th ? 'นำเข้ารูปภาพ (Import)' : 'Import Images'}
+              </h2>
+              <p className="text-sm text-gray-500">
+                {th ? 'นำเข้าจากไฟล์ .zip ที่สำรองไว้' : 'Import from a backed up .zip file'}
+              </p>
+            </div>
+          </div>
+
+          {/* Warning */}
+          <div className="bg-amber-50 rounded-xl p-4 mb-4">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5" />
+              <div className="text-sm text-amber-800">
+                <p className="font-medium">{th ? 'คำเตือน:' : 'Warning:'}</p>
+                <p className="mt-1">
+                  {th
+                    ? 'รูปภาพที่มีชื่อไฟล์ซ้ำกันจะถูกเขียนทับ'
+                    : 'Files with the same name will be overwritten.'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* File Input */}
+          <div
+            onClick={() => imgFileRef.current?.click()}
+            className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-orange-400 hover:bg-orange-50/50 transition-colors mb-4"
+          >
+            <FolderArchive className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+            {selectedImgFile ? (
+              <div>
+                <p className="text-sm font-medium text-orange-600">{selectedImgFile.name}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {(selectedImgFile.size / (1024 * 1024)).toFixed(2)} MB
+                </p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-sm text-gray-600">
+                  {th ? 'คลิกเพื่อเลือกไฟล์ .zip' : 'Click to select .zip file'}
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {th ? 'รองรับเฉพาะไฟล์ .zip (สูงสุด 100MB)' : 'Only .zip files supported (max 100MB)'}
+                </p>
+              </div>
+            )}
+            <input
+              ref={imgFileRef}
+              type="file"
+              accept=".zip"
+              onChange={handleImgFileChange}
+              className="hidden"
+            />
+          </div>
+
+          <button
+            onClick={handleImportImages}
+            disabled={importingImages || !selectedImgFile}
+            className="w-full py-3 bg-orange-600 text-white rounded-xl font-semibold hover:bg-orange-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {importingImages ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                {th ? 'กำลังนำเข้ารูปภาพ...' : 'Importing images...'}
+              </>
+            ) : (
+              <>
+                <Upload className="w-5 h-5" />
+                {th ? 'นำเข้ารูปภาพ' : 'Import Images'}
+              </>
+            )}
+          </button>
+
+          {/* Result */}
+          {imgImportResult && (
+            <div className={`mt-4 rounded-xl p-4 ${imgImportResult.success ? 'bg-green-50' : 'bg-red-50'}`}>
+              <div className="flex items-start gap-2">
+                {imgImportResult.success ? (
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
+                ) : (
+                  <XCircle className="w-5 h-5 text-red-600 mt-0.5" />
+                )}
+                <p className={`text-sm ${imgImportResult.success ? 'text-green-800' : 'text-red-800'}`}>
+                  {imgImportResult.message}
                 </p>
               </div>
             </div>
