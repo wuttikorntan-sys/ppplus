@@ -146,9 +146,16 @@ export default function BlogPostPage() {
           )}
 
           {/* Content */}
-          <div className="prose prose-lg max-w-none text-[#2D2D2D]/80 leading-relaxed whitespace-pre-line">
-            {getContent(post)}
-          </div>
+          <div
+            className="prose prose-lg max-w-none text-[#2D2D2D]/80 leading-relaxed
+              prose-headings:text-[#2D2D2D] prose-headings:font-bold
+              prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+              prose-p:mb-4 prose-p:leading-relaxed
+              prose-ul:my-4 prose-ul:pl-6 prose-li:mb-2
+              prose-strong:text-[#2D2D2D]"
+            dangerouslySetInnerHTML={{ __html: getContent(post) }}
+          />
         </motion.div>
       </article>
     </div>
