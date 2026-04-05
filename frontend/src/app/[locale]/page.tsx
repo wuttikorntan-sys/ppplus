@@ -16,17 +16,17 @@ interface ContentMap {
 }
 
 const featuredItems = [
-  { id: 1, nameTh: '2K Topcoat สีพ่นรถยนต์', nameEn: '2K Topcoat Automotive', price: 1850, image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=300&fit=crop' },
-  { id: 2, nameTh: 'Clear Coat 2:1 เงาสูง', nameEn: 'Clear Coat 2:1 High Gloss', price: 2200, image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop' },
-  { id: 3, nameTh: 'Basecoat Metallic Silver', nameEn: 'Basecoat Metallic Silver', price: 1650, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop' },
-  { id: 4, nameTh: 'Primer Surfacer 2K', nameEn: 'Primer Surfacer 2K', price: 1400, image: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=400&h=300&fit=crop' },
+  { id: 1, nameTh: '2K Topcoat สีพ่นรถยนต์', nameEn: '2K Topcoat Automotive', price: 1850, image: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=400&h=300&fit=crop' },
+  { id: 2, nameTh: 'Clear Coat 2:1 เงาสูง', nameEn: 'Clear Coat 2:1 High Gloss', price: 2200, image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop' },
+  { id: 3, nameTh: 'Basecoat Metallic Silver', nameEn: 'Basecoat Metallic Silver', price: 1650, image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop' },
+  { id: 4, nameTh: 'Primer Surfacer 2K', nameEn: 'Primer Surfacer 2K', price: 1400, image: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=400&h=300&fit=crop' },
 ];
 
 const defaultSlides: { type: 'video' | 'image'; src: string; poster?: string }[] = [
-  { type: 'image', src: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1920&h=1080&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=1080&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1920&h=1080&fit=crop' },
+  { type: 'video', src: 'https://videos.pexels.com/video-files/5532771/5532771-sd_640_360_25fps.mp4', poster: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=1920&h=1080&fit=crop' },
   { type: 'image', src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&h=1080&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1920&h=1080&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&h=1080&fit=crop' },
 ];
 
 interface HeroSlideData {
@@ -230,7 +230,7 @@ export default function HomePage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <Image src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&h=600&fit=crop" alt="Automotive paint" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                <Image src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&h=600&fit=crop" alt="Automotive paint workshop" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -249,7 +249,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative order-1">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <Image src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&h=600&fit=crop" alt="Paint brands" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                <Image src="https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=600&fit=crop" alt="Paint products" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               </div>
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#F5841F] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -282,7 +282,7 @@ export default function HomePage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <Image src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=600&fit=crop" alt="Paint service" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                <Image src="https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=800&h=600&fit=crop" alt="Color matching service" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">

@@ -25,16 +25,16 @@ interface GalleryImageData {
 }
 
 const fallbackItems: GalleryItem[] = [
-  { src: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&h=600&fit=crop', category: 'projects', label: 'Paint Collection' },
-  { src: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&h=600&fit=crop', category: 'projects', label: 'Color Mixing' },
-  { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=600&fit=crop', category: 'before_after', label: 'Wall Painting' },
-  { src: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=800&h=600&fit=crop', category: 'projects', label: 'Color Samples' },
-  { src: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop', category: 'before_after', label: 'Modern Interior' },
-  { src: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop', category: 'before_after', label: 'Living Room' },
-  { src: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?w=800&h=600&fit=crop', category: 'projects', label: 'Paint Roller' },
-  { src: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=800&h=600&fit=crop', category: 'before_after', label: 'Bedroom Design' },
-  { src: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&h=600&fit=crop', category: 'shop', label: 'Our Store' },
-  { src: 'https://images.unsplash.com/photo-1534349762230-e1d0b6e045ba?w=800&h=600&fit=crop', category: 'shop', label: 'Color Display' },
+  { src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&h=600&fit=crop', category: 'projects', label: 'Spray Booth' },
+  { src: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=800&h=600&fit=crop', category: 'projects', label: 'Car Painting' },
+  { src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=600&fit=crop', category: 'before_after', label: 'Paint Supplies' },
+  { src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&h=600&fit=crop', category: 'projects', label: 'Color Mixing' },
+  { src: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop', category: 'before_after', label: 'Finished Result' },
+  { src: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&h=600&fit=crop', category: 'before_after', label: 'Polishing Work' },
+  { src: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=600&fit=crop', category: 'shop', label: 'Our Team' },
+  { src: 'https://images.unsplash.com/photo-1504222490345-c075b6008014?w=800&h=600&fit=crop', category: 'shop', label: 'Equipment Display' },
+  { src: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&h=600&fit=crop', category: 'projects', label: 'Workshop Interior' },
+  { src: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', category: 'before_after', label: 'Premium Finish' },
 ];
 
 type CategoryKey = 'all' | 'projects' | 'before_after' | 'shop';
@@ -73,7 +73,7 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen">
       <section className="relative py-20 text-white overflow-hidden">
-        <Image src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=1920&h=600&fit=crop" alt="Gallery" fill className="object-cover" priority />
+        <Image src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=600&fit=crop" alt="Gallery" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 to-[#F5841F]/50" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

@@ -109,7 +109,7 @@ export default function ProductDetailPage() {
           {/* Image */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-lg">
             <Image
-              src={product.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&h=800&fit=crop'}
+              src={product.image || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=800&fit=crop'}
               alt={name}
               fill
               className="object-cover"

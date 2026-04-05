@@ -77,7 +77,7 @@ export default function ColorMatchingPage() {
       {/* Hero */}
       <div className="relative bg-[#1C1C1E] pt-24 pb-20 overflow-hidden">
         <div className="absolute inset-0 opacity-15">
-          <Image src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
+          <Image src="https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

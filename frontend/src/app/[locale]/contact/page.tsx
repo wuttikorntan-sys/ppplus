@@ -60,7 +60,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen">
       <section className="relative py-20 text-white overflow-hidden">
-        <Image src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1920&h=600&fit=crop" alt="PP Plus" fill className="object-cover" priority />
+        <Image src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=600&fit=crop" alt="PP Plus" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 to-[#F5841F]/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

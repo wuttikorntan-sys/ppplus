@@ -66,7 +66,7 @@ export default function QuotePage() {
       {/* Hero */}
       <div className="relative bg-[#1C1C1E] py-14 overflow-hidden">
         <div className="absolute inset-0 opacity-15">
-          <Image src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
+          <Image src="https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -128,7 +128,7 @@ export default function QuotePage() {
                       className="bg-white rounded-xl p-4 border border-gray-100 flex gap-4">
                       <div className="relative w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-gray-100">
                         <Image
-                          src={item.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=200&h=200&fit=crop'}
+                          src={item.image || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=200&h=200&fit=crop'}
                           alt={th ? item.nameTh : item.nameEn}
                           fill className="object-cover" sizes="96px"
                         />

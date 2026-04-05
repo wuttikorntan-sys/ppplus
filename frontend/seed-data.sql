@@ -502,21 +502,24 @@ INSERT INTO color_formulas (carBrand, colorCode, colorNameTh, colorNameEn, yearR
 -- ============================================
 -- 7. HERO SLIDES
 -- ============================================
-INSERT INTO hero_slides (type, titleTh, titleEn, isActive, sortOrder) VALUES
-('image', 'สีพ่นรถยนต์คุณภาพสูง PP Plus', 'PP Plus Premium Automotive Paint', 1, 1),
-('image', 'บริการผสมสีตรงโทน ทุกยี่ห้อรถ', 'Color Matching Service for All Car Brands', 1, 2),
-('image', 'อุปกรณ์พ่นสีครบวงจร', 'Complete Spray Equipment Solutions', 1, 3);
+INSERT INTO hero_slides (type, image, videoUrl, titleTh, titleEn, isActive, sortOrder) VALUES
+('image', 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=1080&fit=crop', NULL, 'สีพ่นรถยนต์คุณภาพสูง PP Plus', 'PP Plus Premium Automotive Paint', 1, 1),
+('image', 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1920&h=1080&fit=crop', NULL, 'บริการผสมสีตรงโทน ทุกยี่ห้อรถ', 'Color Matching Service for All Car Brands', 1, 2),
+('video', 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=1920&h=1080&fit=crop', 'https://videos.pexels.com/video-files/5532771/5532771-sd_640_360_25fps.mp4', 'อุปกรณ์พ่นสีครบวงจร', 'Complete Spray Equipment Solutions', 1, 3),
+('image', 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&h=1080&fit=crop', NULL, 'สูตรสีตรงรุ่น ΔE < 0.5', 'Color Formula Accuracy ΔE < 0.5', 1, 4);
 
 -- ============================================
 -- 8. GALLERY IMAGES
 -- ============================================
 INSERT INTO gallery_images (image, category, labelTh, labelEn, sortOrder, isActive) VALUES
-('https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&h=600&fit=crop', 'workshop', 'บรรยากาศร้าน PP Plus', 'PP Plus Workshop', 1, 1),
-('https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=600&fit=crop', 'product', 'สีพ่นรถยนต์ PP Plus', 'PP Plus Automotive Paint', 2, 1),
-('https://images.unsplash.com/photo-1610397962076-02407a169a5b?w=800&h=600&fit=crop', 'work', 'งานพ่นสีรถยนต์', 'Car Painting Work', 3, 1),
+('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&h=600&fit=crop', 'workshop', 'บรรยากาศร้าน PP Plus', 'PP Plus Workshop', 1, 1),
+('https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=600&fit=crop', 'product', 'สีพ่นรถยนต์ PP Plus', 'PP Plus Automotive Paint', 2, 1),
+('https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=800&h=600&fit=crop', 'work', 'งานพ่นสีรถยนต์', 'Car Painting Work', 3, 1),
 ('https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&h=600&fit=crop', 'work', 'งานขัดเงารถยนต์', 'Car Polishing', 4, 1),
-('https://images.unsplash.com/photo-1507136566006-cfc505b114fc?w=800&h=600&fit=crop', 'product', 'ปืนพ่นสี HVLP', 'HVLP Spray Gun', 5, 1),
-('https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=800&h=600&fit=crop', 'work', 'งานเตรียมผิวก่อนพ่นสี', 'Surface Preparation', 6, 1);
+('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&h=600&fit=crop', 'product', 'สีผสมสูตร', 'Color Formula Mixing', 5, 1),
+('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop', 'work', 'งานพ่นสีเสร็จ', 'Completed Paint Job', 6, 1),
+('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', 'work', 'ผลงานพ่นสีระดับพรีเมียม', 'Premium Paint Result', 7, 1),
+('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=600&fit=crop', 'workshop', 'ทีมงาน PP Plus', 'PP Plus Team', 8, 1);
 
 -- ============================================
 -- สร้างตาราง b2b_documents ถ้ายังไม่มี

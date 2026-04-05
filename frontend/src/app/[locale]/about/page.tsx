@@ -42,7 +42,7 @@ export default function AboutPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative py-20 text-white overflow-hidden">
-        <Image src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=1920&h=600&fit=crop" alt="Automotive paint factory" fill className="object-cover" priority />
+        <Image src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=600&fit=crop" alt="Automotive paint workshop" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 to-[#F5841F]/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -121,14 +121,14 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { src: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&h=400&fit=crop', alt: 'Auto body shop' },
-              { src: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=400&h=400&fit=crop', alt: 'Spray booth' },
-              { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=400&fit=crop', alt: 'Paint mixing' },
-              { src: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=400&h=400&fit=crop', alt: 'Color samples' },
+              { src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=400&h=400&fit=crop', alt: 'Spray booth' },
+              { src: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=400&h=400&fit=crop', alt: 'Car painting' },
+              { src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=400&h=400&fit=crop', alt: 'Paint cans' },
+              { src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=400&fit=crop', alt: 'Color samples' },
               { src: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=400&fit=crop', alt: 'Finished car' },
-              { src: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=400&fit=crop', alt: 'Paint cans' },
-              { src: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&h=400&fit=crop', alt: 'Factory floor' },
-              { src: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?w=400&h=400&fit=crop', alt: 'Lab equipment' },
+              { src: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=400&fit=crop', alt: 'Workshop team' },
+              { src: 'https://images.unsplash.com/photo-1504222490345-c075b6008014?w=400&h=400&fit=crop', alt: 'Paint spray equipment' },
+              { src: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&h=400&fit=crop', alt: 'Auto body polishing' },
             ].map((img, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.05 }} className="aspect-square rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow relative">
                 <Image src={img.src} alt={img.alt} fill className="object-cover hover:scale-110 transition-transform duration-500" sizes="(max-width: 640px) 50vw, 25vw" />
