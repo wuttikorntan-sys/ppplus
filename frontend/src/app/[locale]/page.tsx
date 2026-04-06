@@ -194,23 +194,45 @@ export default function HomePage() {
             <p className="text-[#64748B] text-lg">{c('featured.subtitle')}</p>
           </motion.div>
         </div>
-        <div className="relative">
+
+        {/* Mobile: touch-scrollable horizontal list */}
+        <div className="lg:hidden overflow-x-auto px-4 pb-4 -mx-0 scrollbar-hide">
+          <div className="flex gap-3 w-max">
+            {featuredItems.map((item, idx) => (
+              <Link key={idx} href={`/menu/${item.id}` as '/menu'} className="flex-shrink-0 w-48">
+                <div className="bg-white rounded-2xl overflow-hidden shadow-sm active:shadow-lg transition-all">
+                  <div className="relative h-36 w-full overflow-hidden bg-gray-100">
+                    <Image src={item.image} alt={item.nameEn} fill className="object-cover" sizes="192px" />
+                  </div>
+                  <div className="p-3">
+                    <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-sm" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
+                    <p className="text-[#F5841F] font-bold text-center text-base">฿{item.price.toLocaleString()}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: marquee auto-scroll */}
+        <div className="relative hidden lg:block">
           <div className="flex animate-marquee">
             {[...featuredItems, ...featuredItems, ...featuredItems, ...featuredItems].map((item, idx) => (
-              <div key={idx} className="flex-shrink-0 w-44 sm:w-72 mx-1.5 sm:mx-3">
+              <div key={idx} className="flex-shrink-0 w-72 mx-3">
                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
-                  <div className="relative h-32 sm:h-48 w-full overflow-hidden">
-                    <Image src={item.image} alt={item.nameEn} fill className="object-cover hover:scale-110 transition-transform duration-500" sizes="(max-width: 640px) 176px, 300px" />
+                  <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+                    <Image src={item.image} alt={item.nameEn} fill className="object-cover hover:scale-110 transition-transform duration-500" sizes="300px" />
                   </div>
-                  <div className="p-3 sm:p-5">
-                    <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-sm sm:text-base" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
-                    <p className="text-[#F5841F] font-bold text-center text-base sm:text-lg">฿{item.price.toLocaleString()}</p>
+                  <div className="p-5">
+                    <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-base" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
+                    <p className="text-[#F5841F] font-bold text-center text-lg">฿{item.price.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-10">
           <Link href="/menu" className="inline-flex items-center gap-2 text-[#1C1C1E] hover:text-[#F5841F] font-medium transition-colors">
             {locale === 'th' ? 'ดูสินค้าทั้งหมด' : 'View All Products'} <ArrowRight className="w-4 h-4" />
