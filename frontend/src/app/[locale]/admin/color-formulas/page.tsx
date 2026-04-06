@@ -4,7 +4,6 @@ import { useLocale } from 'next-intl';
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Edit, Trash2, Search, X, Upload, Eye, EyeOff } from 'lucide-react';
-import Image from 'next/image';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -174,14 +173,14 @@ export default function AdminColorFormulasPage() {
                 <tr key={f.id} className="hover:bg-gray-50/50 transition">
                   <td className="px-4 py-3">
                     <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                      {f.image ? <Image src={f.image} alt="" width={40} height={40} className="object-cover w-full h-full" /> : <div className="w-full h-full bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]" />}
+                      {f.image ? <img src={f.image} alt="" className="object-cover w-full h-full" /> : <div className="w-full h-full bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]" />}
                     </div>
                   </td>
                   <td className="px-4 py-3 font-medium text-gray-900">{f.carBrand}</td>
                   <td className="px-4 py-3"><span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md font-mono">{f.colorCode}</span></td>
                   <td className="px-4 py-3 text-gray-600">{th ? f.colorNameTh : f.colorNameEn || f.colorNameTh || '-'}</td>
                   <td className="px-4 py-3"><span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md">{formulaTypes.find(t => t.value === f.formulaType)?.[th ? 'labelTh' : 'labelEn']}</span></td>
-                  <td className="px-4 py-3 text-gray-500 font-mono text-xs">{f.deltaE !== null ? f.deltaE.toFixed(2) : '-'}</td>
+                  <td className="px-4 py-3 text-gray-500 font-mono text-xs">{f.deltaE != null ? Number(f.deltaE).toFixed(2) : '-'}</td>
                   <td className="px-4 py-3">
                     <button onClick={() => toggleActive(f)}
                       className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition ${f.isActive ? 'bg-green-50 text-green-700 hover:bg-green-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
