@@ -226,12 +226,12 @@ export default function MenuPage() {
           <h2 className="text-xl font-bold text-[#2D2D2D] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
             {th ? 'ค้นหาสินค้า' : 'Search Products'}
           </h2>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <div className="relative">
               <select
                 value={selectedCategory === null ? '' : String(selectedCategory)}
                 onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
-                className="appearance-none w-full sm:w-56 pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-sm"
+                className="appearance-none w-24 sm:w-56 pl-3 sm:pl-4 pr-8 sm:pr-10 py-2.5 sm:py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-xs sm:text-sm"
               >
                 <option value="">{t('all')}</option>
                 {categories.map((cat) => (
@@ -241,18 +241,18 @@ export default function MenuPage() {
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 placeholder={t('search')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-sm"
+                className="w-full pl-9 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-xs sm:text-sm"
               />
             </div>
             <button
               onClick={() => setSearch(search)}
-              className="px-6 py-3 bg-[#1C1C1E] text-white rounded-xl font-medium hover:bg-[#1C1C1E]/90 transition text-sm"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#1C1C1E] text-white rounded-xl font-medium hover:bg-[#1C1C1E]/90 transition text-xs sm:text-sm whitespace-nowrap"
             >
               {th ? 'ค้นหา' : 'Search'}
             </button>
