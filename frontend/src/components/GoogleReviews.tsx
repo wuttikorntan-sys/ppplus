@@ -117,26 +117,26 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.07, duration: 0.4 }}
-      className="bg-white dark:bg-white/5 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-white/10 hover:shadow-md transition-shadow duration-300 flex flex-col"
+      className="bg-white dark:bg-white/5 rounded-2xl p-3 lg:p-5 shadow-sm border border-gray-100 dark:border-white/10 hover:shadow-md transition-shadow duration-300 flex flex-col"
     >
       {/* Author */}
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-2 lg:gap-3 mb-3">
         {review.profilePhoto ? (
           <Image
             src={review.profilePhoto}
             alt={review.authorName}
             width={44}
             height={44}
-            className="w-11 h-11 rounded-full object-cover ring-2 ring-gray-100"
+            className="w-9 h-9 lg:w-11 lg:h-11 rounded-full object-cover ring-2 ring-gray-100"
           />
         ) : (
-          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#1C1C1E]/20 to-[#F5841F]/20 dark:from-[#F5841F]/20 dark:to-[#F5841F]/10 flex items-center justify-center ring-2 ring-gray-100 dark:ring-white/10">
-            <span className="text-[#1C1C1E] dark:text-white font-bold text-base">{review.authorName.charAt(0)}</span>
+          <div className="w-9 h-9 lg:w-11 lg:h-11 rounded-full bg-gradient-to-br from-[#1C1C1E]/20 to-[#F5841F]/20 dark:from-[#F5841F]/20 dark:to-[#F5841F]/10 flex items-center justify-center ring-2 ring-gray-100 dark:ring-white/10">
+            <span className="text-[#1C1C1E] dark:text-white font-bold text-sm lg:text-base">{review.authorName.charAt(0)}</span>
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-[#2D2D2D] dark:text-white font-semibold text-sm truncate">{review.authorName}</p>
-          <p className="text-gray-400 dark:text-gray-500 text-xs">{review.relativeTime}</p>
+          <p className="text-[#2D2D2D] dark:text-white font-semibold text-xs lg:text-sm truncate">{review.authorName}</p>
+          <p className="text-gray-400 dark:text-gray-500 text-[10px] lg:text-xs">{review.relativeTime}</p>
         </div>
         {/* Google "G" badge */}
         <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0 opacity-40">
@@ -152,7 +152,7 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
 
       {/* Review text */}
       {review.text && (
-        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mt-3 line-clamp-4 flex-1">
+        <p className="text-gray-600 dark:text-gray-400 text-xs lg:text-sm leading-relaxed mt-3 line-clamp-3 lg:line-clamp-4 flex-1">
           <Quote className="w-3.5 h-3.5 inline-block text-[#F5841F]/30 mr-1 -mt-0.5" />
           {review.text}
         </p>
@@ -233,11 +233,11 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
 
         {/* Cards — loading / data / empty */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => <SkeletonCard key={i} />)}
           </div>
         ) : data && data.reviews.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
             {data.reviews.slice(0, 6).map((review, idx) => (
               <ReviewCard key={idx} review={review} index={idx} />
             ))}
