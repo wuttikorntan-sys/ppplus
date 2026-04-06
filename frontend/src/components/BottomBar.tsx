@@ -13,7 +13,7 @@ export default function BottomBar() {
   const navItems = [
     { href: '/' as const, label: t('home'), icon: Home },
     { href: '/menu' as const, label: t('menu'), icon: ShoppingBag },
-    { href: '/color-matching' as const, label: t('color_matching'), icon: Palette },
+    { href: '/color-matching' as const, label: 'Color', icon: Palette },
     { href: '/blog' as const, label: t('blog'), icon: Newspaper },
     { href: '/contact' as const, label: t('contact'), icon: User },
   ];
