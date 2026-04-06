@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { api } from '@/lib/api';
 import { Plus, Pencil, Trash2, X, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 interface GalleryImage {
   id: number;
@@ -83,7 +84,7 @@ export default function AdminGalleryPage() {
       }
       setShowModal(false);
       fetchImages();
-    } catch { /* ignore */ }
+    } catch (err) { toast.error(err instanceof Error ? err.message : 'Error'); }
   };
 
   const handleDelete = async (id: number) => {

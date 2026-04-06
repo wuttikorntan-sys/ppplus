@@ -109,7 +109,7 @@ export default function AdminColorFormulasPage() {
         toast.success(th ? 'เพิ่มเรียบร้อย' : 'Added');
       }
       setShowForm(false); fetchData();
-    } catch { toast.error(th ? 'เกิดข้อผิดพลาด' : 'Error'); }
+    } catch (err) { toast.error(err instanceof Error ? err.message : (th ? 'เกิดข้อผิดพลาด' : 'Error')); }
     finally { setSaving(false); }
   };
 

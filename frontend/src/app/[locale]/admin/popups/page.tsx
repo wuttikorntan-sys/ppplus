@@ -117,8 +117,8 @@ export default function AdminPopupsPage() {
       }
       setShowForm(false);
       fetchPopups();
-    } catch {
-      toast.error(th ? 'เกิดข้อผิดพลาด' : 'Error');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : (th ? 'เกิดข้อผิดพลาด' : 'Error'));
     }
   };
 

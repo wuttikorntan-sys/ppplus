@@ -118,8 +118,8 @@ export default function AdminBlogPage() {
       }
       setShowForm(false);
       fetchPosts();
-    } catch {
-      toast.error(th ? 'เกิดข้อผิดพลาด' : 'Error');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : (th ? 'เกิดข้อผิดพลาด' : 'Error'));
     } finally {
       setSaving(false);
     }
