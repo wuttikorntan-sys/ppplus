@@ -1,0 +1,30 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Allow actual files and directories to be served
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # DO NOT rewrite /uploads/ - serve files directly
+  RewriteCond %{REQUEST_URI} ^/uploads/
+  RewriteRule ^ - [L]
+
+  # DO NOT rewrite API routes - serve from Node.js
+  RewriteCond %{REQUEST_URI} ^/api/
+  RewriteRule ^ - [L]
+
+  # Forward everything else to Node.js
+  RewriteRule ^(.*)$ http://localhost:3000/$1 [P,QSA,L]
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript
+</IfModule>
+
+# Cache headers for static assets
+<FilesMatch "\.(jpg|jpeg|png|gif|ico|css|js|svg|webp|woff|woff2)$">
+  Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>

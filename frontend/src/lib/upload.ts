@@ -34,9 +34,17 @@ export async function saveUploadedFile(formData: FormData, fieldName: string): P
 
   const buffer = Buffer.from(await file.arrayBuffer());
   try {
+    // Ensure directory exists
+    const dirPath = path.dirname(filePath);
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
     fs.writeFileSync(filePath, buffer);
+    console.log(`File saved: ${filePath} (${buffer.length} bytes)`);
   } catch (err) {
-    throw new ApiError('ไม่สามารถบันทึกรูปภาพได้ โปรดลองอีกครั้ง', 500);
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error(`File write error: ${filePath} - ${errMsg}`);
+    throw new ApiError(`ไม่สามารถบันทึกรูปภาพได้: ${errMsg}`, 500);
   }
 
   return `/uploads/${uniqueName}`;

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { requireAdmin, handleError } from '@/lib/api-server';
+import { requireAdmin, handleError, ApiError } from '@/lib/api-server';
 import { saveUploadedFile } from '@/lib/upload';
 
 export async function GET(req: NextRequest) {
@@ -28,7 +28,13 @@ export async function POST(req: NextRequest) {
     let image: string | null = null;
     const file = formData.get('image') as File | null;
     if (file && file.size > 0) {
-      image = await saveUploadedFile(formData, 'image');
+      try {
+        image = await saveUploadedFile(formData, 'image');
+        console.log(`Color formula image saved: ${image}`);
+      } catch (uploadErr) {
+        console.error('Color formula image upload error:', uploadErr);
+        throw new ApiError(`Upload failed: ${(uploadErr as Error).message}`, 400);
+      }
     }
 
     const formula = await db.colorFormulas.create({

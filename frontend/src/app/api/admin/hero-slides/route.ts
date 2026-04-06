@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { requireAdmin, handleError } from '@/lib/api-server';
+import { requireAdmin, handleError, ApiError } from '@/lib/api-server';
 import { saveUploadedFile } from '@/lib/upload';
 
 export async function GET(req: NextRequest) {
@@ -18,7 +18,13 @@ export async function POST(req: NextRequest) {
     requireAdmin(req);
     const formData = await req.formData();
 
-    const imagePath = await saveUploadedFile(formData, 'image');
+    let imagePath: string | null = null;
+    try {
+      imagePath = await saveUploadedFile(formData, 'image');
+    } catch (uploadErr) {
+      console.error('Image upload error:', uploadErr);
+      throw new ApiError(`Upload failed: ${(uploadErr as Error).message}`, 400);
+    }
 
     const data = {
       type: (formData.get('type') as string) || 'image',
