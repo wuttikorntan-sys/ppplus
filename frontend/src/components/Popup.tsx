@@ -5,6 +5,7 @@ import { X, Star, CheckCircle2, Clock, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '@/lib/api';
+import logoPng from '../../public/logo.png';
 
 interface PopupData {
   id: number;
@@ -117,7 +118,7 @@ export default function Popup({ locale }: { locale: string }) {
             <div className="px-6 pb-6 -mt-4 relative z-10">
               {/* Title row with badge */}
               <div className="flex items-center gap-3 mb-3">
-                <img src="/logo.png" alt="PP Plus" width={40} height={40} className="w-10 h-10 rounded-xl shadow-lg shadow-[#F5841F]/20" />
+                <img src={logoPng.src} alt="PP Plus" width={40} height={40} className="w-10 h-10 rounded-xl shadow-lg shadow-[#F5841F]/20" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-bold text-white truncate" style={{ fontFamily: 'var(--font-heading)' }}>

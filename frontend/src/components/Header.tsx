@@ -7,6 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useTheme } from '@/lib/theme';
 import { useCart } from '@/lib/cart';
 import ThemeToggle from './ThemeToggle';
+import logoPng from '../../public/logo.png';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -39,7 +40,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="PP Plus" width={44} height={44} className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl" />
+            <img src={logoPng.src} alt="PP Plus" width={44} height={44} className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl" />
             <span className="text-xl lg:text-2xl font-bold text-[#1C1C1E]" style={{ fontFamily: 'var(--font-heading)' }}>
               PP Plus
             </span>

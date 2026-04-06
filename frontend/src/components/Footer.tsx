@@ -6,6 +6,7 @@ import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { FaFacebookF, FaWhatsapp, FaLine, FaInstagram, FaTiktok, FaXTwitter } from 'react-icons/fa6';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import logoPng from '../../public/logo.png';
 
 interface ContentMap {
   [key: string]: { th: string; en: string };
@@ -46,7 +47,7 @@ export default function Footer() {
       <div className="lg:hidden px-4 py-8">
         {/* Brand */}
         <div className="flex items-center gap-3 mb-5">
-          <img src="/logo.png" alt="PP Plus" width={40} height={40} className="w-10 h-10 rounded-xl" />
+          <img src={logoPng.src} alt="PP Plus" width={40} height={40} className="w-10 h-10 rounded-xl" />
           <div>
             <span className="text-lg font-bold text-white block" style={{ fontFamily: 'var(--font-heading)' }}>PP Plus</span>
             <span className="text-[10px] text-[#F5841F] font-medium tracking-widest uppercase">Automotive Paint</span>
@@ -106,7 +107,7 @@ export default function Footer() {
         {/* Top Section - Brand */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-10 border-b border-white/10">
           <div className="flex items-center gap-4">
-            <img src="/logo.png" alt="PP Plus" width={48} height={48} className="w-12 h-12 rounded-2xl shadow-lg shadow-[#F5841F]/10" />
+            <img src={logoPng.src} alt="PP Plus" width={48} height={48} className="w-12 h-12 rounded-2xl shadow-lg shadow-[#F5841F]/10" />
             <div>
               <span className="text-2xl font-bold text-white block" style={{ fontFamily: 'var(--font-heading)' }}>
                 PP Plus

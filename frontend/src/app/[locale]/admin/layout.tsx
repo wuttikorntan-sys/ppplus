@@ -35,6 +35,7 @@ import {
   CalendarDays,
 } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
+import logoPng from '../../../../public/logo.png';
 
 const navSections = [
   {
@@ -178,7 +179,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Logo */}
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="PP Plus" width={36} height={36} className="w-9 h-9 rounded-xl shrink-0" />
+          <img src={logoPng.src} alt="PP Plus" width={36} height={36} className="w-9 h-9 rounded-xl shrink-0" />
           {!collapsed && (
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-white truncate" style={{ fontFamily: 'var(--font-heading)' }}>

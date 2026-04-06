@@ -8,6 +8,7 @@ import { Mail, Lock, LogIn } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useRouter } from '@/i18n/navigation';
 import toast from 'react-hot-toast';
+import logoPng from '../../../../../public/logo.png';
 
 export default function LoginPage() {
   const t = useTranslations('auth');
@@ -41,7 +42,7 @@ export default function LoginPage() {
       >
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <div className="text-center mb-8">
-            <img src="/logo.png" alt="PP Plus" width={64} height={64} className="w-16 h-16 mx-auto mb-4 rounded-xl" />
+            <img src={logoPng.src} alt="PP Plus" width={64} height={64} className="w-16 h-16 mx-auto mb-4 rounded-xl" />
             <h1 className="text-2xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
               {t('login.title')}
             </h1>
