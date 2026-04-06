@@ -1,21 +1,37 @@
 ﻿import jwt from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret-key-ppplus-2026';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-key-ppplus-2026';
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+
+function getJwtSecret(): string {
+  if (JWT_SECRET) return JWT_SECRET;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET environment variable is required in production');
+  }
+  return 'dev-jwt-secret-key-ppplus-2026';
+}
+
+function getJwtRefreshSecret(): string {
+  if (JWT_REFRESH_SECRET) return JWT_REFRESH_SECRET;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_REFRESH_SECRET environment variable is required in production');
+  }
+  return 'dev-refresh-secret-key-ppplus-2026';
+}
 
 export function generateTokens(userId: number, role: string) {
-  const accessToken = jwt.sign({ userId, role }, JWT_SECRET, { expiresIn: '1d' });
-  const refreshToken = jwt.sign({ userId, role }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
+  const accessToken = jwt.sign({ userId, role }, getJwtSecret(), { expiresIn: '1d' });
+  const refreshToken = jwt.sign({ userId, role }, getJwtRefreshSecret(), { expiresIn: '7d' });
   return { accessToken, refreshToken };
 }
 
 export function verifyToken(token: string): { userId: number; role: string } {
-  return jwt.verify(token, JWT_SECRET) as { userId: number; role: string };
+  return jwt.verify(token, getJwtSecret()) as { userId: number; role: string };
 }
 
 export function verifyRefreshToken(token: string): { userId: number; role: string } {
-  return jwt.verify(token, JWT_REFRESH_SECRET) as { userId: number; role: string };
+  return jwt.verify(token, getJwtRefreshSecret()) as { userId: number; role: string };
 }
 
 export function getAuth(req: NextRequest): { userId: number; role: string } | null {

@@ -145,14 +145,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const locale = useLocale();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    if (!loading && (!user || !isAdmin)) {
-      router.push('/auth/login');
+    if (!loading) {
+      if (!user || !isAdmin) {
+        router.replace('/auth/login');
+      } else {
+        setAuthChecked(true);
+      }
     }
   }, [user, loading, isAdmin, router]);
 
-  if (loading || !user || !isAdmin) {
+  if (loading || !authChecked || !user || !isAdmin) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="w-10 h-10 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />

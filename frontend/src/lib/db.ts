@@ -446,6 +446,11 @@ export const db = {
 
   /* ── popups ── */
   popups: {
+    async findById(id: number): Promise<PopupRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM popups WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as PopupRecord) : undefined;
+    },
     async findMany(opts?: { where?: Partial<PopupRecord> }): Promise<PopupRecord[]> {
       let sql = 'SELECT * FROM popups';
       const conditions: string[] = [];
@@ -502,6 +507,11 @@ export const db = {
 
   /* ── heroSlides ── */
   heroSlides: {
+    async findById(id: number): Promise<HeroSlideRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM hero_slides WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as HeroSlideRecord) : undefined;
+    },
     async findMany(opts?: { where?: Partial<HeroSlideRecord> }): Promise<HeroSlideRecord[]> {
       let sql = 'SELECT * FROM hero_slides';
       const conditions: string[] = [];
@@ -558,6 +568,11 @@ export const db = {
 
   /* ── galleryImages ── */
   galleryImages: {
+    async findById(id: number): Promise<GalleryImageRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM gallery_images WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as GalleryImageRecord) : undefined;
+    },
     async findMany(opts?: { where?: Partial<GalleryImageRecord> }): Promise<GalleryImageRecord[]> {
       let sql = 'SELECT * FROM gallery_images';
       const conditions: string[] = [];
@@ -828,6 +843,11 @@ export const db = {
 
   /* ── b2bApplications ── */
   b2bApplications: {
+    async findById(id: number): Promise<B2bApplicationRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM b2b_applications WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as B2bApplicationRecord) : undefined;
+    },
     async findMany(): Promise<B2bApplicationRecord[]> {
       const [rows] = await pool.query('SELECT * FROM b2b_applications ORDER BY createdAt DESC');
       return (rows as any[]).map(mapRow) as B2bApplicationRecord[];
@@ -861,6 +881,11 @@ export const db = {
 
   /* ── quoteRequests ── */
   quoteRequests: {
+    async findById(id: number): Promise<QuoteRequestRecord | undefined> {
+      const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as QuoteRequestRecord) : undefined;
+    },
     async findMany(): Promise<QuoteRequestRecord[]> {
       const [rows] = await pool.query('SELECT * FROM quote_requests ORDER BY createdAt DESC');
       return (rows as any[]).map(mapRow) as QuoteRequestRecord[];
@@ -936,25 +961,35 @@ export const db = {
       return arr.length ? (mapRow(arr[0]) as OrderRecord) : undefined;
     },
     async create(data: { userId?: number | null; totalAmount: number; orderType?: string; items: { menuItemId: number; quantity: number; price: number }[]; paymentMethod?: string }): Promise<OrderRecord> {
-      const ts = now();
-      const [res] = await pool.query(
-        'INSERT INTO orders (userId, totalAmount, orderType, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)',
-        [data.userId ?? null, data.totalAmount, data.orderType || 'ONLINE', ts, ts],
-      );
-      const orderId = (res as mysql.ResultSetHeader).insertId;
-      for (const item of data.items) {
-        await pool.query(
-          'INSERT INTO order_items (orderId, menuItemId, quantity, price, createdAt) VALUES (?, ?, ?, ?, ?)',
-          [orderId, item.menuItemId, item.quantity, item.price, ts],
+      const conn = await pool.getConnection();
+      try {
+        await conn.beginTransaction();
+        const ts = now();
+        const [res] = await conn.query(
+          'INSERT INTO orders (userId, totalAmount, orderType, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)',
+          [data.userId ?? null, data.totalAmount, data.orderType || 'ONLINE', ts, ts],
         );
+        const orderId = (res as mysql.ResultSetHeader).insertId;
+        for (const item of data.items) {
+          await conn.query(
+            'INSERT INTO order_items (orderId, menuItemId, quantity, price, createdAt) VALUES (?, ?, ?, ?, ?)',
+            [orderId, item.menuItemId, item.quantity, item.price, ts],
+          );
+        }
+        if (data.paymentMethod) {
+          await conn.query(
+            'INSERT INTO payments (orderId, method, createdAt, updatedAt) VALUES (?, ?, ?, ?)',
+            [orderId, data.paymentMethod, ts, ts],
+          );
+        }
+        await conn.commit();
+        return (await this.findById(orderId))!;
+      } catch (err) {
+        await conn.rollback();
+        throw err;
+      } finally {
+        conn.release();
       }
-      if (data.paymentMethod) {
-        await pool.query(
-          'INSERT INTO payments (orderId, method, createdAt, updatedAt) VALUES (?, ?, ?, ?)',
-          [orderId, data.paymentMethod, ts, ts],
-        );
-      }
-      return (await this.findById(orderId))!;
     },
     async updateStatus(id: number, status: string): Promise<OrderRecord | undefined> {
       const [check] = await pool.query('SELECT id FROM orders WHERE id = ?', [id]);

@@ -63,10 +63,10 @@ export async function saveUploadedDocument(formData: FormData, fieldName: string
 
   const allAllowed = [...ALLOWED_TYPES, ...DOCUMENT_TYPES];
   if (!allAllowed.includes(file.type)) {
-    throw new Error('อนุญาตเฉพาะไฟล์ PDF, Word หรือรูปภาพ');
+    throw new ApiError('อนุญาตเฉพาะไฟล์ PDF, Word หรือรูปภาพ', 400);
   }
   if (file.size > DOC_MAX_SIZE) {
-    throw new Error('ไฟล์ต้องมีขนาดไม่เกิน 20MB');
+    throw new ApiError('ไฟล์ต้องมีขนาดไม่เกิน 20MB', 400);
   }
 
   const ext = path.extname(file.name) || '.pdf';
@@ -74,7 +74,17 @@ export async function saveUploadedDocument(formData: FormData, fieldName: string
   const filePath = path.join(UPLOADS_DIR, uniqueName);
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  fs.writeFileSync(filePath, buffer);
+  try {
+    const dirPath = path.dirname(filePath);
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+    fs.writeFileSync(filePath, buffer);
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error(`Document write error: ${filePath} - ${errMsg}`);
+    throw new ApiError(`ไม่สามารถบันทึกเอกสารได้: ${errMsg}`, 500);
+  }
 
   return `/uploads/${uniqueName}`;
 }

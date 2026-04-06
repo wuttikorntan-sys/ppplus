@@ -27,9 +27,9 @@ interface PopupItem {
 
 const emptyForm = {
   title: '', titleTh: '', description: '', descriptionTh: '',
-  badge: 'NEW', tags: 'Premium,Restaurant,Cafe & Bar', tagsTh: '????????,?????????,????? & ????',
-  features: 'Premium Quality,Great Ambience,Excellent Service', featuresTh: '???????????,??????????,????????????',
-  buttonText: 'Explore Menu', buttonTextTh: '?????????',
+  badge: 'NEW', tags: 'Premium,Restaurant,Cafe & Bar', tagsTh: 'พรีเมียม,ร้านอาหาร,คาเฟ่ & บาร์',
+  features: 'Premium Quality,Great Ambience,Excellent Service', featuresTh: 'คุณภาพสูง,บรรยากาศดี,บริการยอดเยี่ยม',
+  buttonText: 'Explore Menu', buttonTextTh: 'ดูเมนู',
   isActive: true,
 };
 
@@ -72,7 +72,7 @@ export default function AdminPopupsPage() {
       title: p.title, titleTh: p.titleTh, description: p.description, descriptionTh: p.descriptionTh,
       badge: p.badge || 'NEW', tags: p.tags || '', tagsTh: p.tagsTh || '',
       features: p.features || '', featuresTh: p.featuresTh || '',
-      buttonText: p.buttonText || 'Explore Menu', buttonTextTh: p.buttonTextTh || '?????????',
+      buttonText: p.buttonText || 'Explore Menu', buttonTextTh: p.buttonTextTh || 'ดูเมนู',
       isActive: p.isActive,
     });
     setImageFile(null);
@@ -110,15 +110,15 @@ export default function AdminPopupsPage() {
 
       if (editingId) {
         await api.upload(`/admin/popups/${editingId}`, formData, 'PUT');
-        toast.success(th ? '???????????' : 'Updated');
+        toast.success(th ? 'อัปเดตแล้ว' : 'Updated');
       } else {
         await api.upload('/admin/popups', formData);
-        toast.success(th ? '???????????' : 'Created');
+        toast.success(th ? 'สร้างแล้ว' : 'Created');
       }
       setShowForm(false);
       fetchPopups();
     } catch {
-      toast.error(th ? '??????????????' : 'Error');
+      toast.error(th ? 'เกิดข้อผิดพลาด' : 'Error');
     }
   };
 
@@ -126,10 +126,10 @@ export default function AdminPopupsPage() {
     if (!confirm(t('confirm_delete'))) return;
     try {
       await api.delete(`/admin/popups/${id}`);
-      toast.success(locale === 'th' ? '????????' : 'Deleted');
+      toast.success(locale === 'th' ? 'ลบแล้ว' : 'Deleted');
       fetchPopups();
     } catch {
-      toast.error(locale === 'th' ? '??????????????' : 'Error');
+      toast.error(locale === 'th' ? 'เกิดข้อผิดพลาด' : 'Error');
     }
   };
 
@@ -146,12 +146,12 @@ export default function AdminPopupsPage() {
       formData.append('features', p.features || '');
       formData.append('featuresTh', p.featuresTh || '');
       formData.append('buttonText', p.buttonText || 'Explore Menu');
-      formData.append('buttonTextTh', p.buttonTextTh || '?????????');
+      formData.append('buttonTextTh', p.buttonTextTh || 'ดูเมนู');
       formData.append('isActive', String(!p.isActive));
       await api.upload(`/admin/popups/${p.id}`, formData, 'PUT');
       fetchPopups();
     } catch {
-      toast.error(locale === 'th' ? '??????????????' : 'Error');
+      toast.error(locale === 'th' ? 'เกิดข้อผิดพลาด' : 'Error');
     }
   };
 
@@ -168,7 +168,7 @@ export default function AdminPopupsPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-20 text-gray-400">{locale === 'th' ? '?????????...' : 'Loading...'}</div>
+        <div className="text-center py-20 text-gray-400">{locale === 'th' ? 'กำลังโหลด...' : 'Loading...'}</div>
       ) : popups.length === 0 ? (
         <div className="text-center py-20 text-gray-400">{t('no_popups')}</div>
       ) : (
@@ -185,7 +185,7 @@ export default function AdminPopupsPage() {
                 <p className="text-sm text-gray-400 truncate">{locale === 'th' ? p.descriptionTh || p.description : p.description}</p>
               </div>
               <button onClick={() => toggleActive(p)} className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${p.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                {p.isActive ? (locale === 'th' ? '????' : 'Active') : (locale === 'th' ? '???' : 'Inactive')}
+                {p.isActive ? (locale === 'th' ? 'เปิด' : 'Active') : (locale === 'th' ? 'ปิด' : 'Inactive')}
               </button>
               <button onClick={() => openEdit(p)} className="p-2 hover:bg-gray-100 rounded-lg transition"><Pencil className="w-4 h-4 text-gray-400" /></button>
               <button onClick={() => handleDelete(p.id)} className="p-2 hover:bg-red-50 rounded-lg transition"><Trash2 className="w-4 h-4 text-red-400" /></button>
@@ -221,53 +221,53 @@ export default function AdminPopupsPage() {
               </div>
 
               <div className="pt-2 border-t border-gray-100">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? '??????? Popup' : 'Popup Settings'}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? 'ตั้งค่า Popup' : 'Popup Settings'}</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'Badge' : 'Badge'}</label>
                     <input type="text" value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} placeholder="NEW" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '???? CTA' : 'Button Text'}</label>
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'ปุ่ม CTA' : 'Button Text'}</label>
                     <input type="text" value={form.buttonText} onChange={(e) => setForm({ ...form, buttonText: e.target.value })} placeholder="Explore Menu" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                   <div className="col-span-2">
-                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '???? CTA (???????)' : 'Button Text (Thai)'}</label>
-                    <input type="text" value={form.buttonTextTh} onChange={(e) => setForm({ ...form, buttonTextTh: e.target.value })} placeholder="?????????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'ปุ่ม CTA (ภาษาไทย)' : 'Button Text (Thai)'}</label>
+                    <input type="text" value={form.buttonTextTh} onChange={(e) => setForm({ ...form, buttonTextTh: e.target.value })} placeholder="ดูเมนู" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                 </div>
               </div>
 
               <div className="pt-2 border-t border-gray-100">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? '???? (???????? ,)' : 'Tags (comma separated)'}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? 'แท็ก (คั่นด้วย ,)' : 'Tags (comma separated)'}</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '???? (??????)' : 'Tags (EN)'}</label>
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'แท็ก (อังกฤษ)' : 'Tags (EN)'}</label>
                     <input type="text" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="Premium,Restaurant,Cafe & Bar" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '???? (???)' : 'Tags (TH)'}</label>
-                    <input type="text" value={form.tagsTh} onChange={(e) => setForm({ ...form, tagsTh: e.target.value })} placeholder="????????,?????????,????? & ????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'แท็ก (ไทย)' : 'Tags (TH)'}</label>
+                    <input type="text" value={form.tagsTh} onChange={(e) => setForm({ ...form, tagsTh: e.target.value })} placeholder="พรีเมียม,ร้านอาหาร,คาเฟ่ & บาร์" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                 </div>
               </div>
 
               <div className="pt-2 border-t border-gray-100">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? '??????? (???????? ,)' : 'Features (comma separated)'}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{th ? 'ฟีเจอร์ (คั่นด้วย ,)' : 'Features (comma separated)'}</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '??????? (??????)' : 'Features (EN)'}</label>
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'ฟีเจอร์ (อังกฤษ)' : 'Features (EN)'}</label>
                     <input type="text" value={form.features} onChange={(e) => setForm({ ...form, features: e.target.value })} placeholder="Premium Quality,Great Ambience,Excellent Service" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '??????? (???)' : 'Features (TH)'}</label>
-                    <input type="text" value={form.featuresTh} onChange={(e) => setForm({ ...form, featuresTh: e.target.value })} placeholder="???????????,??????????,????????????" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
+                    <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'ฟีเจอร์ (ไทย)' : 'Features (TH)'}</label>
+                    <input type="text" value={form.featuresTh} onChange={(e) => setForm({ ...form, featuresTh: e.target.value })} placeholder="คุณภาพสูง,บรรยากาศดี,บริการยอดเยี่ยม" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition" />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? '??????' : 'Image'}</label>
+                <label className="block text-sm font-medium text-[#2D2D2D] mb-1">{th ? 'รูปภาพ' : 'Image'}</label>
                 <input type="file" ref={fileInputRef} accept="image/*" onChange={handleImageChange} className="hidden" />
                 {imagePreview ? (
                   <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-gray-200 mb-2">
@@ -279,7 +279,7 @@ export default function AdminPopupsPage() {
                 ) : (
                   <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center gap-2 text-gray-400 hover:border-[#1C1C1E]/30 hover:text-[#1C1C1E] transition">
                     <Upload className="w-6 h-6" />
-                    <span className="text-sm">{th ? '??????????????????????' : 'Click to upload image'}</span>
+                    <span className="text-sm">{th ? 'คลิกเพื่ออัปโหลดรูป' : 'Click to upload image'}</span>
                   </button>
                 )}
               </div>
@@ -288,7 +288,7 @@ export default function AdminPopupsPage() {
                 <label htmlFor="isActive" className="text-sm font-medium text-[#2D2D2D]">{t('form.active')}</label>
               </div>
               <button type="submit" className="w-full py-3 bg-[#1C1C1E] text-white rounded-xl font-medium hover:bg-[#1C1C1E]-light transition-colors">
-                {editingId ? (locale === 'th' ? '??????' : 'Save') : (locale === 'th' ? '?????' : 'Create')}
+                {editingId ? (locale === 'th' ? 'บันทึก' : 'Save') : (locale === 'th' ? 'สร้าง' : 'Create')}
               </button>
             </form>
           </motion.div>

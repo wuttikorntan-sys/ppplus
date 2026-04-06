@@ -139,7 +139,7 @@ export default function AdminMenuPage() {
 
   const handleSave = async () => {
     if (!form.nameTh || !form.nameEn || !form.price || !form.categoryId) {
-      toast.error(th ? '?????????????????????' : 'Please fill required fields');
+      toast.error(th ? 'กรุณากรอกข้อมูลที่จำเป็น' : 'Please fill required fields');
       return;
     }
     setSaving(true);
@@ -171,25 +171,25 @@ export default function AdminMenuPage() {
 
       if (editingId) {
         await api.upload(`/admin/menu/${editingId}`, formData, 'PUT');
-        toast.success(th ? '???????????????' : 'Updated');
+        toast.success(th ? 'อัปเดตเรียบร้อย' : 'Updated');
       } else {
         await api.upload('/admin/menu', formData);
-        toast.success(th ? '??????????????' : 'Added');
+        toast.success(th ? 'เพิ่มสินค้าแล้ว' : 'Added');
       }
       setShowForm(false);
       fetchItems();
     } catch {
-      toast.error(th ? '??????????????' : 'Error');
+      toast.error(th ? 'เกิดข้อผิดพลาด' : 'Error');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(th ? '????????????' : 'Delete this item?')) return;
+    if (!confirm(th ? 'ต้องการลบหรือไม่?' : 'Delete this item?')) return;
     try {
       await api.delete(`/admin/menu/${id}`);
-      toast.success(th ? '???????????' : 'Deleted');
+      toast.success(th ? 'ลบเรียบร้อย' : 'Deleted');
       fetchItems();
     } catch {
       toast.error('Error');
@@ -212,24 +212,24 @@ export default function AdminMenuPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-heading)' }}>
-            {th ? '????????????' : 'Product Management'}
+            {th ? 'จัดการสินค้า' : 'Product Management'}
           </h1>
-          <p className="text-sm text-gray-500 mt-0.5">{filtered.length} {th ? '??????' : 'items'}</p>
+          <p className="text-sm text-gray-500 mt-0.5">{filtered.length} {th ? 'รายการ' : 'items'}</p>
         </div>
         <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-lg font-medium hover:bg-[#1C1C1E]/90 transition text-sm shadow-sm">
-          <Plus className="w-4 h-4" /> {th ? '???????????' : 'Add Product'}
+          <Plus className="w-4 h-4" /> {th ? 'เพิ่มสินค้า' : 'Add Product'}
         </button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input type="text" placeholder={th ? '???????????...' : 'Search products...'} value={search} onChange={(e) => setSearch(e.target.value)}
+          <input type="text" placeholder={th ? 'ค้นหาสินค้า...' : 'Search products...'} value={search} onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition text-sm" />
         </div>
         <select value={filterCat} onChange={(e) => setFilterCat(e.target.value)}
           className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none transition text-sm">
-          <option value="">{th ? '???????????' : 'All Categories'}</option>
+          <option value="">{th ? 'ทุกหมวดหมู่' : 'All Categories'}</option>
           {categories.map((c) => (<option key={c.id} value={c.id}>{th ? c.nameTh : c.nameEn}</option>))}
         </select>
       </div>
@@ -239,12 +239,12 @@ export default function AdminMenuPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? '???' : 'Image'}</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? '????' : 'Name'}</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? '????????' : 'Category'}</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? '????' : 'Price'}</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? '?????' : 'Status'}</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? '??????' : 'Actions'}</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'รูป' : 'Image'}</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'ชื่อ' : 'Name'}</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'หมวดหมู่' : 'Category'}</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'ราคา' : 'Price'}</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'สถานะ' : 'Status'}</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'จัดการ' : 'Actions'}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -271,7 +271,7 @@ export default function AdminMenuPage() {
                     <button onClick={() => toggleAvailable(item)}
                       className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition ${item.isAvailable ? 'bg-green-50 text-green-700 hover:bg-green-100' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}>
                       {item.isAvailable ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                      {item.isAvailable ? (th ? '????????' : 'Active') : (th ? '???' : 'Hidden')}
+                      {item.isAvailable ? (th ? 'แสดงอยู่' : 'Active') : (th ? 'ซ่อน' : 'Hidden')}
                     </button>
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -283,7 +283,7 @@ export default function AdminMenuPage() {
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">{th ? '???????????' : 'No items found'}</td></tr>
+                <tr><td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">{th ? 'ไม่พบสินค้า' : 'No items found'}</td></tr>
               )}
             </tbody>
           </table>
@@ -295,26 +295,26 @@ export default function AdminMenuPage() {
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-xl w-full max-w-2xl shadow-xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'var(--font-heading)' }}>
-                {editingId ? (th ? '???????????' : 'Edit Product') : (th ? '???????????????' : 'New Product')}
+                {editingId ? (th ? 'แก้ไขสินค้า' : 'Edit Product') : (th ? 'เพิ่มสินค้าใหม่' : 'New Product')}
               </h2>
               <button onClick={() => setShowForm(false)} className="p-1.5 hover:bg-gray-100 rounded-lg transition"><X className="w-5 h-5 text-gray-400" /></button>
             </div>
             <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{th ? '??????' : 'Image'}</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{th ? 'รูปภาพ' : 'Image'}</label>
                 <div onClick={() => fileInputRef.current?.click()}
                   className="relative border-2 border-dashed border-gray-200 rounded-xl h-48 flex items-center justify-center cursor-pointer hover:border-[#1C1C1E]/40 transition group overflow-hidden">
                   {imagePreview ? (
                     <>
                       <Image src={imagePreview} alt="" fill className="object-cover" />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <p className="text-white text-sm font-medium">{th ? '??????????' : 'Change Image'}</p>
+                        <p className="text-white text-sm font-medium">{th ? 'เปลี่ยนรูป' : 'Change Image'}</p>
                       </div>
                     </>
                   ) : (
                     <div className="text-center">
                       <Upload className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                      <p className="text-sm text-gray-400">{th ? '???????????????????' : 'Click to upload image'}</p>
+                      <p className="text-sm text-gray-400">{th ? 'คลิกเพื่ออัปโหลดรูป' : 'Click to upload image'}</p>
                       <p className="text-xs text-gray-300 mt-1">JPEG, PNG, WebP (max 5MB)</p>
                     </div>
                   )}
@@ -323,44 +323,44 @@ export default function AdminMenuPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '???? (???)' : 'Name (Thai)'} *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (ไทย)' : 'Name (Thai)'} *</label>
                   <input value={form.nameTh} onChange={(e) => setForm({ ...form, nameTh: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '???? (??????)' : 'Name (English)'} *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (อังกฤษ)' : 'Name (English)'} *</label>
                   <input value={form.nameEn} onChange={(e) => setForm({ ...form, nameEn: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '?????????? (???)' : 'Description (Thai)'}</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'รายละเอียด (ไทย)' : 'Description (Thai)'}</label>
                   <textarea value={form.descriptionTh} onChange={(e) => setForm({ ...form, descriptionTh: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={3} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '?????????? (??????)' : 'Description (English)'}</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'รายละเอียด (อังกฤษ)' : 'Description (English)'}</label>
                   <textarea value={form.descriptionEn} onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={3} />
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '???? (?)' : 'Price (?)'} *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ราคา (฿)' : 'Price (฿)'} *</label>
                   <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '????????' : 'Category'} *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'หมวดหมู่' : 'Category'} *</label>
                   <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm">
-                    <option value="">{th ? '?????' : 'Select'}</option>
+                    <option value="">{th ? 'เลือก' : 'Select'}</option>
                     {categories.map((c) => (<option key={c.id} value={c.id}>{th ? c.nameTh : c.nameEn}</option>))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '?????' : 'Sort Order'}</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ลำดับ' : 'Sort Order'}</label>
                   <input type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                 </div>
@@ -368,23 +368,23 @@ export default function AdminMenuPage() {
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input type="checkbox" checked={form.isAvailable} onChange={(e) => setForm({ ...form, isAvailable: e.target.checked })}
                   className="w-4 h-4 rounded border-gray-300 text-[#1C1C1E] focus:ring-[#1C1C1E]" />
-                <span className="text-sm font-medium text-gray-700">{th ? '????????' : 'Available for sale'}</span>
+                <span className="text-sm font-medium text-gray-700">{th ? 'พร้อมขาย' : 'Available for sale'}</span>
               </label>
               {/* Paint-specific fields */}
               <div className="border-t border-gray-100 pt-4 mt-2">
-                <p className="text-sm font-semibold text-gray-600 mb-3">{th ? '???????????????????' : 'Paint Product Details'}</p>
+                <p className="text-sm font-semibold text-gray-600 mb-3">{th ? 'รายละเอียดสินค้าสี' : 'Paint Product Details'}</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '??????' : 'Brand'}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'แบรนด์' : 'Brand'}</label>
                     <input value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })}
                       placeholder="TOA, Beger, Jotun..."
                       className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '?????????' : 'Finish Type'}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ประเภทผิว' : 'Finish Type'}</label>
                     <select value={form.finishType} onChange={(e) => setForm({ ...form, finishType: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm">
-                      <option value="">{th ? '?????' : 'Select'}</option>
+                      <option value="">{th ? 'เลือก' : 'Select'}</option>
                       <option value="Matte">Matte</option>
                       <option value="Satin">Satin</option>
                       <option value="Semi-gloss">Semi-gloss</option>
@@ -392,7 +392,7 @@ export default function AdminMenuPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '??????' : 'Color Code'}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'รหัสสี' : 'Color Code'}</label>
                     <div className="flex gap-2">
                       <input type="color" value={form.colorCode || '#ffffff'} onChange={(e) => setForm({ ...form, colorCode: e.target.value })}
                         className="w-10 h-10 rounded-lg border border-gray-200 cursor-pointer" />
@@ -402,9 +402,9 @@ export default function AdminMenuPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '??????' : 'Color Name'}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อสี' : 'Color Name'}</label>
                     <input value={form.colorName} onChange={(e) => setForm({ ...form, colorName: e.target.value })}
-                      placeholder={th ? '??????, ???????...' : 'Pearl White, Ocean Blue...'}
+                      placeholder={th ? 'ขาวมุก, ฟ้าทะเล...' : 'Pearl White, Ocean Blue...'}
                       className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
                   <div>
@@ -413,7 +413,7 @@ export default function AdminMenuPage() {
                       className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? '????' : 'Size'}</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ขนาด' : 'Size'}</label>
                     <div className="flex gap-2">
                       <input type="number" value={form.size} onChange={(e) => setForm({ ...form, size: e.target.value })}
                         className="flex-1 px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
@@ -490,9 +490,9 @@ export default function AdminMenuPage() {
               </div>
             </div>
             <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-100">
-              <button onClick={() => setShowForm(false)} className="px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition font-medium">{th ? '??????' : 'Cancel'}</button>
+              <button onClick={() => setShowForm(false)} className="px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition font-medium">{th ? 'ยกเลิก' : 'Cancel'}</button>
               <button onClick={handleSave} disabled={saving} className="px-5 py-2.5 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
-                {saving ? (th ? '???????????...' : 'Saving...') : (th ? '??????' : 'Save')}
+                {saving ? (th ? 'กำลังบันทึก...' : 'Saving...') : (th ? 'บันทึก' : 'Save')}
               </button>
             </div>
           </motion.div>

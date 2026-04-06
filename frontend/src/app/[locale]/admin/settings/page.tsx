@@ -49,10 +49,13 @@ export default function AdminSettingsPage() {
         const filteredNotify: ContentMap = {};
 
         Object.entries(res.data).forEach(([key, val]) => {
-          if (key.startsWith('social.')) filteredSocial[key] = val;
-          if (key.startsWith('smtp.')) filteredSmtp[key] = val;
-          if (key.startsWith('chat.')) filteredChat[key] = val;
-          if (key.startsWith('notify.')) filteredNotify[key] = val;
+          const safeVal = val && typeof val === 'object' && 'th' in val
+            ? val
+            : { th: typeof val === 'string' ? val : '', en: typeof val === 'string' ? val : '' };
+          if (key.startsWith('social.')) filteredSocial[key] = safeVal;
+          if (key.startsWith('smtp.')) filteredSmtp[key] = safeVal;
+          if (key.startsWith('chat.')) filteredChat[key] = safeVal;
+          if (key.startsWith('notify.')) filteredNotify[key] = safeVal;
         });
         // Ensure enabled keys exist with defaults
         for (const f of chatFields) {
@@ -104,26 +107,26 @@ export default function AdminSettingsPage() {
     try {
       const socialItems = Object.entries(social).map(([key, val]) => ({
         key,
-        valueTh: val.th,
-        valueEn: val.en,
+        valueTh: val?.th ?? '',
+        valueEn: val?.en ?? '',
         type: 'text',
       }));
       const smtpItems = Object.entries(smtp).map(([key, val]) => ({
         key,
-        valueTh: val.th,
-        valueEn: val.en,
+        valueTh: val?.th ?? '',
+        valueEn: val?.en ?? '',
         type: 'text',
       }));
       const chatItems = Object.entries(chat).map(([key, val]) => ({
         key,
-        valueTh: val.th,
-        valueEn: val.en,
+        valueTh: val?.th ?? '',
+        valueEn: val?.en ?? '',
         type: 'text',
       }));
       const notifyItems = Object.entries(notify).map(([key, val]) => ({
         key,
-        valueTh: val.th,
-        valueEn: val.en,
+        valueTh: val?.th ?? '',
+        valueEn: val?.en ?? '',
         type: 'text',
       }));
       await api.put('/admin/site-content', [...socialItems, ...smtpItems, ...chatItems, ...notifyItems]);
