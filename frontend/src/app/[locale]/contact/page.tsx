@@ -74,41 +74,41 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-              <div className="space-y-6">
-                <div className="bg-white rounded-2xl p-6 shadow-sm flex items-start gap-4">
-                  <div className="bg-[#1C1C1E]/10 p-3 rounded-xl"><MapPin className="w-6 h-6 text-[#1C1C1E]" /></div>
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 lg:gap-6">
+                <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm flex items-start gap-3 lg:gap-4">
+                  <div className="bg-[#1C1C1E]/10 p-2.5 lg:p-3 rounded-xl"><MapPin className="w-5 h-5 lg:w-6 lg:h-6 text-[#1C1C1E]" /></div>
                   <div>
-                    <h3 className="font-semibold text-[#2D2D2D] mb-1">{lang === 'th' ? 'ที่อยู่' : 'Address'}</h3>
-                    <p className="text-[#64748B] text-sm">{v('location.address') || t('info.address')}</p>
+                    <h3 className="font-semibold text-[#2D2D2D] mb-0.5 lg:mb-1 text-sm lg:text-base">{lang === 'th' ? 'ที่อยู่' : 'Address'}</h3>
+                    <p className="text-[#64748B] text-xs lg:text-sm">{v('location.address') || t('info.address')}</p>
                   </div>
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm flex items-start gap-4">
-                  <div className="bg-[#F5841F]/10 p-3 rounded-xl"><Phone className="w-6 h-6 text-[#F5841F]" /></div>
+                <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm flex items-start gap-3 lg:gap-4">
+                  <div className="bg-[#F5841F]/10 p-2.5 lg:p-3 rounded-xl"><Phone className="w-5 h-5 lg:w-6 lg:h-6 text-[#F5841F]" /></div>
                   <div>
-                    <h3 className="font-semibold text-[#2D2D2D] mb-1">{lang === 'th' ? 'โทรศัพท์' : 'Phone'}</h3>
-                    <p className="text-[#64748B] text-sm">{v('location.phone') || t('info.phone')}</p>
+                    <h3 className="font-semibold text-[#2D2D2D] mb-0.5 lg:mb-1 text-sm lg:text-base">{lang === 'th' ? 'โทรศัพท์' : 'Phone'}</h3>
+                    <p className="text-[#64748B] text-xs lg:text-sm">{v('location.phone') || t('info.phone')}</p>
                   </div>
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm flex items-start gap-4">
-                  <div className="bg-[#F5841F]/10 p-3 rounded-xl"><Mail className="w-6 h-6 text-[#F5841F]" /></div>
+                <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm flex items-start gap-3 lg:gap-4">
+                  <div className="bg-[#F5841F]/10 p-2.5 lg:p-3 rounded-xl"><Mail className="w-5 h-5 lg:w-6 lg:h-6 text-[#F5841F]" /></div>
                   <div>
-                    <h3 className="font-semibold text-[#2D2D2D] mb-1">{lang === 'th' ? 'อีเมล' : 'Email'}</h3>
-                    <p className="text-[#64748B] text-sm">{v('location.email') || t('info.email')}</p>
+                    <h3 className="font-semibold text-[#2D2D2D] mb-0.5 lg:mb-1 text-sm lg:text-base">{lang === 'th' ? 'อีเมล' : 'Email'}</h3>
+                    <p className="text-[#64748B] text-xs lg:text-sm">{v('location.email') || t('info.email')}</p>
                   </div>
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm flex items-start gap-4">
-                  <div className="bg-[#1C1C1E]/10 p-3 rounded-xl"><MessageCircle className="w-6 h-6 text-[#1C1C1E]" /></div>
+                <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm flex items-start gap-3 lg:gap-4">
+                  <div className="bg-[#1C1C1E]/10 p-2.5 lg:p-3 rounded-xl"><MessageCircle className="w-5 h-5 lg:w-6 lg:h-6 text-[#1C1C1E]" /></div>
                   <div>
-                    <h3 className="font-semibold text-[#2D2D2D] mb-1">LINE</h3>
-                    <p className="text-[#64748B] text-sm">{v('location.line') || t('info.line')}</p>
+                    <h3 className="font-semibold text-[#2D2D2D] mb-0.5 lg:mb-1 text-sm lg:text-base">LINE</h3>
+                    <p className="text-[#64748B] text-xs lg:text-sm">{v('location.line') || t('info.line')}</p>
                   </div>
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm flex items-start gap-4">
-                  <div className="bg-[#1C1C1E]/10 p-3 rounded-xl"><Clock className="w-6 h-6 text-[#1C1C1E]" /></div>
+                <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm flex items-start gap-3 lg:gap-4 col-span-2 lg:col-span-1">
+                  <div className="bg-[#1C1C1E]/10 p-2.5 lg:p-3 rounded-xl"><Clock className="w-5 h-5 lg:w-6 lg:h-6 text-[#1C1C1E]" /></div>
                   <div>
-                    <h3 className="font-semibold text-[#2D2D2D] mb-1">{v('location.hours_title') || t('info.hours_title')}</h3>
-                    <p className="text-[#64748B] text-sm">{v('location.hours1') || t('info.hours1')}</p>
-                    <p className="text-[#64748B] text-sm">{v('location.hours2') || t('info.hours2')}</p>
+                    <h3 className="font-semibold text-[#2D2D2D] mb-0.5 lg:mb-1 text-sm lg:text-base">{v('location.hours_title') || t('info.hours_title')}</h3>
+                    <p className="text-[#64748B] text-xs lg:text-sm">{v('location.hours1') || t('info.hours1')}</p>
+                    <p className="text-[#64748B] text-xs lg:text-sm">{v('location.hours2') || t('info.hours2')}</p>
                   </div>
                 </div>
               </div>
