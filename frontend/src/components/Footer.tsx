@@ -47,7 +47,7 @@ export default function Footer() {
       <div className="lg:hidden px-4 py-8">
         {/* Brand */}
         <div className="flex items-center gap-3 mb-5">
-          <Image src="/LOGO1.svg" alt="PP Plus" width={40} height={40} unoptimized className="w-10 h-10 rounded-xl" />
+          <Image src="/logo.png" alt="PP Plus" width={40} height={40} className="w-10 h-10 rounded-xl" />
           <div>
             <span className="text-lg font-bold text-white block" style={{ fontFamily: 'var(--font-heading)' }}>PP Plus</span>
             <span className="text-[10px] text-[#F5841F] font-medium tracking-widest uppercase">Automotive Paint</span>
@@ -107,7 +107,7 @@ export default function Footer() {
         {/* Top Section - Brand */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-10 border-b border-white/10">
           <div className="flex items-center gap-4">
-            <Image src="/LOGO1.svg" alt="PP Plus" width={48} height={48} unoptimized className="w-12 h-12 rounded-2xl shadow-lg shadow-[#F5841F]/10" />
+            <Image src="/logo.png" alt="PP Plus" width={48} height={48} className="w-12 h-12 rounded-2xl shadow-lg shadow-[#F5841F]/10" />
             <div>
               <span className="text-2xl font-bold text-white block" style={{ fontFamily: 'var(--font-heading)' }}>
                 PP Plus
