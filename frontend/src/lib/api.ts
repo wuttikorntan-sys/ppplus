@@ -40,15 +40,21 @@ export const api = {
   delete: <T>(endpoint: string) =>
     request<T>(endpoint, { method: 'DELETE' }),
   // For multipart form data (file uploads)
-  upload: <T>(endpoint: string, formData: FormData, method: 'POST' | 'PUT' = 'POST') => {
+  upload: async <T>(endpoint: string, formData: FormData, method: 'POST' | 'PUT' = 'POST'): Promise<T> => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    return fetch(`${API_URL}${endpoint}`, {
+    const res = await fetch(`${API_URL}${endpoint}`, {
       method,
       headers,
       body: formData,
-    }).then(res => res.json()) as Promise<T>;
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'เกิดข้อผิดพลาด');
+    }
+    return data as T;
   },
 };

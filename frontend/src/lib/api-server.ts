@@ -52,6 +52,9 @@ export function handleError(err: unknown): NextResponse {
   if (err instanceof ApiError) {
     return NextResponse.json({ success: false, error: err.message }, { status: err.status });
   }
+  if (err && typeof err === 'object' && 'status' in err && typeof (err as any).status === 'number' && typeof (err as any).message === 'string') {
+    return NextResponse.json({ success: false, error: (err as any).message }, { status: (err as any).status });
+  }
   if (err && typeof err === 'object' && 'issues' in err) {
     // Zod error
     const zodErr = err as { issues: { path: (string | number)[]; message: string }[] };

@@ -220,7 +220,7 @@ export default function AdminColorFormulasPage() {
                 <div onClick={() => fileInputRef.current?.click()}
                   className="relative border-2 border-dashed border-gray-200 rounded-xl h-32 flex items-center justify-center cursor-pointer hover:border-[#1C1C1E]/40 transition group overflow-hidden">
                   {imagePreview ? (
-                    <><Image src={imagePreview} alt="" fill className="object-cover" /><div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"><p className="text-white text-sm font-medium">{th ? 'เปลี่ยนรูป' : 'Change'}</p></div></>
+                    <><img src={imagePreview} alt="" className="object-cover w-full h-full" /><div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"><p className="text-white text-sm font-medium">{th ? 'เปลี่ยนรูป' : 'Change'}</p></div></>
                   ) : (
                     <div className="text-center"><Upload className="w-8 h-8 text-gray-300 mx-auto mb-2" /><p className="text-sm text-gray-400">{th ? 'คลิกอัปโหลด' : 'Click to upload'}</p></div>
                   )}

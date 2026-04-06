@@ -163,6 +163,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const l = labels[locale] || labels.en;
 
   const isActive = (href: string) => {
+    if (!pathname) return false;
     if (href === '/admin') return pathname === '/admin' || pathname === `/${locale}/admin`;
     return pathname.includes(href);
   };

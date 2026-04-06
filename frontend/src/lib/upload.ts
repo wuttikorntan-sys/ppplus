@@ -1,11 +1,14 @@
 import fs from 'fs';
 import path from 'path';
+import { ApiError } from '@/lib/api-server';
 
 // Persistent uploads directory OUTSIDE the git-managed project
 // On Hostinger: /home/u626866170/uploads  (set via UPLOADS_DIR env var)
-// Locally: ../uploads  (one level up from frontend/, outside git)
+// Locally: ../uploads  (one level up from frontend, outside git)
+const PARENT_UPLOADS_DIR = path.resolve(process.cwd(), '..', 'uploads');
+const LOCAL_UPLOADS_DIR = path.resolve(process.cwd(), 'uploads');
 const UPLOADS_DIR = process.env.UPLOADS_DIR
-  || path.resolve(process.cwd(), '..', 'uploads');
+  || (fs.existsSync(LOCAL_UPLOADS_DIR) ? LOCAL_UPLOADS_DIR : PARENT_UPLOADS_DIR);
 
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -19,10 +22,10 @@ export async function saveUploadedFile(formData: FormData, fieldName: string): P
   if (!file || !(file instanceof File) || file.size === 0) return null;
 
   if (!ALLOWED_TYPES.includes(file.type)) {
-    throw new Error('อนุญาตเฉพาะไฟล์รูปภาพ (jpeg, jpg, png, webp)');
+    throw new ApiError('อนุญาตเฉพาะไฟล์รูปภาพ (jpeg, jpg, png, webp, gif)', 400);
   }
   if (file.size > MAX_SIZE) {
-    throw new Error('ไฟล์ต้องมีขนาดไม่เกิน 5MB');
+    throw new ApiError('ไฟล์ต้องมีขนาดไม่เกิน 5MB', 400);
   }
 
   const ext = path.extname(file.name) || '.png';
@@ -30,7 +33,11 @@ export async function saveUploadedFile(formData: FormData, fieldName: string): P
   const filePath = path.join(UPLOADS_DIR, uniqueName);
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  fs.writeFileSync(filePath, buffer);
+  try {
+    fs.writeFileSync(filePath, buffer);
+  } catch (err) {
+    throw new ApiError('ไม่สามารถบันทึกรูปภาพได้ โปรดลองอีกครั้ง', 500);
+  }
 
   return `/uploads/${uniqueName}`;
 }

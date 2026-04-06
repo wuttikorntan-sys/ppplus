@@ -252,7 +252,7 @@ export default function AdminHeroSlidesPage() {
                   className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-[#1C1C1E]/30 hover:bg-[#1C1C1E]/5 transition group">
                   {imagePreview ? (
                     <div className="relative aspect-video rounded-lg overflow-hidden">
-                      <Image src={imagePreview} alt="Preview" fill className="object-cover" sizes="400px" />
+                      <img src={imagePreview} alt="Preview" className="object-cover w-full h-full" />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center">
                         <Upload className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition" />
                       </div>
