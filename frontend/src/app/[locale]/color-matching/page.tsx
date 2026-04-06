@@ -120,12 +120,12 @@ export default function ColorMatchingPage() {
           <h2 className="text-xl font-bold text-[#2D2D2D] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
             {th ? 'ค้นหาสูตรสี' : 'Search Color Formulas'}
           </h2>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <div className="relative">
               <select
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
-                className="appearance-none w-full sm:w-48 pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-sm"
+                className="appearance-none w-24 sm:w-48 pl-3 sm:pl-4 pr-8 sm:pr-10 py-2.5 sm:py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-xs sm:text-sm"
               >
                 <option value="">{th ? 'ทุกยี่ห้อรถ' : 'All Car Brands'}</option>
                 {brands.map((b) => <option key={b} value={b}>{b}</option>)}
@@ -133,19 +133,19 @@ export default function ColorMatchingPage() {
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 placeholder={th ? 'ค้นหารหัสสี เช่น 040, NH-731P...' : 'Search color code e.g. 040, NH-731P...'}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-sm"
+                className="w-full pl-9 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-xs sm:text-sm"
               />
             </div>
             <button
               onClick={handleSearch}
-              className="px-6 py-3 bg-[#1C1C1E] text-white rounded-xl font-medium hover:bg-[#1C1C1E]/90 transition text-sm"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#1C1C1E] text-white rounded-xl font-medium hover:bg-[#1C1C1E]/90 transition text-xs sm:text-sm whitespace-nowrap"
             >
               {th ? 'ค้นหา' : 'Search'}
             </button>
@@ -161,7 +161,7 @@ export default function ColorMatchingPage() {
             <p className="text-gray-400">{th ? 'ไม่พบสูตรสี — ลองค้นหาใหม่' : 'No color formulas found — try a different search'}</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
             {formulas.map((f, idx) => (
               <motion.div
                 key={f.id}
@@ -175,18 +175,18 @@ export default function ColorMatchingPage() {
                     <Image src={f.image} alt={f.colorCode} fill className="object-cover group-hover:scale-105 transition-transform" sizes="400px" />
                   </div>
                 )}
-                <div className="p-5">
-                  <div className="flex items-start justify-between mb-3">
+                <div className="p-3 lg:p-5">
+                  <div className="flex items-start justify-between mb-2 lg:mb-3">
                     <div>
-                      <p className="text-xs text-[#F5841F] font-semibold uppercase tracking-wide">{f.carBrand}</p>
-                      <h3 className="text-lg font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>{f.colorCode}</h3>
-                      <p className="text-sm text-[#64748B]">{th ? f.colorNameTh : f.colorNameEn}</p>
+                      <p className="text-[10px] lg:text-xs text-[#F5841F] font-semibold uppercase tracking-wide">{f.carBrand}</p>
+                      <h3 className="text-sm lg:text-lg font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>{f.colorCode}</h3>
+                      <p className="text-xs lg:text-sm text-[#64748B]">{th ? f.colorNameTh : f.colorNameEn}</p>
                     </div>
                     <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${typeColor(f.formulaType)}`}>
                       {typeLabel(f.formulaType)}
                     </span>
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-[#64748B]">
+                  <div className="flex items-center gap-2 lg:gap-4 text-[10px] lg:text-xs text-[#64748B]">
                     {f.yearRange && <span>{th ? 'ปี' : 'Year'}: {f.yearRange}</span>}
                     {f.deltaE != null && (
                       <span className="flex items-center gap-1">
