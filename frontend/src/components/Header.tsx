@@ -40,7 +40,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <Image src="/LOGO1.svg" alt="PP Plus" width={44} height={44} className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl" />
+            <Image src="/LOGO1.svg" alt="PP Plus" width={44} height={44} unoptimized className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl" />
             <span className="text-xl lg:text-2xl font-bold text-[#1C1C1E]" style={{ fontFamily: 'var(--font-heading)' }}>
               PP Plus
             </span>
