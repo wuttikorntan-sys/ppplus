@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, LogIn } from 'lucide-react';
-import Image from 'next/image';
 import { useAuth } from '@/lib/auth';
 import { useRouter } from '@/i18n/navigation';
 import toast from 'react-hot-toast';
@@ -42,7 +41,7 @@ export default function LoginPage() {
       >
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <div className="text-center mb-8">
-            <Image src="/logo.png" alt="PP Plus" width={64} height={64} className="w-16 h-16 mx-auto mb-4 rounded-xl" />
+            <img src="/logo.png" alt="PP Plus" width={64} height={64} className="w-16 h-16 mx-auto mb-4 rounded-xl" />
             <h1 className="text-2xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
               {t('login.title')}
             </h1>
