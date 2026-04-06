@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
-import { Search, Target, Zap, Award, ChevronDown } from 'lucide-react';
+import { Search, Target, Zap, Award, Truck, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { api } from '@/lib/api';
 
@@ -95,11 +95,12 @@ export default function ColorMatchingPage() {
 
       {/* USP Cards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { icon: Target, title: th ? 'Spectrophotometer' : 'Spectrophotometer', desc: th ? 'ใช้เครื่อง X-Rite วัดค่าสีแม่นยำระดับ ΔE < 0.5' : 'X-Rite precision measurement with ΔE < 0.5' },
             { icon: Zap, title: th ? 'CIEDE2000' : 'CIEDE2000', desc: th ? 'มาตรฐานการคำนวณสีระดับสากลที่แม่นยำที่สุด' : 'International color calculation standard for highest accuracy' },
             { icon: Award, title: th ? 'สูตรสีครบทุกยี่ห้อ' : 'All Car Brands', desc: th ? 'รองรับ Toyota, Honda, Nissan, Mazda, Isuzu และอื่นๆ' : 'Toyota, Honda, Nissan, Mazda, Isuzu and more' },
+            { icon: Truck, title: th ? 'จัดส่งทั่วประเทศ' : 'Nationwide Delivery', desc: th ? 'ผสมสีตามสูตรพร้อมจัดส่งถึงอู่สีทั่วไทย' : 'Custom mixed paint delivered to body shops nationwide' },
           ].map((item, idx) => (
             <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
               className="bg-white rounded-xl p-5 shadow-lg border border-gray-100">
