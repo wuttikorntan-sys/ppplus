@@ -1,10 +1,11 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { Palette, MapPin, Share2, Save, ExternalLink, Mail, Eye, EyeOff, MessageCircle, Globe, Bell } from 'lucide-react';
+import { Palette, MapPin, Share2, Save, ExternalLink, Mail, Eye, EyeOff, MessageCircle, Globe, Bell, Send } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import toast from 'react-hot-toast';
 import { FaFacebookF, FaWhatsapp, FaLine, FaInstagram, FaTiktok, FaXTwitter } from 'react-icons/fa6';
 
 interface ContentMap {
@@ -39,6 +40,19 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
+  const [testingLine, setTestingLine] = useState(false);
+
+  const handleTestLine = async () => {
+    setTestingLine(true);
+    try {
+      await api.post('/admin/line-test', {});
+      toast.success(th ? 'ส่งข้อความทดสอบสำเร็จ! ✅' : 'Test message sent! ✅');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : (th ? 'ส่งไม่สำเร็จ กรุณาตรวจสอบ Token และ Group ID' : 'Failed. Check Token and Group ID'));
+    } finally {
+      setTestingLine(false);
+    }
+  };
 
   useEffect(() => {
     api.get<{ success: boolean; data: ContentMap }>('/site-content')
@@ -379,6 +393,9 @@ export default function AdminSettingsPage() {
                 <input type="text" value={notify['notify.line.group.id']?.th || ''} onChange={(e) => updateNotifyField('notify.line.group.id', e.target.value)} placeholder="Cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-[#1C1C1E] transition font-mono" />
               </div>
               <p className="text-xs text-gray-400">{th ? '* ระบบจะส่งแจ้งเตือนเมื่อมีใบเสนอราคา, ข้อความติดต่อ, สมัครตัวแทนจำหน่าย' : '* Notifications sent for quotes, contact messages, and B2B applications'}</p>
+              <button onClick={handleTestLine} disabled={testingLine} className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition disabled:opacity-50 mt-1">
+                <Send className="w-4 h-4" /> {testingLine ? (th ? 'กำลังส่ง...' : 'Sending...') : (th ? 'ทดสอบส่งข้อความ' : 'Send Test Message')}
+              </button>
             </div>
           )}
         </div>
