@@ -1,7 +1,7 @@
 ﻿import type { MetadataRoute } from 'next';
 import { db } from '@/lib/db';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ppplus.co.th';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pcolour.com';
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
   let disallow = ['/api/', '/admin/'];
