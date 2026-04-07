@@ -128,6 +128,8 @@ const sections: SectionDef[] = [
       { key: 'header.gallery', labelTh: 'หน้าอัลบั้ม', labelEn: 'Gallery Page', isImage: true },
       { key: 'header.b2b', labelTh: 'หน้าตัวแทนจำหน่าย', labelEn: 'B2B/Dealer Page', isImage: true },
       { key: 'header.quote', labelTh: 'หน้าใบเสนอราคา', labelEn: 'Quote Page', isImage: true },
+      { key: 'header.blog', labelTh: 'หน้าบทความ', labelEn: 'Blog Page', isImage: true },
+      { key: 'header.menu', labelTh: 'หน้าสินค้า', labelEn: 'Products Page', isImage: true },
     ],
   },
 ];

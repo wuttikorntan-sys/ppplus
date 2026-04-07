@@ -31,6 +31,7 @@ export default function BlogPage() {
   const router = useRouter();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [headerImg, setHeaderImg] = useState('');
 
   useEffect(() => {
     api.get<{ success: boolean; data: BlogPost[] }>('/blog')
@@ -39,6 +40,9 @@ export default function BlogPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+    api.get<{ success: boolean; data: Record<string, { th: string; en: string }> }>('/site-content')
+      .then((r) => { if (r.data?.['header.blog']?.th) setHeaderImg(r.data['header.blog'].th); })
+      .catch(() => {});
   }, []);
 
   const getTitle = (p: BlogPost) => locale === 'th' ? p.titleTh : p.titleEn;
@@ -58,7 +62,14 @@ export default function BlogPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative py-20 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]" />
+        {headerImg ? (
+          <>
+            <img src={headerImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 to-[#F5841F]/50" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E] to-[#F5841F]" />
+        )}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>

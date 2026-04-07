@@ -150,6 +150,7 @@ export default function MenuPage() {
   const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
   const th = locale === 'th';
+  const [headerImg, setHeaderImg] = useState('https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1600&h=400&fit=crop');
 
   const handleAddToCart = (item: MenuItem) => {
     addItem({
@@ -181,6 +182,9 @@ export default function MenuPage() {
       }
     }
     fetchMenu();
+    api.get<{ success: boolean; data: Record<string, { th: string; en: string }> }>('/site-content')
+      .then((r) => { if (r.data?.['header.menu']?.th) setHeaderImg(r.data['header.menu'].th); })
+      .catch(() => {});
   }, []);
 
   const filteredItems = items.filter((item) => {
@@ -212,7 +216,7 @@ export default function MenuPage() {
       {/* Hero Header */}
       <div className="relative bg-[#1C1C1E] py-16 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <Image src="https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
+          <img src={headerImg} alt="" className="w-full h-full object-cover" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{t('title')}</h1>
