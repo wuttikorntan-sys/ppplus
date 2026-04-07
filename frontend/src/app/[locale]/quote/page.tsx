@@ -54,8 +54,9 @@ export default function QuotePage() {
       setSubmitted(true);
       clearCart();
       toast.success(th ? 'ส่งคำขอเรียบร้อย' : 'Quote request sent');
-    } catch {
-      toast.error(th ? 'เกิดข้อผิดพลาด' : 'An error occurred');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      toast.error(msg);
     } finally {
       setSaving(false);
     }

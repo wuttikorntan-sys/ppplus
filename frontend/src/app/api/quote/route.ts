@@ -154,7 +154,8 @@ export async function POST(req: NextRequest) {
     sendLineNotification(data, data.cartItems).catch(() => {});
 
     return NextResponse.json({ success: true, data: quote }, { status: 201 });
-  } catch (err) {
+  } catch (err: unknown) {
+    console.error('Quote API error:', err);
     return handleError(err);
   }
 }

@@ -81,5 +81,6 @@ export function handleError(err: unknown): NextResponse {
     }, { status: 400 });
   }
   console.error('Unhandled error:', err);
-  return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
+  const errMsg = err instanceof Error ? err.message : 'Internal server error';
+  return NextResponse.json({ success: false, error: errMsg }, { status: 500 });
 }
