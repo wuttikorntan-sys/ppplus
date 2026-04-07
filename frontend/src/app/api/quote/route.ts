@@ -3,6 +3,7 @@ import { z } from 'zod';
 import nodemailer from 'nodemailer';
 import { db } from '@/lib/db';
 import { handleError } from '@/lib/api-server';
+import { sendLineMessage } from '@/lib/line';
 
 function escapeHtml(str: string): string {
   return str
@@ -119,28 +120,12 @@ async function sendEmailNotification(quote: { name: string; phone: string; email
 }
 
 async function sendLineNotification(quote: { name: string; phone: string; company: string | null }, items: CartItemParsed[]) {
-  try {
-    const contents = await db.siteContents.findMany();
-    const tokenItem = contents.find((c) => c.key === 'notify.line.token');
-    const token = tokenItem?.valueTh || tokenItem?.valueEn || process.env.LINE_NOTIFY_TOKEN || '';
-    if (!token) return;
+  const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const itemList = items.map((i) => `  • ${i.nameTh} x${i.quantity} = ฿${(i.price * i.quantity).toLocaleString()}`).join('\n');
 
-    const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    const itemList = items.map((i) => `  • ${i.nameTh} x${i.quantity} = ฿${(i.price * i.quantity).toLocaleString()}`).join('\n');
+  const message = `🛒 ขอใบเสนอราคาใหม่!\n\n👤 ${quote.name}\n📱 ${quote.phone}${quote.company ? `\n🏢 ${quote.company}` : ''}\n\n📦 สินค้า (${items.length} รายการ):\n${itemList}\n\n💰 รวม: ฿${total.toLocaleString()}\n\n🔗 ดูรายละเอียดใน Admin Panel`;
 
-    const message = `\n🛒 ขอใบเสนอราคาใหม่!\n\n👤 ${quote.name}\n📱 ${quote.phone}${quote.company ? `\n🏢 ${quote.company}` : ''}\n\n📦 สินค้า (${items.length} รายการ):\n${itemList}\n\n💰 รวม: ฿${total.toLocaleString()}\n\n🔗 ดูรายละเอียดใน Admin Panel`;
-
-    await fetch('https://notify-api.line.me/api/notify', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ message }),
-    });
-  } catch (err) {
-    console.error('LINE notify error:', err);
-  }
+  await sendLineMessage(message);
 }
 
 export async function POST(req: NextRequest) {

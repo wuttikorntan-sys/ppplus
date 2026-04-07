@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { handleError } from '@/lib/api-server';
+import { sendLineMessage } from '@/lib/line';
 
 const b2bSchema = z.object({
   companyName: z.string().min(1),
@@ -18,6 +19,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const data = b2bSchema.parse(body);
     const application = await db.b2bApplications.create(data);
+
+    // LINE notification (non-blocking)
+    sendLineMessage(`🤝 สมัครตัวแทนจำหน่ายใหม่!\n\n🏢 ${data.companyName}\n👤 ${data.contactPerson}\n📱 ${data.phone}\n📧 ${data.email}\n📋 ประเภท: ${data.businessType}${data.province ? `\n📍 ${data.province}` : ''}${data.message ? `\n💬 ${data.message}` : ''}`).catch(() => {});
+
     return NextResponse.json({ success: true, data: application }, { status: 201 });
   } catch (err) {
     return handleError(err);

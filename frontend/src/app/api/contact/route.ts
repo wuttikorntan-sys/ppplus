@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { db } from '@/lib/db';
+import { sendLineMessage } from '@/lib/line';
 
 function escapeHtml(str: string): string {
   return str
@@ -96,6 +97,9 @@ export async function POST(request: NextRequest) {
         </div>
       `,
     });
+
+    // LINE notification (non-blocking)
+    sendLineMessage(`📩 ข้อความใหม่จากเว็บไซต์!\n\n👤 ${name}\n📧 ${email}${phone ? `\n📱 ${phone}` : ''}\n\n💬 ${message}`).catch(() => {});
 
     return NextResponse.json({ success: true });
   } catch (error) {
