@@ -37,8 +37,11 @@ export default function AdminHeroSlidesPage() {
   const [form, setForm] = useState(emptyForm);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoFileName, setVideoFileName] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const fetchSlides = () => {
     api.get<{ success: boolean; data: HeroSlide[] }>('/admin/hero-slides')
@@ -53,6 +56,8 @@ export default function AdminHeroSlidesPage() {
     setForm(emptyForm);
     setImageFile(null);
     setImagePreview(null);
+    setVideoFile(null);
+    setVideoFileName(null);
     setShowForm(true);
   };
 
@@ -68,6 +73,8 @@ export default function AdminHeroSlidesPage() {
     });
     setImageFile(null);
     setImagePreview(slide.image || null);
+    setVideoFile(null);
+    setVideoFileName(slide.videoUrl ? slide.videoUrl.split('/').pop() || null : null);
     setShowForm(true);
   };
 
@@ -86,8 +93,8 @@ export default function AdminHeroSlidesPage() {
       toast.error(th ? 'กรุณาเลือกรูปภาพ' : 'Please select an image');
       return;
     }
-    if (form.type === 'video' && !form.videoUrl && !imageFile) {
-      toast.error(th ? 'กรุณาระบุ URL วิดีโอหรืออัปโหลดรูป poster' : 'Please provide video URL or upload poster image');
+    if (form.type === 'video' && !form.videoUrl && !videoFile) {
+      toast.error(th ? 'กรุณาระบุ URL วิดีโอ หรืออัปโหลดไฟล์วิดีโอ' : 'Please provide a video URL or upload a video file');
       return;
     }
     setSaving(true);
@@ -100,6 +107,7 @@ export default function AdminHeroSlidesPage() {
       formData.append('isActive', String(form.isActive));
       formData.append('sortOrder', form.sortOrder || '0');
       if (imageFile) formData.append('image', imageFile);
+      if (videoFile) formData.append('video', videoFile);
 
       if (editingId) {
         await api.upload(`/admin/hero-slides/${editingId}`, formData, 'PUT');
@@ -243,38 +251,96 @@ export default function AdminHeroSlidesPage() {
                 </div>
               </div>
 
-              {/* Image Upload */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  {form.type === 'video' ? (th ? 'รูป Poster' : 'Poster Image') : (th ? 'รูปภาพ' : 'Image')}
-                </label>
-                <div onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-[#1C1C1E]/30 hover:bg-[#1C1C1E]/5 transition group">
-                  {imagePreview ? (
-                    <div className="relative aspect-video rounded-lg overflow-hidden">
-                      <img src={imagePreview} alt="Preview" className="object-cover w-full h-full" />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center">
-                        <Upload className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition" />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="py-6">
-                      <Upload className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                      <p className="text-sm text-gray-400">{th ? 'คลิกเพื่ออัปโหลด (1920x1080 แนะนำ)' : 'Click to upload (1920x1080 recommended)'}</p>
-                    </div>
-                  )}
-                  <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-                </div>
-              </div>
-
-              {/* Video URL */}
-              {form.type === 'video' && (
+              {/* Image Upload - required for image type, optional poster for video */}
+              {form.type === 'image' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ลิงก์วิดีโอ (mp4)' : 'Video URL (mp4)'}</label>
-                  <input type="text" value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
-                    placeholder="/hero-video.mp4"
-                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none text-sm" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    {th ? 'รูปภาพ' : 'Image'}
+                  </label>
+                  <div onClick={() => fileInputRef.current?.click()}
+                    className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-[#1C1C1E]/30 hover:bg-[#1C1C1E]/5 transition group">
+                    {imagePreview ? (
+                      <div className="relative aspect-video rounded-lg overflow-hidden">
+                        <img src={imagePreview} alt="Preview" className="object-cover w-full h-full" />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center">
+                          <Upload className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="py-6">
+                        <Upload className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                        <p className="text-sm text-gray-400">{th ? 'คลิกเพื่ออัปโหลด (1920x1080 แนะนำ)' : 'Click to upload (1920x1080 recommended)'}</p>
+                      </div>
+                    )}
+                    <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                  </div>
                 </div>
+              )}
+
+              {/* Video Upload / URL */}
+              {form.type === 'video' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'อัปโหลดวิดีโอ (mp4)' : 'Upload Video (mp4)'}</label>
+                    <div onClick={() => videoInputRef.current?.click()}
+                      className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-[#1C1C1E]/30 hover:bg-[#1C1C1E]/5 transition group">
+                      {videoFileName ? (
+                        <div className="flex items-center justify-center gap-2 py-4">
+                          <Video className="w-8 h-8 text-purple-500" />
+                          <div className="text-left">
+                            <p className="text-sm font-medium text-gray-800 truncate max-w-[250px]">{videoFileName}</p>
+                            <p className="text-xs text-gray-400">{th ? 'คลิกเพื่อเปลี่ยนวิดีโอ' : 'Click to change video'}</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="py-6">
+                          <Video className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                          <p className="text-sm text-gray-400">{th ? 'คลิกเพื่ออัปโหลดวิดีโอ' : 'Click to upload video'}</p>
+                        </div>
+                      )}
+                      <input ref={videoInputRef} type="file" accept="video/mp4,video/*" className="hidden" onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) { setVideoFile(file); setVideoFileName(file.name); setForm({ ...form, videoUrl: '' }); }
+                      }} />
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    <div className="absolute inset-x-0 top-1/2 border-t border-gray-200" />
+                    <p className="relative text-center"><span className="bg-white px-3 text-xs text-gray-400">{th ? 'หรือ' : 'or'}</span></p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ลิงก์วิดีโอ (URL)' : 'Video URL'}</label>
+                    <input type="text" value={form.videoUrl} onChange={(e) => { setForm({ ...form, videoUrl: e.target.value }); if (e.target.value) { setVideoFile(null); setVideoFileName(null); } }}
+                      placeholder="/hero-video.mp4"
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1C1C1E]/20 focus:border-[#1C1C1E] outline-none text-sm" />
+                  </div>
+
+                  {/* Optional Poster */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      {th ? 'รูป Poster (ไม่บังคับ)' : 'Poster Image (optional)'}
+                    </label>
+                    <div onClick={() => fileInputRef.current?.click()}
+                      className="border-2 border-dashed border-gray-200 rounded-xl p-3 text-center cursor-pointer hover:border-[#1C1C1E]/30 hover:bg-[#1C1C1E]/5 transition group">
+                      {imagePreview ? (
+                        <div className="relative aspect-video rounded-lg overflow-hidden">
+                          <img src={imagePreview} alt="Poster" className="object-cover w-full h-full" />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center">
+                            <Upload className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition" />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="py-3">
+                          <ImageIcon className="w-6 h-6 text-gray-300 mx-auto mb-1" />
+                          <p className="text-xs text-gray-400">{th ? 'คลิกเพื่ออัปโหลดรูป poster (ไม่บังคับ)' : 'Click to upload poster (optional)'}</p>
+                        </div>
+                      )}
+                      <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                    </div>
+                  </div>
+                </>
               )}
 
               {/* Titles */}

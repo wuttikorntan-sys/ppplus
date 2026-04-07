@@ -23,6 +23,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const imagePath = await saveUploadedFile(formData, 'image');
     if (imagePath) data.image = imagePath;
 
+    const videoPath = await saveUploadedFile(formData, 'video');
+    if (videoPath) data.videoUrl = videoPath;
+
     const slide = await db.heroSlides.update(id, data);
     if (!slide) throw new ApiError('ไม่พบสไลด์', 404);
     return NextResponse.json({ success: true, data: slide });

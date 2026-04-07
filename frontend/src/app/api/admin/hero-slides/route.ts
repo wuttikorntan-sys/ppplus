@@ -26,11 +26,19 @@ export async function POST(req: NextRequest) {
       throw new ApiError(`Upload failed: ${(uploadErr as Error).message}`, 400);
     }
 
+    let videoPath: string | null = null;
+    try {
+      videoPath = await saveUploadedFile(formData, 'video');
+    } catch (uploadErr) {
+      console.error('Video upload error:', uploadErr);
+      throw new ApiError(`Video upload failed: ${(uploadErr as Error).message}`, 400);
+    }
+
     const data = {
       type: (formData.get('type') as string) || 'image',
       titleTh: (formData.get('titleTh') as string) || null,
       titleEn: (formData.get('titleEn') as string) || null,
-      videoUrl: (formData.get('videoUrl') as string) || null,
+      videoUrl: videoPath || (formData.get('videoUrl') as string) || null,
       isActive: formData.get('isActive') !== 'false',
       sortOrder: formData.get('sortOrder') ? parseInt(formData.get('sortOrder') as string) : 0,
       image: imagePath,

@@ -16,21 +16,26 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
 const ALLOWED_EXTS = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
+const VIDEO_EXTS = ['.mp4', '.webm', '.ogg', '.mov'];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
 
 export async function saveUploadedFile(formData: FormData, fieldName: string): Promise<string | null> {
   const file = formData.get(fieldName);
   if (!file || typeof file === 'string' || file.size === 0) return null;
 
   const ext = path.extname(file.name || '').toLowerCase() || '.png';
-  const mimeOk = file.type && ALLOWED_TYPES.includes(file.type);
-  const extOk = ALLOWED_EXTS.includes(ext);
+  const isVideo = VIDEO_TYPES.includes(file.type) || VIDEO_EXTS.includes(ext);
+  const mimeOk = file.type && (ALLOWED_TYPES.includes(file.type) || VIDEO_TYPES.includes(file.type));
+  const extOk = ALLOWED_EXTS.includes(ext) || VIDEO_EXTS.includes(ext);
   if (!mimeOk && !extOk) {
     console.error(`Upload rejected: type=${file.type}, name=${file.name}, ext=${ext}`);
-    throw new ApiError('อนุญาตเฉพาะไฟล์รูปภาพ (jpeg, jpg, png, webp, gif)', 400);
+    throw new ApiError('อนุญาตเฉพาะไฟล์รูปภาพ (jpeg, png, webp, gif) หรือวิดีโอ (mp4, webm)', 400);
   }
-  if (file.size > MAX_SIZE) {
-    throw new ApiError('ไฟล์ต้องมีขนาดไม่เกิน 10MB', 400);
+  const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_SIZE;
+  if (file.size > maxSize) {
+    throw new ApiError(isVideo ? 'วิดีโอต้องมีขนาดไม่เกิน 100MB' : 'ไฟล์ต้องมีขนาดไม่เกิน 10MB', 400);
   }
   const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext;
   const filePath = path.join(UPLOADS_DIR, uniqueName);
