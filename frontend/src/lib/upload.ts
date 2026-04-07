@@ -50,7 +50,7 @@ export async function saveUploadedFile(formData: FormData, fieldName: string): P
     throw new ApiError(`ไม่สามารถบันทึกรูปภาพได้: ${errMsg}`, 500);
   }
 
-  return `/uploads/${uniqueName}`;
+  return `/api/uploads/${uniqueName}`;
 }
 
 export function getUploadsDir(): string {
@@ -93,5 +93,5 @@ export async function saveUploadedDocument(formData: FormData, fieldName: string
     throw new ApiError(`ไม่สามารถบันทึกเอกสารได้: ${errMsg}`, 500);
   }
 
-  return `/uploads/${uniqueName}`;
+  return `/api/uploads/${uniqueName}`;
 }
