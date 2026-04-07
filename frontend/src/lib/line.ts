@@ -1,12 +1,18 @@
-const LINE_CHANNEL_TOKEN = process.env.LINE_CHANNEL_TOKEN || '';
-const LINE_GROUP_ID = process.env.LINE_GROUP_ID || '';
+import { db } from '@/lib/db';
 
 export async function sendLineMessage(message: string): Promise<void> {
-  const token = LINE_CHANNEL_TOKEN;
-  const groupId = LINE_GROUP_ID;
-  if (!token || !groupId) return;
-
   try {
+    // Read from DB first, fallback to env
+    const contents = await db.siteContents.findMany();
+    const getVal = (key: string, envKey: string) => {
+      const item = contents.find((c) => c.key === key);
+      return item?.valueTh || item?.valueEn || process.env[envKey] || '';
+    };
+
+    const token = getVal('notify.line.channel.token', 'LINE_CHANNEL_TOKEN');
+    const groupId = getVal('notify.line.group.id', 'LINE_GROUP_ID');
+    if (!token || !groupId) return;
+
     const res = await fetch('https://api.line.me/v2/bot/message/push', {
       method: 'POST',
       headers: {
