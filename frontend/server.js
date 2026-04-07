@@ -8,8 +8,8 @@ const copies = [
   { src: path.join(__dirname, 'public'),           dest: path.join(standaloneDir, 'public') },
 ];
 for (const { src, dest } of copies) {
-  if (fs.existsSync(src) && !fs.existsSync(dest)) {
-    fs.cpSync(src, dest, { recursive: true });
+  if (fs.existsSync(src)) {
+    fs.cpSync(src, dest, { recursive: true, force: true });
   }
 }
 
