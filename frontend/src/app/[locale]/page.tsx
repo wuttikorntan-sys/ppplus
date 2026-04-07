@@ -274,7 +274,7 @@ export default function HomePage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <Image src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&h=600&fit=crop" alt="Automotive paint workshop" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                <img src={c('welcome.image') || 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&h=600&fit=crop'} alt="Automotive paint workshop" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -293,7 +293,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative order-1">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <Image src="https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=600&fit=crop" alt="Paint products" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                <img src={c('brands.image') || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=600&fit=crop'} alt="Paint products" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#F5841F] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -326,7 +326,7 @@ export default function HomePage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <Image src="https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=800&h=600&fit=crop" alt="Color matching service" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                <img src={c('services.image') || 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=800&h=600&fit=crop'} alt="Color matching service" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">

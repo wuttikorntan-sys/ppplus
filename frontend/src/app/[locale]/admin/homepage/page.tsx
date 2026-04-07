@@ -1,15 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocale } from 'next-intl';
 import { api } from '@/lib/api';
-import { Save, RotateCcw, FileText, ChevronDown, ChevronRight } from 'lucide-react';
+import { Save, RotateCcw, FileText, ChevronDown, ChevronRight, Upload, X, ImageIcon } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface ContentMap {
   [key: string]: { th: string; en: string };
 }
 
-const sections = [
+interface FieldDef {
+  key: string;
+  labelTh: string;
+  labelEn: string;
+  multiline?: boolean;
+  isImage?: boolean;
+}
+
+interface SectionDef {
+  id: string;
+  titleTh: string;
+  titleEn: string;
+  fields: FieldDef[];
+}
+
+const sections: SectionDef[] = [
   {
     id: 'hero',
     titleTh: 'ส่วน Hero (แบนเนอร์หลัก)',
@@ -42,6 +58,7 @@ const sections = [
       { key: 'welcome.cta', labelTh: 'ปุ่ม CTA', labelEn: 'CTA Button Text' },
       { key: 'welcome.years', labelTh: 'จำนวนปี (ในกรอบ)', labelEn: 'Years (badge)' },
       { key: 'welcome.years_label', labelTh: 'คำใต้กรอบ', labelEn: 'Years Label' },
+      { key: 'welcome.image', labelTh: 'รูปภาพประกอบ', labelEn: 'Section Image', isImage: true },
     ],
   },
   {
@@ -56,6 +73,7 @@ const sections = [
       { key: 'brands.cta', labelTh: 'ปุ่ม CTA', labelEn: 'CTA Button Text' },
       { key: 'brands.badge', labelTh: 'ตัวเลขในกรอบ', labelEn: 'Badge Number' },
       { key: 'brands.badge_label', labelTh: 'คำใต้กรอบ', labelEn: 'Badge Label' },
+      { key: 'brands.image', labelTh: 'รูปภาพประกอบ', labelEn: 'Section Image', isImage: true },
     ],
   },
   {
@@ -70,6 +88,7 @@ const sections = [
       { key: 'services.cta', labelTh: 'ปุ่ม CTA', labelEn: 'CTA Button Text' },
       { key: 'services.badge', labelTh: 'ตัวเลขในกรอบ', labelEn: 'Badge Number' },
       { key: 'services.badge_label', labelTh: 'คำใต้กรอบ', labelEn: 'Badge Label' },
+      { key: 'services.image', labelTh: 'รูปภาพประกอบ', labelEn: 'Section Image', isImage: true },
     ],
   },
   {
@@ -96,6 +115,19 @@ const sections = [
     fields: [
       { key: 'contact.title', labelTh: 'หัวข้อ', labelEn: 'Title' },
       { key: 'contact.subtitle', labelTh: 'คำอธิบาย', labelEn: 'Subtitle' },
+    ],
+  },
+  {
+    id: 'pageheaders',
+    titleTh: 'รูปส่วนหัวแต่ละหน้า',
+    titleEn: 'Page Header Images',
+    fields: [
+      { key: 'header.about', labelTh: 'หน้าเกี่ยวกับเรา', labelEn: 'About Page', isImage: true },
+      { key: 'header.color-matching', labelTh: 'หน้าค้นหาสูตรสี', labelEn: 'Color Matching Page', isImage: true },
+      { key: 'header.contact', labelTh: 'หน้าติดต่อ', labelEn: 'Contact Page', isImage: true },
+      { key: 'header.gallery', labelTh: 'หน้าอัลบั้ม', labelEn: 'Gallery Page', isImage: true },
+      { key: 'header.b2b', labelTh: 'หน้าตัวแทนจำหน่าย', labelEn: 'B2B/Dealer Page', isImage: true },
+      { key: 'header.quote', labelTh: 'หน้าใบเสนอราคา', labelEn: 'Quote Page', isImage: true },
     ],
   },
 ];
@@ -150,6 +182,8 @@ export default function AdminHomepageContentPage() {
   const [saving, setSaving] = useState(false);
   const [savedMsg, setSavedMsg] = useState(false);
   const [openSections, setOpenSections] = useState<Set<string>>(new Set(['hero']));
+  const [uploading, setUploading] = useState<string | null>(null);
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   useEffect(() => {
     api.get<{ success: boolean; data: ContentMap }>('/site-content')
@@ -205,6 +239,30 @@ export default function AdminHomepageContentPage() {
     }
   };
 
+  const handleImageUpload = async (key: string, file: File) => {
+    setUploading(key);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const fd = new FormData();
+      fd.append('image', file);
+      const res = await fetch('/api/admin/site-content/upload', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      const imageUrl = data.url || '';
+      if (imageUrl) {
+        setContent((prev) => ({ ...prev, [key]: { th: imageUrl, en: imageUrl } }));
+        toast.success(locale === 'th' ? 'อัพโหลดสำเร็จ' : 'Uploaded');
+      }
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Upload error');
+    }
+    setUploading(null);
+  };
+
   if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" /></div>;
 
   return (
@@ -256,47 +314,104 @@ export default function AdminHomepageContentPage() {
               {isOpen && (
                 <div className="px-5 pb-5 space-y-4 border-t">
                   {section.fields.map((field) => (
-                    <div key={field.key} className="grid md:grid-cols-2 gap-4 pt-4">
-                      <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">
-                          {locale === 'th' ? field.labelTh : field.labelEn} — <span className="text-[#1C1C1E]">TH</span>
-                        </label>
-                        {field.multiline ? (
-                          <textarea
-                            value={content[field.key]?.th || ''}
-                            onChange={(e) => updateField(field.key, 'th', e.target.value)}
-                            rows={3}
-                            className="w-full border rounded-lg px-3 py-2 text-sm resize-y"
-                          />
-                        ) : (
-                          <input
-                            type="text"
-                            value={content[field.key]?.th || ''}
-                            onChange={(e) => updateField(field.key, 'th', e.target.value)}
-                            className="w-full border rounded-lg px-3 py-2 text-sm"
-                          />
-                        )}
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">
-                          {locale === 'th' ? field.labelTh : field.labelEn} — <span className="text-blue-600">EN</span>
-                        </label>
-                        {field.multiline ? (
-                          <textarea
-                            value={content[field.key]?.en || ''}
-                            onChange={(e) => updateField(field.key, 'en', e.target.value)}
-                            rows={3}
-                            className="w-full border rounded-lg px-3 py-2 text-sm resize-y"
-                          />
-                        ) : (
-                          <input
-                            type="text"
-                            value={content[field.key]?.en || ''}
-                            onChange={(e) => updateField(field.key, 'en', e.target.value)}
-                            className="w-full border rounded-lg px-3 py-2 text-sm"
-                          />
-                        )}
-                      </div>
+                    <div key={field.key} className="pt-4">
+                      {field.isImage ? (
+                        <div>
+                          <label className="block text-xs font-medium text-gray-500 mb-2">
+                            {locale === 'th' ? field.labelTh : field.labelEn}
+                          </label>
+                          <div className="flex items-start gap-4">
+                            {content[field.key]?.th ? (
+                              <div className="relative w-48 h-32 rounded-lg overflow-hidden bg-gray-100 border shrink-0">
+                                <img src={content[field.key].th} alt="" className="w-full h-full object-cover" />
+                                <button
+                                  onClick={() => setContent((prev) => ({ ...prev, [field.key]: { th: '', en: '' } }))}
+                                  className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="w-48 h-32 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shrink-0">
+                                <ImageIcon className="w-8 h-8 text-gray-300" />
+                              </div>
+                            )}
+                            <div className="flex flex-col gap-2">
+                              <input
+                                ref={(el) => { fileInputRefs.current[field.key] = el; }}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const f = e.target.files?.[0];
+                                  if (f) handleImageUpload(field.key, f);
+                                  e.target.value = '';
+                                }}
+                              />
+                              <button
+                                onClick={() => fileInputRefs.current[field.key]?.click()}
+                                disabled={uploading === field.key}
+                                className="flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium hover:bg-gray-50 transition disabled:opacity-50"
+                              >
+                                <Upload className="w-4 h-4" />
+                                {uploading === field.key
+                                  ? (locale === 'th' ? 'กำลังอัพโหลด...' : 'Uploading...')
+                                  : (locale === 'th' ? 'อัพโหลดรูป' : 'Upload Image')}
+                              </button>
+                              <input
+                                type="text"
+                                placeholder={locale === 'th' ? 'หรือวาง URL รูปภาพ' : 'Or paste image URL'}
+                                value={content[field.key]?.th || ''}
+                                onChange={(e) => setContent((prev) => ({ ...prev, [field.key]: { th: e.target.value, en: e.target.value } }))}
+                                className="border rounded-lg px-3 py-2 text-sm w-64"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">
+                              {locale === 'th' ? field.labelTh : field.labelEn} — <span className="text-[#1C1C1E]">TH</span>
+                            </label>
+                            {field.multiline ? (
+                              <textarea
+                                value={content[field.key]?.th || ''}
+                                onChange={(e) => updateField(field.key, 'th', e.target.value)}
+                                rows={3}
+                                className="w-full border rounded-lg px-3 py-2 text-sm resize-y"
+                              />
+                            ) : (
+                              <input
+                                type="text"
+                                value={content[field.key]?.th || ''}
+                                onChange={(e) => updateField(field.key, 'th', e.target.value)}
+                                className="w-full border rounded-lg px-3 py-2 text-sm"
+                              />
+                            )}
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">
+                              {locale === 'th' ? field.labelTh : field.labelEn} — <span className="text-blue-600">EN</span>
+                            </label>
+                            {field.multiline ? (
+                              <textarea
+                                value={content[field.key]?.en || ''}
+                                onChange={(e) => updateField(field.key, 'en', e.target.value)}
+                                rows={3}
+                                className="w-full border rounded-lg px-3 py-2 text-sm resize-y"
+                              />
+                            ) : (
+                              <input
+                                type="text"
+                                value={content[field.key]?.en || ''}
+                                onChange={(e) => updateField(field.key, 'en', e.target.value)}
+                                className="w-full border rounded-lg px-3 py-2 text-sm"
+                              />
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

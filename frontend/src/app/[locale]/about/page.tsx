@@ -1,13 +1,22 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Target, Beaker, Factory, Award, FlaskConical, Microscope } from 'lucide-react';
 import Image from 'next/image';
+import { api } from '@/lib/api';
 
 export default function AboutPage() {
   const t = useTranslations('about');
   const locale = useLocale();
+  const [headerImg, setHeaderImg] = useState('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=600&fit=crop');
+
+  useEffect(() => {
+    api.get<{ success: boolean; data: Record<string, { th: string; en: string }> }>('/site-content')
+      .then((r) => { if (r.data?.['header.about']?.th) setHeaderImg(r.data['header.about'].th); })
+      .catch(() => {});
+  }, []);
 
   const values = [
     { icon: Target, key: 'quality' as const, color: 'bg-[#1C1C1E]' },
@@ -42,7 +51,7 @@ export default function AboutPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative py-20 text-white overflow-hidden">
-        <Image src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=600&fit=crop" alt="Automotive paint workshop" fill className="object-cover" priority />
+        <img src={headerImg} alt="Automotive paint workshop" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 to-[#F5841F]/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

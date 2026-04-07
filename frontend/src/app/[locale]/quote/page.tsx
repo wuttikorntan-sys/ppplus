@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { FileText, CheckCircle, Phone, ShoppingCart, Trash2, Plus, Minus, ArrowLeft } from 'lucide-react';
@@ -21,6 +21,13 @@ export default function QuotePage() {
   });
   const [saving, setSaving] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [headerImg, setHeaderImg] = useState('https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1600&h=400&fit=crop');
+
+  useEffect(() => {
+    api.get<{ success: boolean; data: Record<string, { th: string; en: string }> }>('/site-content')
+      .then((r) => { if (r.data?.['header.quote']?.th) setHeaderImg(r.data['header.quote'].th); })
+      .catch(() => {});
+  }, []);
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
@@ -67,7 +74,7 @@ export default function QuotePage() {
       {/* Hero */}
       <div className="relative bg-[#1C1C1E] py-14 overflow-hidden">
         <div className="absolute inset-0 opacity-15">
-          <Image src="https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
+          <img src={headerImg} alt="" className="w-full h-full object-cover" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

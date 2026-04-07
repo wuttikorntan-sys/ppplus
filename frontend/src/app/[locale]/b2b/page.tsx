@@ -28,6 +28,7 @@ export default function B2BPage() {
   const [saving, setSaving] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [documents, setDocuments] = useState<B2bDocument[]>([]);
+  const [headerImg, setHeaderImg] = useState('https://images.unsplash.com/photo-1504222490345-c075b6008014?w=1600&h=400&fit=crop');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +52,9 @@ export default function B2BPage() {
     api.get('/b2b/documents').then((res: any) => {
       if (res.data) setDocuments(res.data);
     }).catch(() => {});
+    api.get<{ success: boolean; data: Record<string, { th: string; en: string }> }>('/site-content')
+      .then((r) => { if (r.data?.['header.b2b']?.th) setHeaderImg(r.data['header.b2b'].th); })
+      .catch(() => {});
   }, []);
 
   return (
@@ -58,7 +62,7 @@ export default function B2BPage() {
       {/* Hero */}
       <div className="relative bg-[#1C1C1E] py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-15">
-          <Image src="https://images.unsplash.com/photo-1504222490345-c075b6008014?w=1600&h=400&fit=crop" alt="" fill className="object-cover" priority />
+          <img src={headerImg} alt="" className="w-full h-full object-cover" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

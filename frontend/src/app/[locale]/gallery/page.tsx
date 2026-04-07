@@ -45,6 +45,13 @@ export default function GalleryPage() {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(fallbackItems);
+  const [headerImg, setHeaderImg] = useState('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=600&fit=crop');
+
+  useEffect(() => {
+    api.get<{ success: boolean; data: Record<string, { th: string; en: string }> }>('/site-content')
+      .then((r) => { if (r.data?.['header.gallery']?.th) setHeaderImg(r.data['header.gallery'].th); })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     api.get<{ success: boolean; data: GalleryImageData[] }>('/gallery')
@@ -73,7 +80,7 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen">
       <section className="relative py-20 text-white overflow-hidden">
-        <Image src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=600&fit=crop" alt="Gallery" fill className="object-cover" priority />
+        <img src={headerImg} alt="Gallery" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 to-[#F5841F]/50" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
