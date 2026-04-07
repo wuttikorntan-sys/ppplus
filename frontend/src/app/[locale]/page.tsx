@@ -15,12 +15,13 @@ interface ContentMap {
   [key: string]: { th: string; en: string };
 }
 
-const featuredItems = [
-  { id: 1, nameTh: '2K Topcoat สีพ่นรถยนต์', nameEn: '2K Topcoat Automotive', price: 1850, image: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=400&h=300&fit=crop' },
-  { id: 2, nameTh: 'Clear Coat 2:1 เงาสูง', nameEn: 'Clear Coat 2:1 High Gloss', price: 2200, image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop' },
-  { id: 3, nameTh: 'Basecoat Metallic Silver', nameEn: 'Basecoat Metallic Silver', price: 1650, image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop' },
-  { id: 4, nameTh: 'Primer Surfacer 2K', nameEn: 'Primer Surfacer 2K', price: 1400, image: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=400&h=300&fit=crop' },
-];
+interface FeaturedProduct {
+  id: number;
+  nameTh: string;
+  nameEn: string;
+  price: number;
+  image: string | null;
+}
 
 const defaultSlides: { type: 'video' | 'image'; src: string; poster?: string }[] = [
   { type: 'image', src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=1080&fit=crop' },
@@ -99,6 +100,7 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heroSlides, setHeroSlides] = useState(defaultSlides);
   const [sc, setSc] = useState<ContentMap>(defaultContent);
+  const [featuredItems, setFeaturedItems] = useState<FeaturedProduct[]>([]);
 
   const c = (key: string) => {
     const val = sc[key];
@@ -132,6 +134,16 @@ export default function HomePage() {
             poster: s.type === 'video' && s.image ? s.image : undefined,
           }));
           setHeroSlides(mapped);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    api.get<{ success: boolean; data: FeaturedProduct[] }>('/menu')
+      .then((r) => {
+        if (r.data && r.data.length > 0) {
+          setFeaturedItems(r.data.slice(0, 8));
         }
       })
       .catch(() => {});
@@ -195,6 +207,7 @@ export default function HomePage() {
           </motion.div>
         </div>
 
+        {featuredItems.length > 0 && (<>
         {/* Mobile: touch-scrollable horizontal list */}
         <div className="lg:hidden overflow-x-auto px-4 pb-4 -mx-0 scrollbar-hide">
           <div className="flex gap-3 w-max">
@@ -202,11 +215,15 @@ export default function HomePage() {
               <Link key={idx} href={`/menu/${item.id}` as '/menu'} className="flex-shrink-0 w-48">
                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm active:shadow-lg transition-all">
                   <div className="relative h-36 w-full overflow-hidden bg-gray-100">
-                    <Image src={item.image} alt={item.nameEn} fill className="object-cover" sizes="192px" />
+                    {item.image ? (
+                      <img src={item.image} alt={locale === 'th' ? item.nameTh : item.nameEn} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-300"><Palette className="w-10 h-10" /></div>
+                    )}
                   </div>
                   <div className="p-3">
                     <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-sm" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
-                    <p className="text-[#F5841F] font-bold text-center text-base">฿{item.price.toLocaleString()}</p>
+                    <p className="text-[#F5841F] font-bold text-center text-base">฿{Number(item.price).toLocaleString()}</p>
                   </div>
                 </div>
               </Link>
@@ -221,11 +238,15 @@ export default function HomePage() {
               <div key={idx} className="flex-shrink-0 w-72 mx-3">
                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
                   <div className="relative h-48 w-full overflow-hidden bg-gray-100">
-                    <Image src={item.image} alt={item.nameEn} fill className="object-cover hover:scale-110 transition-transform duration-500" sizes="300px" />
+                    {item.image ? (
+                      <img src={item.image} alt={locale === 'th' ? item.nameTh : item.nameEn} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-300"><Palette className="w-12 h-12" /></div>
+                    )}
                   </div>
                   <div className="p-5">
                     <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-base" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
-                    <p className="text-[#F5841F] font-bold text-center text-lg">฿{item.price.toLocaleString()}</p>
+                    <p className="text-[#F5841F] font-bold text-center text-lg">฿{Number(item.price).toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -238,6 +259,7 @@ export default function HomePage() {
             {locale === 'th' ? 'ดูสินค้าทั้งหมด' : 'View All Products'} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+        </>)}
       </section>
 
       {/* About */}
