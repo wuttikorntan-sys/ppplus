@@ -15,11 +15,11 @@ function escapeHtml(str: string): string {
 }
 
 const cartItemSchema = z.object({
-  id: z.number(),
+  id: z.coerce.number(),
   nameTh: z.string(),
   nameEn: z.string(),
-  price: z.number(),
-  quantity: z.number(),
+  price: z.coerce.number(),
+  quantity: z.coerce.number(),
   size: z.string().nullable().optional(),
   brand: z.string().nullable().optional(),
 });

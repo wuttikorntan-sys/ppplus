@@ -30,6 +30,12 @@ function mapRow(row: any): any {
   ]) {
     if (boolKey in out) out[boolKey] = toBool(out[boolKey]);
   }
+  // DECIMAL columns come as strings from mysql2 — convert to number
+  for (const numKey of ['price', 'deltaE', 'amount', 'total', 'rating']) {
+    if (numKey in out && typeof out[numKey] === 'string') {
+      out[numKey] = Number(out[numKey]);
+    }
+  }
   return out;
 }
 
