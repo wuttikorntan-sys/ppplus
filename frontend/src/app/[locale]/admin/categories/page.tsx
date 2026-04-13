@@ -46,6 +46,22 @@ export default function AdminCategoriesPage() {
     setShowForm(true);
   };
 
+  const handleDelete = async (cat: Category) => {
+    const confirmed = window.confirm(
+      th
+        ? `ต้องการลบหมวดหมู่ "${cat.nameTh}" ใช่หรือไม่?`
+        : `Delete category "${cat.nameEn}"?`
+    );
+    if (!confirmed) return;
+    try {
+      await api.delete(`/admin/categories/${cat.id}`);
+      toast.success(th ? 'ลบเรียบร้อย' : 'Deleted');
+      fetchCategories();
+    } catch {
+      toast.error(th ? 'ไม่สามารถลบได้' : 'Failed to delete');
+    }
+  };
+
   const handleSave = async () => {
     if (!form.nameTh || !form.nameEn) {
       toast.error(th ? 'กรุณากรอกชื่อ' : 'Please fill name');
@@ -107,6 +123,9 @@ export default function AdminCategoriesPage() {
                 <td className="px-4 py-3 text-right">
                   <button onClick={() => openEdit(cat)} className="p-1.5 hover:bg-gray-100 rounded-lg transition">
                     <Edit className="w-4 h-4 text-gray-400" />
+                  </button>
+                  <button onClick={() => handleDelete(cat)} className="p-1.5 hover:bg-red-50 rounded-lg transition ml-1">
+                    <Trash2 className="w-4 h-4 text-red-400" />
                   </button>
                 </td>
               </tr>
