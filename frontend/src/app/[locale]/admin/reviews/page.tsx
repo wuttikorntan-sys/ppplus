@@ -23,7 +23,7 @@ export default function AdminReviewsPage() {
   const fetchReviews = () => {
     api.get<{ success: boolean; data: Review[] }>('/admin/reviews')
       .then((r) => setReviews(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'));
   };
 
   useEffect(() => { fetchReviews(); }, []);

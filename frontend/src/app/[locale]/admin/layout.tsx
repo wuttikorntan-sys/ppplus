@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import logoPng from '../../../../public/logo.png';
+import { ConfirmProvider } from '@/components/ConfirmDialog';
 
 const navSections = [
   {
@@ -320,7 +321,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Page Content */}
-        <div className="p-4 lg:p-6">{children}</div>
+        <div className="p-4 lg:p-6">
+          <ConfirmProvider>{children}</ConfirmProvider>
+        </div>
       </div>
     </div>
   );

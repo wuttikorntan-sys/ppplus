@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Plus, Edit, Trash2, Search, X, Upload, Eye, EyeOff } from 'lucide-react';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 interface ColorFormula {
   id: number;
@@ -37,6 +38,7 @@ const formulaTypes = [
 export default function AdminColorFormulasPage() {
   const locale = useLocale();
   const th = locale === 'th';
+  const confirm = useConfirm();
   const [formulas, setFormulas] = useState<ColorFormula[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [search, setSearch] = useState('');
@@ -52,7 +54,7 @@ export default function AdminColorFormulasPage() {
   const fetchData = () => {
     api.get<{ success: boolean; data: ColorFormula[]; brands: string[] }>('/admin/color-formulas')
       .then((r) => { setFormulas(r.data); setBrands(r.brands || []); })
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'));
   };
 
   useEffect(() => { fetchData(); }, []);
@@ -114,16 +116,23 @@ export default function AdminColorFormulasPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(th ? 'ลบสูตรสีนี้?' : 'Delete this color formula?')) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
+      message: th ? 'ต้องการลบสูตรสีนี้ใช่หรือไม่?' : 'Delete this color formula?',
+      confirmText: th ? 'ลบ' : 'Delete',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
     try { await api.delete(`/admin/color-formulas/${id}`); toast.success(th ? 'ลบเรียบร้อย' : 'Deleted'); fetchData(); }
-    catch { toast.error('Error'); }
+    catch { toast.error(th ? 'ลบไม่สำเร็จ' : 'Failed to delete'); }
   };
 
   const toggleActive = async (f: ColorFormula) => {
     try {
       const fd = new FormData(); fd.append('isActive', String(!f.isActive));
       await api.upload(`/admin/color-formulas/${f.id}`, fd, 'PUT'); fetchData();
-    } catch { toast.error('Error'); }
+    } catch { toast.error(th ? 'อัปเดตไม่สำเร็จ' : 'Failed to update'); }
   };
 
   return (

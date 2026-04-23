@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Plus, Pencil, Trash2, Megaphone, X, Upload } from 'lucide-react';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 interface PopupItem {
   id: number;
@@ -37,6 +38,7 @@ export default function AdminPopupsPage() {
   const t = useTranslations('admin.popup');
   const locale = useLocale();
   const th = locale === 'th';
+  const confirm = useConfirm();
   const [popups, setPopups] = useState<PopupItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -51,10 +53,11 @@ export default function AdminPopupsPage() {
       setPopups(res.data);
     } catch {
       setPopups([]);
+      toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [th]);
 
   useEffect(() => { fetchPopups(); }, [fetchPopups]);
 
@@ -123,13 +126,20 @@ export default function AdminPopupsPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(t('confirm_delete'))) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
+      message: t('confirm_delete'),
+      confirmText: th ? 'ลบ' : 'Delete',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
     try {
       await api.delete(`/admin/popups/${id}`);
-      toast.success(locale === 'th' ? 'ลบแล้ว' : 'Deleted');
+      toast.success(th ? 'ลบแล้ว' : 'Deleted');
       fetchPopups();
     } catch {
-      toast.error(locale === 'th' ? 'เกิดข้อผิดพลาด' : 'Error');
+      toast.error(th ? 'ลบไม่สำเร็จ' : 'Failed to delete');
     }
   };
 

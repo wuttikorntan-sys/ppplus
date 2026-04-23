@@ -37,13 +37,16 @@ export default function AdminOrdersPage() {
   const locale = useLocale();
   const th = locale === 'th';
   const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
 
   const fetchOrders = () => {
+    setLoading(true);
     const q = filterStatus ? `?status=${filterStatus}` : '';
     api.get<{ success: boolean; data: Order[] }>(`/admin/orders${q}`)
       .then((r) => setOrders(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => { fetchOrders(); }, [filterStatus]);
@@ -75,7 +78,12 @@ export default function AdminOrdersPage() {
       </div>
 
       <div className="space-y-3">
-        {orders.map((order) => (
+        {loading && (
+          <div className="flex justify-center py-16">
+            <div className="w-6 h-6 border-2 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+        {!loading && orders.map((order) => (
           <div key={order.id} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
             <div className="flex items-start justify-between mb-3">
               <div>
@@ -131,7 +139,7 @@ export default function AdminOrdersPage() {
             )}
           </div>
         ))}
-        {orders.length === 0 && (
+        {!loading && orders.length === 0 && (
           <div className="text-center py-16 text-gray-400 text-sm">{th ? 'ยังไม่มีออเดอร์' : 'No orders'}</div>
         )}
       </div>

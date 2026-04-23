@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { api } from '@/lib/api';
 import { Save, RotateCcw, FileText, ChevronDown, ChevronRight, Upload, X, ImageIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 interface ContentMap {
   [key: string]: { th: string; en: string };
@@ -179,6 +180,8 @@ const defaults: ContentMap = {
 
 export default function AdminHomepageContentPage() {
   const locale = useLocale();
+  const th = locale === 'th';
+  const confirm = useConfirm();
   const [content, setContent] = useState<ContentMap>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -231,14 +234,21 @@ export default function AdminHomepageContentPage() {
       await api.put('/admin/site-content', items);
       setSavedMsg(true);
       setTimeout(() => setSavedMsg(false), 3000);
-    } catch { /* ignore */ }
+    } catch {
+      toast.error(th ? 'บันทึกไม่สำเร็จ' : 'Failed to save');
+    }
     setSaving(false);
   };
 
-  const handleReset = () => {
-    if (confirm(locale === 'th' ? 'รีเซ็ตเป็นค่าเริ่มต้น?' : 'Reset to defaults?')) {
-      setContent({ ...defaults });
-    }
+  const handleReset = async () => {
+    const ok = await confirm({
+      title: th ? 'ยืนยันการรีเซ็ต' : 'Confirm reset',
+      message: th ? 'ต้องการรีเซ็ตเป็นค่าเริ่มต้นใช่หรือไม่?' : 'Reset to defaults?',
+      confirmText: th ? 'รีเซ็ต' : 'Reset',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (ok) setContent({ ...defaults });
   };
 
   const handleImageUpload = async (key: string, file: File) => {

@@ -38,7 +38,7 @@ export default function AdminQuotesPage() {
   const fetchQuotes = () => {
     api.get<{ success: boolean; data: QuoteRequest[] }>('/admin/quotes')
       .then((r) => setQuotes(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'));
   };
 
   useEffect(() => { fetchQuotes(); }, []);

@@ -18,10 +18,12 @@ import {
   FolderArchive,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 export default function BackupPage() {
   const locale = useLocale();
   const th = locale === 'th';
+  const confirm = useConfirm();
   const fileRef = useRef<HTMLInputElement>(null);
   const imgFileRef = useRef<HTMLInputElement>(null);
 
@@ -93,12 +95,16 @@ export default function BackupPage() {
   const handleImport = async () => {
     if (!selectedFile) return;
 
-    const confirm = window.confirm(
-      th
-        ? '⚠️ การนำเข้า SQL จะเขียนทับข้อมูลเดิม ต้องการดำเนินการต่อหรือไม่?'
-        : '⚠️ Importing SQL will overwrite existing data. Continue?'
-    );
-    if (!confirm) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการนำเข้า' : 'Confirm import',
+      message: th
+        ? 'การนำเข้า SQL จะเขียนทับข้อมูลเดิม ต้องการดำเนินการต่อหรือไม่?'
+        : 'Importing SQL will overwrite existing data. Continue?',
+      confirmText: th ? 'นำเข้า' : 'Import',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
 
     setImporting(true);
     setImportResult(null);
@@ -180,12 +186,16 @@ export default function BackupPage() {
   const handleImportImages = async () => {
     if (!selectedImgFile) return;
 
-    const confirm = window.confirm(
-      th
-        ? '⚠️ การนำเข้ารูปภาพจากไฟล์ ZIP จะเขียนทับไฟล์ที่มีชื่อซ้ำกัน ต้องการดำเนินการต่อหรือไม่?'
-        : '⚠️ Importing images will overwrite files with the same name. Continue?'
-    );
-    if (!confirm) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการนำเข้า' : 'Confirm import',
+      message: th
+        ? 'การนำเข้ารูปภาพจากไฟล์ ZIP จะเขียนทับไฟล์ที่มีชื่อซ้ำกัน ต้องการดำเนินการต่อหรือไม่?'
+        : 'Importing images will overwrite files with the same name. Continue?',
+      confirmText: th ? 'นำเข้า' : 'Import',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
 
     setImportingImages(true);
     setImgImportResult(null);

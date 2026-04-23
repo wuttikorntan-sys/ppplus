@@ -35,7 +35,7 @@ export default function AdminReservationsPage() {
     const q = filterStatus ? `?status=${filterStatus}` : '';
     api.get<{ success: boolean; data: Reservation[] }>(`/admin/reservations${q}`)
       .then((r) => setReservations(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'));
   };
 
   useEffect(() => { fetchReservations(); }, [filterStatus]);

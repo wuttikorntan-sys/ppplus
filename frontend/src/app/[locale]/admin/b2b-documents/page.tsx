@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Plus, Edit, Trash2, Upload, Eye, EyeOff, FileDown, GripVertical } from 'lucide-react';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 interface B2bDocument {
   id: number;
@@ -26,6 +27,7 @@ const emptyForm: { nameTh: string; nameEn: string; sortOrder: string; isActive: 
 export default function AdminB2bDocumentsPage() {
   const locale = useLocale();
   const th = locale === 'th';
+  const confirm = useConfirm();
   const [docs, setDocs] = useState<B2bDocument[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -91,7 +93,14 @@ export default function AdminB2bDocumentsPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(th ? 'ต้องการลบเอกสารนี้?' : 'Delete this document?')) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
+      message: th ? 'ต้องการลบเอกสารนี้ใช่หรือไม่?' : 'Delete this document?',
+      confirmText: th ? 'ลบ' : 'Delete',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
     try {
       await api.delete(`/admin/b2b-documents/${id}`);
       toast.success(th ? 'ลบแล้ว' : 'Deleted');

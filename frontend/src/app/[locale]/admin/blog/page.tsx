@@ -7,6 +7,7 @@ import { Plus, Edit, Trash2, Search, X, Upload, Image as ImageIcon, Eye, EyeOff 
 import Image from 'next/image';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 interface BlogPost {
   id: number;
@@ -31,6 +32,7 @@ const emptyForm = {
 export default function AdminBlogPage() {
   const locale = useLocale();
   const th = locale === 'th';
+  const confirm = useConfirm();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -44,7 +46,7 @@ export default function AdminBlogPage() {
   const fetchPosts = () => {
     api.get<{ success: boolean; data: BlogPost[] }>('/admin/blog')
       .then((r) => setPosts(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'));
   };
 
   useEffect(() => { fetchPosts(); }, []);
@@ -126,13 +128,20 @@ export default function AdminBlogPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(th ? 'ลบบทความนี้?' : 'Delete this post?')) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
+      message: th ? 'ต้องการลบบทความนี้ใช่หรือไม่?' : 'Delete this post?',
+      confirmText: th ? 'ลบ' : 'Delete',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
     try {
       await api.delete(`/admin/blog/${id}`);
       toast.success(th ? 'ลบเรียบร้อย' : 'Deleted');
       fetchPosts();
     } catch {
-      toast.error('Error');
+      toast.error(th ? 'ลบไม่สำเร็จ' : 'Failed to delete');
     }
   };
 

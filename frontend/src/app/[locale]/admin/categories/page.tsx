@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Plus, Edit, Trash2, X, GripVertical } from 'lucide-react';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 interface Category {
   id: number;
@@ -20,16 +21,20 @@ const emptyForm = { nameTh: '', nameEn: '', sortOrder: '0' };
 export default function AdminCategoriesPage() {
   const locale = useLocale();
   const th = locale === 'th';
+  const confirm = useConfirm();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
 
   const fetchCategories = () => {
+    setLoading(true);
     api.get<{ success: boolean; data: Category[] }>('/admin/categories')
       .then((r) => setCategories(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => { fetchCategories(); }, []);
@@ -47,11 +52,15 @@ export default function AdminCategoriesPage() {
   };
 
   const handleDelete = async (cat: Category) => {
-    const confirmed = window.confirm(
-      th
+    const confirmed = await confirm({
+      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
+      message: th
         ? `ต้องการลบหมวดหมู่ "${cat.nameTh}" ใช่หรือไม่?`
-        : `Delete category "${cat.nameEn}"?`
-    );
+        : `Delete category "${cat.nameEn}"?`,
+      confirmText: th ? 'ลบ' : 'Delete',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
     if (!confirmed) return;
     try {
       await api.delete(`/admin/categories/${cat.id}`);
@@ -112,7 +121,12 @@ export default function AdminCategoriesPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {categories.map((cat) => (
+            {loading && (
+              <tr><td colSpan={5} className="px-4 py-12 text-center">
+                <div className="w-6 h-6 border-2 border-[#1C1C1E] border-t-transparent rounded-full animate-spin mx-auto" />
+              </td></tr>
+            )}
+            {!loading && categories.map((cat) => (
               <tr key={cat.id} className="hover:bg-gray-50/50 transition">
                 <td className="px-4 py-3 text-gray-400">{cat.id}</td>
                 <td className="px-4 py-3 font-medium text-gray-900">{cat.nameTh}</td>
@@ -130,7 +144,7 @@ export default function AdminCategoriesPage() {
                 </td>
               </tr>
             ))}
-            {categories.length === 0 && (
+            {!loading && categories.length === 0 && (
               <tr><td colSpan={5} className="px-4 py-12 text-center text-gray-400 text-sm">{th ? 'ยังไม่มีหมวดหมู่' : 'No categories'}</td></tr>
             )}
           </tbody>

@@ -6,6 +6,7 @@ import { api } from '@/lib/api';
 import { Plus, Pencil, Trash2, X, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
 
 interface GalleryImage {
   id: number;
@@ -25,6 +26,8 @@ const categories = [
 
 export default function AdminGalleryPage() {
   const locale = useLocale();
+  const th = locale === 'th';
+  const confirm = useConfirm();
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -37,7 +40,9 @@ export default function AdminGalleryPage() {
     try {
       const res = await api.get<{ success: boolean; data: GalleryImage[] }>('/admin/gallery');
       setImages(res.data);
-    } catch { /* ignore */ }
+    } catch {
+      toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load');
+    }
     setLoading(false);
   };
 
@@ -88,11 +93,21 @@ export default function AdminGalleryPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(locale === 'th' ? 'ต้องการลบรูปนี้?' : 'Delete this image?')) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
+      message: th ? 'ต้องการลบรูปนี้ใช่หรือไม่?' : 'Delete this image?',
+      confirmText: th ? 'ลบ' : 'Delete',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
     try {
       await api.delete(`/admin/gallery/${id}`);
+      toast.success(th ? 'ลบเรียบร้อย' : 'Deleted');
       fetchImages();
-    } catch { /* ignore */ }
+    } catch {
+      toast.error(th ? 'ลบไม่สำเร็จ' : 'Failed to delete');
+    }
   };
 
   if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" /></div>;

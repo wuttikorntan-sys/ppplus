@@ -7,6 +7,10 @@ import { Plus, Edit, Trash2, Search, X, Upload, Image as ImageIcon, Eye, EyeOff 
 import Image from 'next/image';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_TDS_SIZE = 10 * 1024 * 1024; // 10MB
 
 interface MenuItem {
   id: number;
@@ -51,6 +55,7 @@ const emptyForm = {
 export default function AdminMenuPage() {
   const locale = useLocale();
   const th = locale === 'th';
+  const confirm = useConfirm();
   const [items, setItems] = useState<MenuItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState('');
@@ -69,14 +74,15 @@ export default function AdminMenuPage() {
   const fetchItems = () => {
     api.get<{ success: boolean; data: MenuItem[] }>('/admin/menu')
       .then((r) => setItems(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'));
   };
 
   useEffect(() => {
     fetchItems();
     api.get<{ success: boolean; data: Category[] }>('/admin/categories')
       .then((r) => setCategories(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดหมวดหมู่ไม่สำเร็จ' : 'Failed to load categories'));
+
   }, []);
 
   const filtered = items.filter((i) => {
@@ -129,17 +135,37 @@ export default function AdminMenuPage() {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error(th ? 'ไฟล์ใหญ่เกิน 5MB' : 'File exceeds 5MB');
+      e.target.value = '';
+      return;
     }
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const handleTdsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > MAX_TDS_SIZE) {
+      toast.error(th ? 'ไฟล์ TDS ใหญ่เกิน 10MB' : 'TDS file exceeds 10MB');
+      e.target.value = '';
+      return;
+    }
+    setTdsFile(file);
   };
 
   const handleSave = async () => {
     if (!form.nameTh || !form.nameEn || !form.price || !form.categoryId) {
       toast.error(th ? 'กรุณากรอกข้อมูลที่จำเป็น' : 'Please fill required fields');
+      return;
+    }
+    const priceNum = parseFloat(form.price);
+    if (!isFinite(priceNum) || priceNum <= 0) {
+      toast.error(th ? 'ราคาต้องมากกว่า 0' : 'Price must be greater than 0');
       return;
     }
     setSaving(true);
@@ -186,13 +212,20 @@ export default function AdminMenuPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(th ? 'ต้องการลบหรือไม่?' : 'Delete this item?')) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
+      message: th ? 'ต้องการลบสินค้านี้ใช่หรือไม่?' : 'Delete this item?',
+      confirmText: th ? 'ลบ' : 'Delete',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
     try {
       await api.delete(`/admin/menu/${id}`);
       toast.success(th ? 'ลบเรียบร้อย' : 'Deleted');
       fetchItems();
     } catch {
-      toast.error('Error');
+      toast.error(th ? 'ลบไม่สำเร็จ' : 'Failed to delete');
     }
   };
 
@@ -203,7 +236,7 @@ export default function AdminMenuPage() {
       await api.upload(`/admin/menu/${item.id}`, formData, 'PUT');
       fetchItems();
     } catch {
-      toast.error('Error');
+      toast.error(th ? 'อัปเดตไม่สำเร็จ' : 'Failed to update');
     }
   };
 
@@ -484,7 +517,7 @@ export default function AdminMenuPage() {
                         </span>
                       )}
                     </div>
-                    <input ref={tdsInputRef} type="file" accept=".pdf" onChange={(e) => { const f = e.target.files?.[0]; if (f) setTdsFile(f); }} className="hidden" />
+                    <input ref={tdsInputRef} type="file" accept=".pdf" onChange={handleTdsChange} className="hidden" />
                   </div>
                 </div>
               </div>

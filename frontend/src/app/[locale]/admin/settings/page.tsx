@@ -84,9 +84,9 @@ export default function AdminSettingsPage() {
         setNotify(filteredNotify);
 
       })
-      .catch(() => {})
+      .catch(() => toast.error(th ? 'โหลดการตั้งค่าไม่สำเร็จ' : 'Failed to load settings'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [th]);
 
   const updateField = (key: string, value: string) => {
     setSocial((prev) => ({

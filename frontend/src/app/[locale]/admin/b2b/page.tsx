@@ -46,7 +46,7 @@ export default function AdminB2BPage() {
   const fetchApplications = () => {
     api.get<{ success: boolean; data: B2bApplication[] }>('/admin/b2b')
       .then((r) => setApplications(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'));
   };
 
   useEffect(() => { fetchApplications(); }, []);

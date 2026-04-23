@@ -4,6 +4,7 @@ import { useLocale } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Search, Shield, User } from 'lucide-react';
 import { api } from '@/lib/api';
+import toast from 'react-hot-toast';
 
 interface UserData {
   id: number;
@@ -18,13 +19,15 @@ export default function AdminUsersPage() {
   const locale = useLocale();
   const th = locale === 'th';
   const [users, setUsers] = useState<UserData[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
     api.get<{ success: boolean; data: UserData[] }>('/admin/users')
       .then((r) => setUsers(r.data))
-      .catch(() => {});
-  }, []);
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'))
+      .finally(() => setLoading(false));
+  }, [th]);
 
   const filtered = users.filter((u) =>
     search === '' || u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase())
@@ -65,7 +68,12 @@ export default function AdminUsersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {filtered.map((u) => (
+              {loading && (
+                <tr><td colSpan={5} className="px-4 py-12 text-center">
+                  <div className="w-6 h-6 border-2 border-[#1C1C1E] border-t-transparent rounded-full animate-spin mx-auto" />
+                </td></tr>
+              )}
+              {!loading && filtered.map((u) => (
                 <tr key={u.id} className="hover:bg-gray-50/50 transition">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
@@ -87,7 +95,7 @@ export default function AdminUsersPage() {
                   <td className="px-4 py-3 text-gray-400 text-xs">{new Date(u.createdAt).toLocaleDateString(locale)}</td>
                 </tr>
               ))}
-              {filtered.length === 0 && (
+              {!loading && filtered.length === 0 && (
                 <tr><td colSpan={5} className="px-4 py-12 text-center text-gray-400 text-sm">{th ? 'ไม่พบผู้ใช้' : 'No users'}</td></tr>
               )}
             </tbody>

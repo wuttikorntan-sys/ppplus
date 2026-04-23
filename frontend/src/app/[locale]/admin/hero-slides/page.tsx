@@ -7,6 +7,10 @@ import { Plus, Edit, Trash2, X, Upload, Image as ImageIcon, Eye, EyeOff, GripVer
 import Image from 'next/image';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useConfirm } from '@/components/ConfirmDialog';
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
 
 interface HeroSlide {
   id: number;
@@ -31,6 +35,7 @@ const emptyForm = {
 export default function AdminHeroSlidesPage() {
   const locale = useLocale();
   const th = locale === 'th';
+  const confirm = useConfirm();
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -46,7 +51,7 @@ export default function AdminHeroSlidesPage() {
   const fetchSlides = () => {
     api.get<{ success: boolean; data: HeroSlide[] }>('/admin/hero-slides')
       .then((r) => setSlides(r.data))
-      .catch(() => {});
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'));
   };
 
   useEffect(() => { fetchSlides(); }, []);
@@ -80,12 +85,29 @@ export default function AdminHeroSlidesPage() {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error(th ? 'ไฟล์รูปใหญ่เกิน 5MB' : 'Image exceeds 5MB');
+      e.target.value = '';
+      return;
     }
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > MAX_VIDEO_SIZE) {
+      toast.error(th ? 'ไฟล์วิดีโอใหญ่เกิน 100MB' : 'Video exceeds 100MB');
+      e.target.value = '';
+      return;
+    }
+    setVideoFile(file);
+    setVideoFileName(file.name);
+    setForm({ ...form, videoUrl: '' });
   };
 
   const handleSave = async () => {
@@ -126,13 +148,20 @@ export default function AdminHeroSlidesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(th ? 'ลบสไลด์นี้?' : 'Delete this slide?')) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
+      message: th ? 'ต้องการลบสไลด์นี้ใช่หรือไม่?' : 'Delete this slide?',
+      confirmText: th ? 'ลบ' : 'Delete',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
     try {
       await api.delete(`/admin/hero-slides/${id}`);
       toast.success(th ? 'ลบเรียบร้อย' : 'Deleted');
       fetchSlides();
     } catch {
-      toast.error('Error');
+      toast.error(th ? 'ลบไม่สำเร็จ' : 'Failed to delete');
     }
   };
 
@@ -143,7 +172,7 @@ export default function AdminHeroSlidesPage() {
       await api.upload(`/admin/hero-slides/${slide.id}`, formData, 'PUT');
       fetchSlides();
     } catch {
-      toast.error('Error');
+      toast.error(th ? 'อัปเดตไม่สำเร็จ' : 'Failed to update');
     }
   };
 
@@ -298,10 +327,7 @@ export default function AdminHeroSlidesPage() {
                           <p className="text-sm text-gray-400">{th ? 'คลิกเพื่ออัปโหลดวิดีโอ' : 'Click to upload video'}</p>
                         </div>
                       )}
-                      <input ref={videoInputRef} type="file" accept="video/mp4,video/*" className="hidden" onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) { setVideoFile(file); setVideoFileName(file.name); setForm({ ...form, videoUrl: '' }); }
-                      }} />
+                      <input ref={videoInputRef} type="file" accept="video/mp4,video/*" className="hidden" onChange={handleVideoChange} />
                     </div>
                   </div>
 

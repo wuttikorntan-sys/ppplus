@@ -4,6 +4,7 @@ import { useLocale } from 'next-intl';
 import { Globe, Save, Plus, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import toast from 'react-hot-toast';
 
 interface ContentMap {
   [key: string]: { th: string; en: string };
@@ -59,9 +60,9 @@ export default function AdminSeoPage() {
           }
         } catch {}
       })
-      .catch(() => {})
+      .catch(() => toast.error(th ? 'โหลดข้อมูลไม่สำเร็จ' : 'Failed to load'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [th]);
 
   const updateSeoField = (key: string, value: string) => {
     setSeo((prev) => ({
