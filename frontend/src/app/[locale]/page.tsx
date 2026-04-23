@@ -101,6 +101,8 @@ export default function HomePage() {
   const [heroSlides, setHeroSlides] = useState(defaultSlides);
   const [sc, setSc] = useState<ContentMap>(defaultContent);
   const [featuredItems, setFeaturedItems] = useState<FeaturedProduct[]>([]);
+  const [featuredLoading, setFeaturedLoading] = useState(true);
+  const [featuredError, setFeaturedError] = useState<string | null>(null);
 
   const c = (key: string) => {
     const val = sc[key];
@@ -142,11 +144,12 @@ export default function HomePage() {
   useEffect(() => {
     api.get<{ success: boolean; data: FeaturedProduct[] }>('/menu')
       .then((r) => {
-        if (r.data && r.data.length > 0) {
-          setFeaturedItems(r.data.slice(0, 8));
-        }
+        setFeaturedItems(r.data && r.data.length > 0 ? r.data.slice(0, 8) : []);
       })
-      .catch(() => {});
+      .catch((err: unknown) => {
+        setFeaturedError(err instanceof Error ? err.message : 'Failed to load products');
+      })
+      .finally(() => setFeaturedLoading(false));
   }, []);
 
   const nextSlide = useCallback(() => {
@@ -207,7 +210,30 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        {featuredItems.length > 0 && (<>
+        {featuredLoading && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center py-12">
+            <div className="w-8 h-8 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
+        {!featuredLoading && featuredError && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
+            <p className="text-red-500 text-sm">
+              {locale === 'th' ? 'โหลดสินค้าไม่สำเร็จ' : 'Failed to load products'}
+            </p>
+            <p className="text-gray-400 text-xs mt-1">{featuredError}</p>
+          </div>
+        )}
+
+        {!featuredLoading && !featuredError && featuredItems.length === 0 && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
+            <p className="text-gray-400 text-sm">
+              {locale === 'th' ? 'ยังไม่มีสินค้าที่จะแสดง' : 'No products to display yet'}
+            </p>
+          </div>
+        )}
+
+        {!featuredLoading && featuredItems.length > 0 && (<>
         {/* Mobile: touch-scrollable horizontal list */}
         <div className="lg:hidden overflow-x-auto px-4 pb-4 -mx-0 scrollbar-hide">
           <div className="flex gap-3 w-max">
