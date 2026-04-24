@@ -1,9 +1,18 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText, Play, Beaker, ShieldCheck, Layers, ShoppingCart, Download, ExternalLink } from 'lucide-react';
+import {
+  ArrowLeft,
+  ShoppingCart,
+  FileText,
+  Play,
+  AlertTriangle,
+  ClipboardCheck,
+  SprayCan,
+  Layers,
+} from 'lucide-react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { useParams } from 'next/navigation';
@@ -32,6 +41,7 @@ interface ProductDetail {
   colorName: string | null;
   finishType: string | null;
   size: string | null;
+  unit: string | null;
   mixingRatio: string | null;
   applicationMethodTh: string | null;
   applicationMethodEn: string | null;
@@ -42,14 +52,46 @@ interface ProductDetail {
   category: Category;
 }
 
+type Step = { title: string; bullets: string[] };
+
+/**
+ * Parse application method text into ordered steps.
+ * Expected shape (flexible): lines starting with "Step N:" become new steps;
+ * lines starting with "- " or "• " become bullets of the current step.
+ * Falls back to a single step if no markers are present.
+ */
+function parseSteps(text: string | null): Step[] {
+  if (!text) return [];
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const steps: Step[] = [];
+  let current: Step | null = null;
+
+  for (const line of lines) {
+    const stepMatch = line.match(/^(?:Step\s*\d+\s*[:.\-]|ขั้นที่\s*\d+\s*[:.\-]|\d+\s*[.)])\s*(.+)$/i);
+    if (stepMatch) {
+      if (current) steps.push(current);
+      current = { title: stepMatch[1], bullets: [] };
+      continue;
+    }
+    const bulletMatch = line.match(/^[-•*]\s*(.+)$/);
+    if (current) {
+      current.bullets.push(bulletMatch ? bulletMatch[1] : line);
+    } else {
+      current = { title: '', bullets: [bulletMatch ? bulletMatch[1] : line] };
+    }
+  }
+  if (current) steps.push(current);
+  return steps;
+}
+
 export default function ProductDetailPage() {
-  const t = useTranslations('menu');
   const locale = useLocale();
+  const th = locale === 'th';
   const params = useParams();
+  const { addItem } = useCart();
+
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const { addItem } = useCart();
-  const th = locale === 'th';
 
   useEffect(() => {
     async function fetchProduct() {
@@ -68,7 +110,7 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-400">
-        {locale === 'th' ? 'กำลังโหลด...' : 'Loading...'}
+        {th ? 'กำลังโหลด...' : 'Loading...'}
       </div>
     );
   }
@@ -76,21 +118,34 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-gray-500">{locale === 'th' ? 'ไม่พบสินค้า' : 'Product not found'}</p>
+        <p className="text-gray-500">{th ? 'ไม่พบสินค้า' : 'Product not found'}</p>
         <Link href="/menu" className="text-[#F5841F] hover:underline flex items-center gap-1">
-          <ArrowLeft className="w-4 h-4" /> {locale === 'th' ? 'กลับหน้าสินค้า' : 'Back to Products'}
+          <ArrowLeft className="w-4 h-4" /> {th ? 'กลับหน้าสินค้า' : 'Back to Products'}
         </Link>
       </div>
     );
   }
 
-  const name = locale === 'th' ? product.nameTh : product.nameEn;
-  const description = locale === 'th' ? product.descriptionTh : product.descriptionEn;
-  const applicationMethod = locale === 'th' ? product.applicationMethodTh : product.applicationMethodEn;
-  const features = locale === 'th' ? product.featuresTh : product.featuresEn;
-  const categoryName = locale === 'th' ? product.category?.nameTh : product.category?.nameEn;
+  const name = th ? product.nameTh : product.nameEn;
+  const description = th ? product.descriptionTh : product.descriptionEn;
+  const applicationMethod = th ? product.applicationMethodTh : product.applicationMethodEn;
+  const features = th ? product.featuresTh : product.featuresEn;
+  const categoryName = th ? product.category?.nameTh : product.category?.nameEn;
+  const steps = parseSteps(applicationMethod);
+  const featureList = (features || '').split(/\r?\n/).map((f) => f.trim()).filter(Boolean);
 
-  // Parse video embed URL
+  const stepIcons = [ClipboardCheck, Layers, SprayCan];
+
+  // Technical Specifications – build from available fields
+  const specs: { label: string; value: string }[] = [];
+  if (product.brand) specs.push({ label: th ? 'แบรนด์' : 'Brand', value: product.brand });
+  if (product.colorName || product.colorCode) {
+    specs.push({ label: th ? 'สี' : 'Color', value: product.colorName || product.colorCode || '-' });
+  }
+  if (product.finishType) specs.push({ label: th ? 'ประเภทผิว' : 'Finish', value: product.finishType });
+  if (product.size) specs.push({ label: th ? 'ขนาด' : 'Size', value: `${product.size}${product.unit ? ' ' + product.unit : ''}` });
+  if (product.mixingRatio) specs.push({ label: th ? 'สัดส่วนผสม' : 'Mixing Ratio', value: product.mixingRatio });
+
   const getEmbedUrl = (url: string) => {
     const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
     if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
@@ -98,7 +153,6 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
-    if (!product) return;
     addItem({
       id: product.id,
       nameTh: product.nameTh,
@@ -122,126 +176,243 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-          {/* Image */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="relative aspect-square rounded-2xl overflow-hidden bg-white dark:bg-[#2D2D2D] shadow-lg">
-            <Image
-              src={product.image || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=800&fit=crop'}
-              alt={name}
-              fill
-              className="object-cover"
-              priority
-            />
-            {product.brand && (
-              <div className="absolute top-4 left-4 bg-[#F5841F] text-white text-sm font-semibold px-3 py-1 rounded-full">
-                {product.brand}
-              </div>
-            )}
-            {product.colorCode && (
-              <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1.5">
-                <div className="w-5 h-5 rounded-full border-2 border-white/30" style={{ backgroundColor: product.colorCode }} />
-                <span className="text-white text-sm font-medium">{product.colorName || product.colorCode}</span>
-              </div>
-            )}
-          </motion.div>
-
-          {/* Info */}
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
-            <div>
-              <span className="text-sm text-[#F5841F] font-semibold uppercase">{categoryName}</span>
-              <h1 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] dark:text-white mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{name}</h1>
-            </div>
-
-            <div className="bg-white dark:bg-[#2D2D2D] rounded-2xl p-6 shadow-sm space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-3xl font-bold text-[#1C1C1E] dark:text-white">฿{Number(product.price).toLocaleString()}</span>
-                {product.size && <span className="text-[#64748B] dark:text-gray-400 bg-gray-100 dark:bg-white/10 px-3 py-1 rounded-full text-sm">{product.size}</span>}
-              </div>
-              {product.finishType && (
-                <div className="flex items-center gap-2 text-sm text-[#64748B] dark:text-gray-400">
-                  <Layers className="w-4 h-4" />
-                  <span>{th ? 'เนื้อสี: ' : 'Finish: '}{product.finishType}</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+        <div className="grid lg:grid-cols-5 gap-6 lg:gap-8">
+          {/* LEFT — image + downloads (2/5) */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="lg:col-span-2 space-y-4"
+          >
+            {/* Image card */}
+            <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#2D2D2D] dark:to-[#1C1C1E] shadow-sm">
+              {product.image ? (
+                <Image src={product.image} alt={name} fill className="object-cover" priority />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-300">
+                  <Layers className="w-24 h-24" />
                 </div>
               )}
-              {product.mixingRatio && (
-                <div className="flex items-center gap-2 text-sm text-[#64748B] dark:text-gray-400">
-                  <Beaker className="w-4 h-4" />
-                  <span>{th ? 'สัดส่วนผสม: ' : 'Mix Ratio: '}{product.mixingRatio}</span>
+
+              {/* PP PLUS brand badge */}
+              {product.brand && (
+                <div className="absolute top-4 left-4 bg-[#F5841F] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                  {product.brand}
+                </div>
+              )}
+
+              {/* QC badge (top-right, decorative) */}
+              <div className="absolute top-4 right-4 bg-white/95 dark:bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 flex items-center gap-2 shadow-sm">
+                <ClipboardCheck className="w-4 h-4 text-green-600" />
+                <div className="text-[10px] leading-tight font-medium text-gray-700 dark:text-gray-200">
+                  <div>{th ? 'ตรวจสอบ' : 'Batch Quality'}</div>
+                  <div>{th ? 'คุณภาพทุกล็อต' : 'Control'}</div>
+                </div>
+              </div>
+
+              {/* Color swatch pill */}
+              {(product.colorCode || product.colorName) && (
+                <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1.5">
+                  <div
+                    className="w-4 h-4 rounded-full border-2 border-white/40 shrink-0"
+                    style={{ backgroundColor: product.colorCode || '#CCCCCC' }}
+                  />
+                  <span className="text-white text-xs font-medium">{product.colorName || product.colorCode}</span>
                 </div>
               )}
             </div>
 
-            <p className="text-[#64748B] dark:text-gray-300 leading-relaxed">{description}</p>
-
-            {features && (
-              <div>
-                <h3 className="font-semibold text-[#2D2D2D] dark:text-white mb-2 flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-[#F5841F]" />
-                  {th ? 'คุณสมบัติเด่น' : 'Key Features'}
-                </h3>
-                <ul className="space-y-1.5">
-                  {features.split('\n').filter(Boolean).map((f, i) => (
-                    <li key={i} className="text-[#64748B] dark:text-gray-400 text-sm flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F5841F] mt-1.5 flex-shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            {/* Watch Application Video */}
+            {product.videoUrl && (
+              <a
+                href={product.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative block rounded-xl overflow-hidden bg-[#1C1C1E] text-white h-16 group"
+              >
+                <div className="absolute inset-0 flex items-center gap-3 px-4">
+                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-[#F5841F] transition">
+                    <Play className="w-4 h-4 fill-white text-white ml-0.5" />
+                  </div>
+                  <span className="font-semibold text-sm">
+                    {th ? 'ดูวิดีโอการใช้งาน' : 'Watch Application Video'}
+                  </span>
+                </div>
+              </a>
             )}
 
-            {applicationMethod && (
+            {/* Downloads */}
+            {product.tdsFile && (
               <div>
-                <h3 className="font-semibold text-[#2D2D2D] dark:text-white mb-2">
-                  {th ? 'วิธีใช้งาน' : 'Application Method'}
+                <h3 className="text-lg font-bold text-[#2D2D2D] dark:text-white mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                  {th ? 'ดาวน์โหลด' : 'Downloads'}
                 </h3>
-                <p className="text-[#64748B] dark:text-gray-400 text-sm whitespace-pre-line">{applicationMethod}</p>
-              </div>
-            )}
-
-            {/* Video / TDS buttons */}
-            {(product.videoUrl || product.tdsFile) && (
-              <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                {product.videoUrl && (
-                  <a
-                    href={product.videoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-[#1C1C1E] dark:border-white/20 text-[#1C1C1E] dark:text-white hover:bg-[#1C1C1E]/5 dark:hover:bg-white/10 transition font-medium"
-                  >
-                    <Play className="w-5 h-5 text-[#F5841F]" />
-                    {th ? 'ดูวิดีโอสาธิต' : 'Watch Demo Video'}
-                    <ExternalLink className="w-3.5 h-3.5 opacity-50" />
-                  </a>
-                )}
-                {product.tdsFile && (
+                <div className="space-y-2">
                   <a
                     href={product.tdsFile}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-[#1C1C1E] dark:border-white/20 text-[#1C1C1E] dark:text-white hover:bg-[#1C1C1E]/5 dark:hover:bg-white/10 transition font-medium"
+                    className="flex items-center gap-3 bg-[#1e3a5f] hover:bg-[#254a7a] text-white rounded-xl px-4 py-3 font-semibold text-sm transition shadow-sm"
                   >
-                    <FileText className="w-5 h-5 text-[#F5841F]" />
-                    {th ? 'ดาวน์โหลด TDS' : 'Download TDS'}
-                    <Download className="w-3.5 h-3.5 opacity-50" />
+                    <FileText className="w-5 h-5 text-red-400 shrink-0" />
+                    <span>TDS (Technical Data Sheet)</span>
                   </a>
-                )}
+                </div>
               </div>
             )}
+          </motion.div>
 
-            {/* Add to Cart */}
-            <button
-              onClick={handleAddToCart}
-              className="w-full flex items-center justify-center gap-2 font-semibold py-3.5 rounded-xl bg-[#F5841F] text-white hover:bg-[#e0741a] transition text-lg shadow-md cursor-pointer"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {th ? 'เพิ่มลงตะกร้า' : 'Add to Cart'}
-            </button>
+          {/* RIGHT — info (3/5) */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="lg:col-span-3 space-y-5"
+          >
+            {/* Title block */}
+            <div>
+              {categoryName && (
+                <span className="text-xs text-[#F5841F] font-bold uppercase tracking-wider">{categoryName}</span>
+              )}
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2D2D2D] dark:text-white mt-1 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                {name}
+              </h1>
+            </div>
+
+            {/* Price + CTA card */}
+            <div className="bg-white dark:bg-[#2D2D2D] rounded-2xl p-5 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl md:text-4xl font-bold text-[#2D2D2D] dark:text-white">
+                      ฿{Number(product.price).toLocaleString()}
+                    </span>
+                    {product.finishType && (
+                      <span className="text-[#64748B] dark:text-gray-400 text-lg">({product.finishType})</span>
+                    )}
+                  </div>
+                  {product.finishType && (
+                    <p className="flex items-center gap-1.5 text-sm text-[#64748B] dark:text-gray-400 mt-1">
+                      <Layers className="w-4 h-4" />
+                      {th ? 'เนื้อสี: ' : 'Finish: '}{product.finishType}
+                    </p>
+                  )}
+                </div>
+                <button
+                  onClick={handleAddToCart}
+                  className="flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-xl bg-[#F5841F] text-white hover:bg-[#e0741a] transition shadow-md whitespace-nowrap"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {th ? 'เพิ่มลงตะกร้า' : 'Add to Cart'}
+                </button>
+              </div>
+            </div>
+
+            {/* Description (if present) */}
+            {description && (
+              <p className="text-[#64748B] dark:text-gray-300 leading-relaxed text-sm">{description}</p>
+            )}
+
+            {/* Guide + Specs grid */}
+            <div className="grid md:grid-cols-2 gap-5">
+              {/* Application Guide */}
+              {(steps.length > 0 || featureList.length > 0) && (
+                <div className="bg-white dark:bg-[#2D2D2D] rounded-2xl p-5 shadow-sm">
+                  <h3 className="text-lg font-bold text-[#2D2D2D] dark:text-white mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+                    {th ? 'วิธีใช้งาน' : 'Application Guide'}
+                  </h3>
+                  <div className="space-y-4">
+                    {steps.length > 0 ? (
+                      steps.map((step, idx) => {
+                        const Icon = stepIcons[idx] || ClipboardCheck;
+                        return (
+                          <div key={idx}>
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <div className="w-7 h-7 rounded-full bg-[#F5841F]/10 text-[#F5841F] flex items-center justify-center shrink-0">
+                                <Icon className="w-4 h-4" />
+                              </div>
+                              <h4 className="font-semibold text-[#2D2D2D] dark:text-white text-sm">
+                                {th ? `ขั้นที่ ${idx + 1}: ` : `Step ${idx + 1}: `}
+                                {step.title || (th ? 'ดำเนินการ' : 'Procedure')}
+                              </h4>
+                            </div>
+                            {step.bullets.length > 0 && (
+                              <ul className="ml-9 space-y-1">
+                                {step.bullets.map((b, i) => (
+                                  <li key={i} className="text-xs text-[#64748B] dark:text-gray-400 flex items-start gap-2">
+                                    <span className="w-1 h-1 rounded-full bg-[#F5841F] mt-1.5 shrink-0" />
+                                    {b}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <ul className="space-y-1.5">
+                        {featureList.map((f, i) => (
+                          <li key={i} className="text-sm text-[#64748B] dark:text-gray-400 flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#F5841F] mt-1.5 shrink-0" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Technical Specifications + Safety */}
+              <div className="space-y-5">
+                {specs.length > 0 && (
+                  <div className="bg-white dark:bg-[#2D2D2D] rounded-2xl p-5 shadow-sm">
+                    <h3 className="text-lg font-bold text-[#2D2D2D] dark:text-white mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+                      {th ? 'ข้อมูลทางเทคนิค' : 'Technical Specifications'}
+                    </h3>
+                    <dl className="space-y-2.5">
+                      {specs.map((s) => (
+                        <div key={s.label} className="flex items-center justify-between gap-3 text-sm">
+                          <dt className="text-[#64748B] dark:text-gray-400 font-medium">{s.label}</dt>
+                          <dd className="text-[#2D2D2D] dark:text-white font-semibold text-right">{s.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                )}
+
+                {/* Safety & Storage – static best-practice guidance */}
+                <div className="bg-white dark:bg-[#2D2D2D] rounded-2xl p-5 shadow-sm">
+                  <h3 className="text-lg font-bold text-[#2D2D2D] dark:text-white mb-3 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                    <AlertTriangle className="w-5 h-5 text-red-500" />
+                    {th ? 'การจัดเก็บและความปลอดภัย' : 'Safety & Storage'}
+                  </h3>
+                  <ul className="space-y-1.5">
+                    <li className="text-xs text-[#64748B] dark:text-gray-400 flex items-start gap-2">
+                      <span className="w-1 h-1 rounded-full bg-red-400 mt-1.5 shrink-0" />
+                      {th
+                        ? 'เก็บในที่เย็น อากาศถ่ายเทดี ห่างจากความร้อนและเปลวไฟ'
+                        : 'Store in a cool, well-ventilated area away from heat'}
+                    </li>
+                    <li className="text-xs text-[#64748B] dark:text-gray-400 flex items-start gap-2">
+                      <span className="w-1 h-1 rounded-full bg-red-400 mt-1.5 shrink-0" />
+                      {th
+                        ? 'สวมอุปกรณ์ป้องกัน (ถุงมือ หน้ากาก แว่นตา) ขณะใช้งาน'
+                        : 'Use appropriate PPE (gloves, mask, goggles) when handling'}
+                    </li>
+                    <li className="text-xs text-[#64748B] dark:text-gray-400 flex items-start gap-2">
+                      <span className="w-1 h-1 rounded-full bg-red-400 mt-1.5 shrink-0" />
+                      {th
+                        ? 'ปิดฝาให้สนิทหลังใช้งาน หลีกเลี่ยงเด็กและสัตว์เลี้ยง'
+                        : 'Close container tightly after use. Keep out of reach of children and pets'}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
 
-        {/* Video section */}
+        {/* Video embed (below the fold) */}
         {product.videoUrl && (
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-12">
             <h2 className="text-2xl font-bold text-[#2D2D2D] dark:text-white mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
