@@ -95,6 +95,8 @@ export interface MenuItemRecord {
   specFlashPoint: string | null;
   specPotLife: string | null;
   relatedProductIds: string | null;
+  safetyNotesTh: string | null;
+  safetyNotesEn: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -421,9 +423,9 @@ export const db = {
     async create(data: Omit<MenuItemRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<MenuItemRecord> {
       const ts = now();
       const [res] = await pool.query(
-        `INSERT INTO menu_items (categoryId, nameTh, nameEn, descriptionTh, descriptionEn, price, image, isAvailable, sortOrder, brand, colorCode, colorName, finishType, coverageArea, size, unit, mixingRatio, applicationMethodTh, applicationMethodEn, featuresTh, featuresEn, tdsFile, sdsFile, videoUrl, specColor, specDensity, specFlashPoint, specPotLife, relatedProductIds, createdAt, updatedAt)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [data.categoryId, data.nameTh, data.nameEn, data.descriptionTh, data.descriptionEn, data.price, data.image, data.isAvailable ? 1 : 0, data.sortOrder, data.brand, data.colorCode, data.colorName, data.finishType, data.coverageArea, data.size, data.unit, data.mixingRatio, data.applicationMethodTh, data.applicationMethodEn, data.featuresTh, data.featuresEn, data.tdsFile, data.sdsFile, data.videoUrl, data.specColor, data.specDensity, data.specFlashPoint, data.specPotLife, data.relatedProductIds, ts, ts],
+        `INSERT INTO menu_items (categoryId, nameTh, nameEn, descriptionTh, descriptionEn, price, image, isAvailable, sortOrder, brand, colorCode, colorName, finishType, coverageArea, size, unit, mixingRatio, applicationMethodTh, applicationMethodEn, featuresTh, featuresEn, tdsFile, sdsFile, videoUrl, specColor, specDensity, specFlashPoint, specPotLife, relatedProductIds, safetyNotesTh, safetyNotesEn, createdAt, updatedAt)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [data.categoryId, data.nameTh, data.nameEn, data.descriptionTh, data.descriptionEn, data.price, data.image, data.isAvailable ? 1 : 0, data.sortOrder, data.brand, data.colorCode, data.colorName, data.finishType, data.coverageArea, data.size, data.unit, data.mixingRatio, data.applicationMethodTh, data.applicationMethodEn, data.featuresTh, data.featuresEn, data.tdsFile, data.sdsFile, data.videoUrl, data.specColor, data.specDensity, data.specFlashPoint, data.specPotLife, data.relatedProductIds, data.safetyNotesTh, data.safetyNotesEn, ts, ts],
       );
       const id = (res as mysql.ResultSetHeader).insertId;
       return (await this.findById(id)) as MenuItemRecord;
@@ -433,7 +435,7 @@ export const db = {
       if (!existing) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
-      const allowed = ['categoryId', 'nameTh', 'nameEn', 'descriptionTh', 'descriptionEn', 'price', 'image', 'isAvailable', 'sortOrder', 'brand', 'colorCode', 'colorName', 'finishType', 'coverageArea', 'size', 'unit', 'mixingRatio', 'applicationMethodTh', 'applicationMethodEn', 'featuresTh', 'featuresEn', 'tdsFile', 'sdsFile', 'videoUrl', 'specColor', 'specDensity', 'specFlashPoint', 'specPotLife', 'relatedProductIds'] as const;
+      const allowed = ['categoryId', 'nameTh', 'nameEn', 'descriptionTh', 'descriptionEn', 'price', 'image', 'isAvailable', 'sortOrder', 'brand', 'colorCode', 'colorName', 'finishType', 'coverageArea', 'size', 'unit', 'mixingRatio', 'applicationMethodTh', 'applicationMethodEn', 'featuresTh', 'featuresEn', 'tdsFile', 'sdsFile', 'videoUrl', 'specColor', 'specDensity', 'specFlashPoint', 'specPotLife', 'relatedProductIds', 'safetyNotesTh', 'safetyNotesEn'] as const;
       for (const k of allowed) {
         if (k in data) {
           const v = data[k];

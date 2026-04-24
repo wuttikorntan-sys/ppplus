@@ -31,6 +31,8 @@ const menuItemSchema = z.object({
   specFlashPoint: z.string().nullable().default(null),
   specPotLife: z.string().nullable().default(null),
   relatedProductIds: z.string().nullable().default(null),
+  safetyNotesTh: z.string().nullable().default(null),
+  safetyNotesEn: z.string().nullable().default(null),
 });
 
 export async function GET(req: NextRequest) {
@@ -75,6 +77,8 @@ export async function POST(req: NextRequest) {
       specFlashPoint: formData.get('specFlashPoint') as string || null,
       specPotLife: formData.get('specPotLife') as string || null,
       relatedProductIds: formData.get('relatedProductIds') as string || null,
+      safetyNotesTh: formData.get('safetyNotesTh') as string || null,
+      safetyNotesEn: formData.get('safetyNotesEn') as string || null,
     });
 
     const imagePath = await saveUploadedFile(formData, 'image');
@@ -106,6 +110,8 @@ export async function POST(req: NextRequest) {
       specFlashPoint: data.specFlashPoint ?? null,
       specPotLife: data.specPotLife ?? null,
       relatedProductIds: data.relatedProductIds ?? null,
+      safetyNotesTh: data.safetyNotesTh ?? null,
+      safetyNotesEn: data.safetyNotesEn ?? null,
     });
 
     return NextResponse.json({ success: true, data: item }, { status: 201 });

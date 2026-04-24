@@ -44,6 +44,64 @@ interface MenuItem {
   specFlashPoint: string | null;
   specPotLife: string | null;
   relatedProductIds: string | null;
+  safetyNotesTh: string | null;
+  safetyNotesEn: string | null;
+}
+
+type StepField = {
+  titleTh: string;
+  titleEn: string;
+  bulletsTh: string; // each line = one bullet
+  bulletsEn: string;
+};
+
+const defaultSteps: StepField[] = [
+  { titleTh: '', titleEn: '', bulletsTh: '', bulletsEn: '' },
+  { titleTh: '', titleEn: '', bulletsTh: '', bulletsEn: '' },
+  { titleTh: '', titleEn: '', bulletsTh: '', bulletsEn: '' },
+];
+
+/**
+ * Parse a concatenated applicationMethod string ("Step 1: ...\n- ...") back into
+ * 3 structured step fields for the admin editor. Lines starting with "Step N:" or
+ * "ขั้นที่ N:" begin a new step; lines starting with "- " or "• " become bullets.
+ */
+function parseStepsFromText(text: string | null, lang: 'th' | 'en'): Partial<StepField>[] {
+  if (!text) return [];
+  const lines = text.split(/\r?\n/).map((l) => l.trim());
+  const steps: Partial<StepField>[] = [];
+  let current: { title: string; bullets: string[] } | null = null;
+
+  for (const line of lines) {
+    if (!line) continue;
+    const m = line.match(/^(?:Step\s*\d+\s*[:.\-]|ขั้นที่\s*\d+\s*[:.\-]|\d+\s*[.)])\s*(.+)$/i);
+    if (m) {
+      if (current) steps.push(lang === 'th' ? { titleTh: current.title, bulletsTh: current.bullets.join('\n') } : { titleEn: current.title, bulletsEn: current.bullets.join('\n') });
+      current = { title: m[1], bullets: [] };
+      continue;
+    }
+    const b = line.match(/^[-•*]\s*(.+)$/);
+    if (current) current.bullets.push(b ? b[1] : line);
+  }
+  if (current) steps.push(lang === 'th' ? { titleTh: current.title, bulletsTh: current.bullets.join('\n') } : { titleEn: current.title, bulletsEn: current.bullets.join('\n') });
+  return steps;
+}
+
+/** Build the concatenated "Step N: title\n- bullet" text from 3 structured steps. */
+function stepsToText(steps: StepField[], lang: 'th' | 'en'): string {
+  return steps
+    .map((s, idx) => {
+      const title = (lang === 'th' ? s.titleTh : s.titleEn).trim();
+      const bullets = (lang === 'th' ? s.bulletsTh : s.bulletsEn)
+        .split(/\r?\n/)
+        .map((b) => b.trim())
+        .filter(Boolean);
+      if (!title && bullets.length === 0) return '';
+      const header = title ? `Step ${idx + 1}: ${title}` : `Step ${idx + 1}`;
+      return [header, ...bullets.map((b) => `- ${b}`)].join('\n');
+    })
+    .filter(Boolean)
+    .join('\n\n');
 }
 
 interface Category {
@@ -55,8 +113,9 @@ interface Category {
 const emptyForm = {
   nameTh: '', nameEn: '', descriptionTh: '', descriptionEn: '', price: '', categoryId: '', isAvailable: true, sortOrder: '0',
   brand: '', colorCode: '', colorName: '', finishType: '', coverageArea: '', size: '', unit: 'L',
-  mixingRatio: '', featuresTh: '', featuresEn: '', applicationMethodTh: '', applicationMethodEn: '', videoUrl: '',
+  mixingRatio: '', featuresTh: '', featuresEn: '', videoUrl: '',
   specColor: '', specDensity: '', specFlashPoint: '', specPotLife: '', relatedProductIds: '',
+  safetyNotesTh: '', safetyNotesEn: '',
 };
 
 export default function AdminMenuPage() {
@@ -76,6 +135,7 @@ export default function AdminMenuPage() {
   const [tdsPreview, setTdsPreview] = useState<string | null>(null);
   const [sdsFile, setSdsFile] = useState<File | null>(null);
   const [sdsPreview, setSdsPreview] = useState<string | null>(null);
+  const [steps, setSteps] = useState<StepField[]>(defaultSteps);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const tdsInputRef = useRef<HTMLInputElement>(null);
@@ -110,6 +170,7 @@ export default function AdminMenuPage() {
     setTdsPreview(null);
     setSdsFile(null);
     setSdsPreview(null);
+    setSteps(defaultSteps.map((s) => ({ ...s })));
     setShowForm(true);
   };
 
@@ -134,15 +195,25 @@ export default function AdminMenuPage() {
       mixingRatio: item.mixingRatio || '',
       featuresTh: item.featuresTh || '',
       featuresEn: item.featuresEn || '',
-      applicationMethodTh: item.applicationMethodTh || '',
-      applicationMethodEn: item.applicationMethodEn || '',
       videoUrl: item.videoUrl || '',
       specColor: item.specColor || '',
       specDensity: item.specDensity || '',
       specFlashPoint: item.specFlashPoint || '',
       specPotLife: item.specPotLife || '',
       relatedProductIds: item.relatedProductIds || '',
+      safetyNotesTh: item.safetyNotesTh || '',
+      safetyNotesEn: item.safetyNotesEn || '',
     });
+    // Parse applicationMethod text back into 3 structured steps
+    const thSteps = parseStepsFromText(item.applicationMethodTh, 'th');
+    const enSteps = parseStepsFromText(item.applicationMethodEn, 'en');
+    const merged = defaultSteps.map((d, i) => ({
+      titleTh:   thSteps[i]?.titleTh   ?? d.titleTh,
+      titleEn:   enSteps[i]?.titleEn   ?? d.titleEn,
+      bulletsTh: thSteps[i]?.bulletsTh ?? '',
+      bulletsEn: enSteps[i]?.bulletsEn ?? '',
+    }));
+    setSteps(merged);
     setImageFile(null);
     setImagePreview(item.image || null);
     setTdsFile(null);
@@ -219,9 +290,13 @@ export default function AdminMenuPage() {
       if (form.mixingRatio) formData.append('mixingRatio', form.mixingRatio);
       if (form.featuresTh) formData.append('featuresTh', form.featuresTh);
       if (form.featuresEn) formData.append('featuresEn', form.featuresEn);
-      if (form.applicationMethodTh) formData.append('applicationMethodTh', form.applicationMethodTh);
-      if (form.applicationMethodEn) formData.append('applicationMethodEn', form.applicationMethodEn);
+      const appTh = stepsToText(steps, 'th');
+      const appEn = stepsToText(steps, 'en');
+      if (appTh) formData.append('applicationMethodTh', appTh);
+      if (appEn) formData.append('applicationMethodEn', appEn);
       if (form.videoUrl) formData.append('videoUrl', form.videoUrl);
+      if (form.safetyNotesTh) formData.append('safetyNotesTh', form.safetyNotesTh);
+      if (form.safetyNotesEn) formData.append('safetyNotesEn', form.safetyNotesEn);
       if (form.specColor) formData.append('specColor', form.specColor);
       if (form.specDensity) formData.append('specDensity', form.specDensity);
       if (form.specFlashPoint) formData.append('specFlashPoint', form.specFlashPoint);
@@ -521,16 +596,76 @@ export default function AdminMenuPage() {
                         className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={4} />
                     </div>
                   </div>
+                  {/* Application Guide — structured 3-step editor */}
+                  <div className="border border-gray-100 rounded-xl p-4 bg-gray-50/50">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-sm font-semibold text-gray-700">
+                        {th ? 'วิธีใช้งาน (Application Guide) – 3 ขั้นตอน' : 'Application Guide – 3 Steps'}
+                      </p>
+                      <p className="text-[11px] text-gray-400">
+                        {th ? 'แต่ละ bullet ขึ้นบรรทัดใหม่' : 'One bullet per line'}
+                      </p>
+                    </div>
+                    <div className="space-y-3">
+                      {steps.map((s, i) => (
+                        <div key={i} className="bg-white border border-gray-100 rounded-lg p-3">
+                          <div className="text-xs font-bold text-[#F5841F] mb-2">{th ? `ขั้นที่ ${i + 1}` : `Step ${i + 1}`}</div>
+                          <div className="grid grid-cols-2 gap-2 mb-2">
+                            <input
+                              value={s.titleTh}
+                              onChange={(e) => setSteps(steps.map((st, idx) => idx === i ? { ...st, titleTh: e.target.value } : st))}
+                              placeholder={th ? 'หัวข้อ (ไทย) เช่น เตรียมการ' : 'Title (TH), e.g. การเตรียม'}
+                              className="px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm"
+                            />
+                            <input
+                              value={s.titleEn}
+                              onChange={(e) => setSteps(steps.map((st, idx) => idx === i ? { ...st, titleEn: e.target.value } : st))}
+                              placeholder="Title (EN), e.g. Preparation"
+                              className="px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <textarea
+                              value={s.bulletsTh}
+                              onChange={(e) => setSteps(steps.map((st, idx) => idx === i ? { ...st, bulletsTh: e.target.value } : st))}
+                              placeholder={th ? 'รายการ (ไทย)\nแต่ละข้อบรรทัดใหม่' : 'Bullets (TH)\nOne per line'}
+                              className="px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none"
+                              rows={3}
+                            />
+                            <textarea
+                              value={s.bulletsEn}
+                              onChange={(e) => setSteps(steps.map((st, idx) => idx === i ? { ...st, bulletsEn: e.target.value } : st))}
+                              placeholder="Bullets (EN)&#10;One per line"
+                              className="px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none"
+                              rows={3}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Safety & Storage */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'วิธีใช้งาน (ไทย)' : 'Application Method (Thai)'}</label>
-                      <textarea value={form.applicationMethodTh} onChange={(e) => setForm({ ...form, applicationMethodTh: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={4} />
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'การจัดเก็บและความปลอดภัย (ไทย)' : 'Safety & Storage (Thai)'}</label>
+                      <textarea
+                        value={form.safetyNotesTh}
+                        onChange={(e) => setForm({ ...form, safetyNotesTh: e.target.value })}
+                        placeholder={th ? 'แต่ละข้อขึ้นบรรทัดใหม่\nเก็บในที่เย็น...\nสวมอุปกรณ์ป้องกัน...' : 'One bullet per line'}
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none"
+                        rows={4}
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'วิธีใช้งาน (อังกฤษ)' : 'Application Method (English)'}</label>
-                      <textarea value={form.applicationMethodEn} onChange={(e) => setForm({ ...form, applicationMethodEn: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={4} />
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'การจัดเก็บและความปลอดภัย (อังกฤษ)' : 'Safety & Storage (English)'}</label>
+                      <textarea
+                        value={form.safetyNotesEn}
+                        onChange={(e) => setForm({ ...form, safetyNotesEn: e.target.value })}
+                        placeholder={th ? 'แต่ละข้อขึ้นบรรทัดใหม่' : 'Store in a cool, well-ventilated area...\nUse appropriate PPE...'}
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none"
+                        rows={4}
+                      />
                     </div>
                   </div>
                   <div>

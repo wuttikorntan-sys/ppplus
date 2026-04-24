@@ -31,6 +31,8 @@ const menuItemSchema = z.object({
   specFlashPoint: z.string().nullable().default(null),
   specPotLife: z.string().nullable().default(null),
   relatedProductIds: z.string().nullable().default(null),
+  safetyNotesTh: z.string().nullable().default(null),
+  safetyNotesEn: z.string().nullable().default(null),
 });
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -69,6 +71,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       specFlashPoint: formData.get('specFlashPoint') as string || undefined,
       specPotLife: formData.get('specPotLife') as string || undefined,
       relatedProductIds: formData.get('relatedProductIds') as string || undefined,
+      safetyNotesTh: formData.get('safetyNotesTh') as string || undefined,
+      safetyNotesEn: formData.get('safetyNotesEn') as string || undefined,
     });
 
     const updateData: Record<string, unknown> = { ...data };
