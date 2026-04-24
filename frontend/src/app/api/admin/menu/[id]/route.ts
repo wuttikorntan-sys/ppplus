@@ -26,6 +26,11 @@ const menuItemSchema = z.object({
   featuresTh: z.string().nullable().default(null),
   featuresEn: z.string().nullable().default(null),
   videoUrl: z.string().nullable().default(null),
+  specColor: z.string().nullable().default(null),
+  specDensity: z.string().nullable().default(null),
+  specFlashPoint: z.string().nullable().default(null),
+  specPotLife: z.string().nullable().default(null),
+  relatedProductIds: z.string().nullable().default(null),
 });
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -59,6 +64,11 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       featuresTh: formData.get('featuresTh') as string || undefined,
       featuresEn: formData.get('featuresEn') as string || undefined,
       videoUrl: formData.get('videoUrl') as string || undefined,
+      specColor: formData.get('specColor') as string || undefined,
+      specDensity: formData.get('specDensity') as string || undefined,
+      specFlashPoint: formData.get('specFlashPoint') as string || undefined,
+      specPotLife: formData.get('specPotLife') as string || undefined,
+      relatedProductIds: formData.get('relatedProductIds') as string || undefined,
     });
 
     const updateData: Record<string, unknown> = { ...data };
@@ -66,6 +76,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (imagePath) updateData.image = imagePath;
     const tdsPath = await saveUploadedDocument(formData, 'tdsFile');
     if (tdsPath) updateData.tdsFile = tdsPath;
+    const sdsPath = await saveUploadedDocument(formData, 'sdsFile');
+    if (sdsPath) updateData.sdsFile = sdsPath;
 
     const item = await db.menuItems.update(id, updateData);
     if (!item) throw new ApiError('ไม่พบสินค้า', 404);

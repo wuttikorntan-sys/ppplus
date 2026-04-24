@@ -38,6 +38,12 @@ interface MenuItem {
   applicationMethodEn: string | null;
   videoUrl: string | null;
   tdsFile: string | null;
+  sdsFile: string | null;
+  specColor: string | null;
+  specDensity: string | null;
+  specFlashPoint: string | null;
+  specPotLife: string | null;
+  relatedProductIds: string | null;
 }
 
 interface Category {
@@ -50,6 +56,7 @@ const emptyForm = {
   nameTh: '', nameEn: '', descriptionTh: '', descriptionEn: '', price: '', categoryId: '', isAvailable: true, sortOrder: '0',
   brand: '', colorCode: '', colorName: '', finishType: '', coverageArea: '', size: '', unit: 'L',
   mixingRatio: '', featuresTh: '', featuresEn: '', applicationMethodTh: '', applicationMethodEn: '', videoUrl: '',
+  specColor: '', specDensity: '', specFlashPoint: '', specPotLife: '', relatedProductIds: '',
 };
 
 export default function AdminMenuPage() {
@@ -67,9 +74,12 @@ export default function AdminMenuPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [tdsFile, setTdsFile] = useState<File | null>(null);
   const [tdsPreview, setTdsPreview] = useState<string | null>(null);
+  const [sdsFile, setSdsFile] = useState<File | null>(null);
+  const [sdsPreview, setSdsPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const tdsInputRef = useRef<HTMLInputElement>(null);
+  const sdsInputRef = useRef<HTMLInputElement>(null);
 
   const fetchItems = () => {
     api.get<{ success: boolean; data: MenuItem[] }>('/admin/menu')
@@ -98,6 +108,8 @@ export default function AdminMenuPage() {
     setImagePreview(null);
     setTdsFile(null);
     setTdsPreview(null);
+    setSdsFile(null);
+    setSdsPreview(null);
     setShowForm(true);
   };
 
@@ -125,11 +137,18 @@ export default function AdminMenuPage() {
       applicationMethodTh: item.applicationMethodTh || '',
       applicationMethodEn: item.applicationMethodEn || '',
       videoUrl: item.videoUrl || '',
+      specColor: item.specColor || '',
+      specDensity: item.specDensity || '',
+      specFlashPoint: item.specFlashPoint || '',
+      specPotLife: item.specPotLife || '',
+      relatedProductIds: item.relatedProductIds || '',
     });
     setImageFile(null);
     setImagePreview(item.image || null);
     setTdsFile(null);
     setTdsPreview(item.tdsFile || null);
+    setSdsFile(null);
+    setSdsPreview(item.sdsFile || null);
     setShowForm(true);
   };
 
@@ -156,6 +175,17 @@ export default function AdminMenuPage() {
       return;
     }
     setTdsFile(file);
+  };
+
+  const handleSdsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > MAX_TDS_SIZE) {
+      toast.error(th ? 'ไฟล์ SDS ใหญ่เกิน 10MB' : 'SDS file exceeds 10MB');
+      e.target.value = '';
+      return;
+    }
+    setSdsFile(file);
   };
 
   const handleSave = async () => {
@@ -192,8 +222,14 @@ export default function AdminMenuPage() {
       if (form.applicationMethodTh) formData.append('applicationMethodTh', form.applicationMethodTh);
       if (form.applicationMethodEn) formData.append('applicationMethodEn', form.applicationMethodEn);
       if (form.videoUrl) formData.append('videoUrl', form.videoUrl);
+      if (form.specColor) formData.append('specColor', form.specColor);
+      if (form.specDensity) formData.append('specDensity', form.specDensity);
+      if (form.specFlashPoint) formData.append('specFlashPoint', form.specFlashPoint);
+      if (form.specPotLife) formData.append('specPotLife', form.specPotLife);
+      if (form.relatedProductIds) formData.append('relatedProductIds', form.relatedProductIds);
       if (imageFile) formData.append('image', imageFile);
       if (tdsFile) formData.append('tdsFile', tdsFile);
+      if (sdsFile) formData.append('sdsFile', sdsFile);
 
       if (editingId) {
         await api.upload(`/admin/menu/${editingId}`, formData, 'PUT');
@@ -503,22 +539,82 @@ export default function AdminMenuPage() {
                       placeholder="https://www.youtube.com/watch?v=..."
                       className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'เอกสาร TDS (PDF)' : 'TDS Document (PDF)'}</label>
-                    <div className="flex items-center gap-3">
-                      <button type="button" onClick={() => tdsInputRef.current?.click()}
-                        className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition flex items-center gap-2">
-                        <Upload className="w-4 h-4" />
-                        {th ? 'เลือกไฟล์ TDS' : 'Choose TDS File'}
-                      </button>
-                      {(tdsFile || tdsPreview) && (
-                        <span className="text-xs text-green-600 font-medium">
-                          {tdsFile ? tdsFile.name : (th ? 'มีไฟล์ TDS แล้ว' : 'TDS file uploaded')}
-                        </span>
-                      )}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'เอกสาร TDS (PDF)' : 'TDS Document (PDF)'}</label>
+                      <div className="flex items-center gap-3">
+                        <button type="button" onClick={() => tdsInputRef.current?.click()}
+                          className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition flex items-center gap-2">
+                          <Upload className="w-4 h-4" />
+                          {th ? 'เลือกไฟล์ TDS' : 'Choose TDS File'}
+                        </button>
+                        {(tdsFile || tdsPreview) && (
+                          <span className="text-xs text-green-600 font-medium truncate">
+                            {tdsFile ? tdsFile.name : (th ? 'มี TDS แล้ว' : 'TDS uploaded')}
+                          </span>
+                        )}
+                      </div>
+                      <input ref={tdsInputRef} type="file" accept=".pdf" onChange={handleTdsChange} className="hidden" />
                     </div>
-                    <input ref={tdsInputRef} type="file" accept=".pdf" onChange={handleTdsChange} className="hidden" />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'เอกสาร SDS (PDF)' : 'SDS Document (PDF)'}</label>
+                      <div className="flex items-center gap-3">
+                        <button type="button" onClick={() => sdsInputRef.current?.click()}
+                          className="px-4 py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition flex items-center gap-2">
+                          <Upload className="w-4 h-4" />
+                          {th ? 'เลือกไฟล์ SDS' : 'Choose SDS File'}
+                        </button>
+                        {(sdsFile || sdsPreview) && (
+                          <span className="text-xs text-green-600 font-medium truncate">
+                            {sdsFile ? sdsFile.name : (th ? 'มี SDS แล้ว' : 'SDS uploaded')}
+                          </span>
+                        )}
+                      </div>
+                      <input ref={sdsInputRef} type="file" accept=".pdf" onChange={handleSdsChange} className="hidden" />
+                    </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Specifications card */}
+              <div className="border-t border-gray-100 pt-4 mt-2">
+                <p className="text-sm font-semibold text-gray-600 mb-3">{th ? 'ข้อมูลจำเพาะ (แสดงในหน้าสินค้า)' : 'Specifications (shown on product page)'}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'สี (Color)' : 'Color'}</label>
+                    <input value={form.specColor} onChange={(e) => setForm({ ...form, specColor: e.target.value })}
+                      placeholder="Clear-Amber"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ความหนาแน่น (Density)' : 'Density'}</label>
+                    <input value={form.specDensity} onChange={(e) => setForm({ ...form, specDensity: e.target.value })}
+                      placeholder="1.10g/cm³"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'จุดวาบไฟ (Flash Point)' : 'Flash Point'}</label>
+                    <input value={form.specFlashPoint} onChange={(e) => setForm({ ...form, specFlashPoint: e.target.value })}
+                      placeholder="38°C"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'อายุใช้งานหลังผสม (Pot Life)' : 'Pot Life'}</label>
+                    <input value={form.specPotLife} onChange={(e) => setForm({ ...form, specPotLife: e.target.value })}
+                      placeholder="4-6 Hours @ 30°C"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    {th ? 'สินค้าที่ใช้ร่วมกัน (ID คั่นด้วยจุลภาค)' : 'Used With (product IDs, comma-separated)'}
+                  </label>
+                  <input value={form.relatedProductIds} onChange={(e) => setForm({ ...form, relatedProductIds: e.target.value })}
+                    placeholder="2,5,7"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
+                  <p className="text-xs text-gray-400 mt-1">
+                    {th ? 'ใส่ ID ของสินค้าที่ใช้คู่กัน (เช่น ตัวเร่งของ Primer) คั่นด้วยจุลภาค' : 'Enter IDs of companion products (e.g. hardener for this primer), comma-separated'}
+                  </p>
                 </div>
               </div>
             </div>

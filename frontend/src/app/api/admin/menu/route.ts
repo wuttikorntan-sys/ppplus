@@ -26,6 +26,11 @@ const menuItemSchema = z.object({
   featuresTh: z.string().nullable().default(null),
   featuresEn: z.string().nullable().default(null),
   videoUrl: z.string().nullable().default(null),
+  specColor: z.string().nullable().default(null),
+  specDensity: z.string().nullable().default(null),
+  specFlashPoint: z.string().nullable().default(null),
+  specPotLife: z.string().nullable().default(null),
+  relatedProductIds: z.string().nullable().default(null),
 });
 
 export async function GET(req: NextRequest) {
@@ -65,10 +70,16 @@ export async function POST(req: NextRequest) {
       featuresTh: formData.get('featuresTh') as string || null,
       featuresEn: formData.get('featuresEn') as string || null,
       videoUrl: formData.get('videoUrl') as string || null,
+      specColor: formData.get('specColor') as string || null,
+      specDensity: formData.get('specDensity') as string || null,
+      specFlashPoint: formData.get('specFlashPoint') as string || null,
+      specPotLife: formData.get('specPotLife') as string || null,
+      relatedProductIds: formData.get('relatedProductIds') as string || null,
     });
 
     const imagePath = await saveUploadedFile(formData, 'image');
     const tdsPath = await saveUploadedDocument(formData, 'tdsFile');
+    const sdsPath = await saveUploadedDocument(formData, 'sdsFile');
 
     const item = await db.menuItems.create({
       ...data,
@@ -88,7 +99,13 @@ export async function POST(req: NextRequest) {
       featuresTh: data.featuresTh ?? null,
       featuresEn: data.featuresEn ?? null,
       tdsFile: tdsPath,
+      sdsFile: sdsPath,
       videoUrl: data.videoUrl ?? null,
+      specColor: data.specColor ?? null,
+      specDensity: data.specDensity ?? null,
+      specFlashPoint: data.specFlashPoint ?? null,
+      specPotLife: data.specPotLife ?? null,
+      relatedProductIds: data.relatedProductIds ?? null,
     });
 
     return NextResponse.json({ success: true, data: item }, { status: 201 });

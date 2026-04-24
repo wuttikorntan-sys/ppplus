@@ -49,7 +49,20 @@ interface ProductDetail {
   featuresEn: string | null;
   videoUrl: string | null;
   tdsFile: string | null;
+  sdsFile: string | null;
+  specColor: string | null;
+  specDensity: string | null;
+  specFlashPoint: string | null;
+  specPotLife: string | null;
+  relatedProductIds: string | null;
   category: Category;
+}
+
+interface RelatedProduct {
+  id: number;
+  nameTh: string;
+  nameEn: string;
+  image: string | null;
 }
 
 type Step = { title: string; bullets: string[] };
@@ -92,12 +105,25 @@ export default function ProductDetailPage() {
 
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [related, setRelated] = useState<RelatedProduct[]>([]);
 
   useEffect(() => {
     async function fetchProduct() {
       try {
         const res = await api.get<{ success: boolean; data: ProductDetail }>(`/menu/${params.id}`);
         setProduct(res.data);
+
+        const ids = (res.data.relatedProductIds || '')
+          .split(/[,\s]+/)
+          .map((s) => parseInt(s.trim(), 10))
+          .filter((n) => Number.isFinite(n) && n > 0);
+
+        if (ids.length > 0) {
+          const all = await api.get<{ success: boolean; data: RelatedProduct[] }>(`/menu`);
+          setRelated(all.data.filter((p) => ids.includes(p.id)));
+        } else {
+          setRelated([]);
+        }
       } catch {
         setProduct(null);
       } finally {
@@ -136,15 +162,17 @@ export default function ProductDetailPage() {
 
   const stepIcons = [ClipboardCheck, Layers, SprayCan];
 
-  // Technical Specifications – build from available fields
+  // Technical Specifications — prefer dedicated spec fields; fall back to derived ones
   const specs: { label: string; value: string }[] = [];
-  if (product.brand) specs.push({ label: th ? 'แบรนด์' : 'Brand', value: product.brand });
-  if (product.colorName || product.colorCode) {
-    specs.push({ label: th ? 'สี' : 'Color', value: product.colorName || product.colorCode || '-' });
-  }
-  if (product.finishType) specs.push({ label: th ? 'ประเภทผิว' : 'Finish', value: product.finishType });
-  if (product.size) specs.push({ label: th ? 'ขนาด' : 'Size', value: `${product.size}${product.unit ? ' ' + product.unit : ''}` });
-  if (product.mixingRatio) specs.push({ label: th ? 'สัดส่วนผสม' : 'Mixing Ratio', value: product.mixingRatio });
+  const colorVal = product.specColor || product.colorName || product.colorCode;
+  if (colorVal) specs.push({ label: th ? 'สี' : 'Color', value: colorVal });
+  if (product.specDensity) specs.push({ label: th ? 'ความหนาแน่น' : 'Density', value: product.specDensity });
+  if (product.specFlashPoint) specs.push({ label: th ? 'จุดวาบไฟ' : 'Flash Point', value: product.specFlashPoint });
+  if (product.specPotLife) specs.push({ label: th ? 'อายุใช้งาน' : 'Pot Life', value: product.specPotLife });
+  if (product.brand && specs.length < 4) specs.push({ label: th ? 'แบรนด์' : 'Brand', value: product.brand });
+  if (product.finishType && specs.length < 4) specs.push({ label: th ? 'ประเภทผิว' : 'Finish', value: product.finishType });
+  if (product.size && specs.length < 5) specs.push({ label: th ? 'ขนาด' : 'Size', value: `${product.size}${product.unit ? ' ' + product.unit : ''}` });
+  if (product.mixingRatio && specs.length < 5) specs.push({ label: th ? 'สัดส่วนผสม' : 'Mixing Ratio', value: product.mixingRatio });
 
   const getEmbedUrl = (url: string) => {
     const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
@@ -242,21 +270,66 @@ export default function ProductDetailPage() {
             )}
 
             {/* Downloads */}
-            {product.tdsFile && (
+            {(product.tdsFile || product.sdsFile) && (
               <div>
                 <h3 className="text-lg font-bold text-[#2D2D2D] dark:text-white mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
                   {th ? 'ดาวน์โหลด' : 'Downloads'}
                 </h3>
                 <div className="space-y-2">
-                  <a
-                    href={product.tdsFile}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 bg-[#1e3a5f] hover:bg-[#254a7a] text-white rounded-xl px-4 py-3 font-semibold text-sm transition shadow-sm"
-                  >
-                    <FileText className="w-5 h-5 text-red-400 shrink-0" />
-                    <span>TDS (Technical Data Sheet)</span>
-                  </a>
+                  {product.sdsFile && (
+                    <a
+                      href={product.sdsFile}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 bg-[#1e3a5f] hover:bg-[#254a7a] text-white rounded-xl px-4 py-3 font-semibold text-sm transition shadow-sm"
+                    >
+                      <FileText className="w-5 h-5 text-red-400 shrink-0" />
+                      <span>SDS (Safety Data Sheet)</span>
+                    </a>
+                  )}
+                  {product.tdsFile && (
+                    <a
+                      href={product.tdsFile}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 bg-[#1e3a5f] hover:bg-[#254a7a] text-white rounded-xl px-4 py-3 font-semibold text-sm transition shadow-sm"
+                    >
+                      <FileText className="w-5 h-5 text-red-400 shrink-0" />
+                      <span>TDS (Technical Data Sheet)</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Used With */}
+            {related.length > 0 && (
+              <div>
+                <h3 className="text-lg font-bold text-[#2D2D2D] dark:text-white mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+                  {th ? 'ใช้คู่กับ' : 'Used With'}
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {related.map((r) => (
+                    <Link
+                      key={r.id}
+                      href={`/menu/${r.id}` as '/menu'}
+                      className="group block"
+                    >
+                      <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#2D2D2D] dark:to-[#1C1C1E] mb-2 border border-gray-200 dark:border-white/10 group-hover:border-[#F5841F] transition">
+                        {r.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={r.image} alt={th ? r.nameTh : r.nameEn} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-300">
+                            <Layers className="w-10 h-10" />
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs font-medium text-center text-[#2D2D2D] dark:text-gray-200 line-clamp-2 group-hover:text-[#F5841F] transition">
+                        {th ? r.nameTh : r.nameEn}
+                      </p>
+                    </Link>
+                  ))}
                 </div>
               </div>
             )}

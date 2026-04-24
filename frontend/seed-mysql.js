@@ -58,7 +58,13 @@ async function main() {
       featuresTh TEXT NULL,
       featuresEn TEXT NULL,
       tdsFile VARCHAR(500) NULL,
+      sdsFile VARCHAR(500) NULL,
       videoUrl VARCHAR(500) NULL,
+      specColor VARCHAR(100) NULL,
+      specDensity VARCHAR(50) NULL,
+      specFlashPoint VARCHAR(50) NULL,
+      specPotLife VARCHAR(100) NULL,
+      relatedProductIds TEXT NULL,
       createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       FOREIGN KEY (categoryId) REFERENCES categories(id) ON DELETE CASCADE
@@ -206,6 +212,26 @@ async function main() {
   `);
 
   console.log('Tables created.');
+
+  // Migrations: idempotently add columns that may be missing on older DBs
+  const ensureColumn = async (table, column, ddl) => {
+    const [rows] = await conn.query(
+      `SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?`,
+      [table, column]
+    );
+    if (rows[0].cnt === 0) {
+      await conn.query(`ALTER TABLE ${table} ADD COLUMN ${ddl}`);
+      console.log(`Added column ${table}.${column}`);
+    }
+  };
+
+  await ensureColumn('menu_items', 'sdsFile', 'sdsFile VARCHAR(500) NULL AFTER tdsFile');
+  await ensureColumn('menu_items', 'specColor', 'specColor VARCHAR(100) NULL');
+  await ensureColumn('menu_items', 'specDensity', 'specDensity VARCHAR(50) NULL');
+  await ensureColumn('menu_items', 'specFlashPoint', 'specFlashPoint VARCHAR(50) NULL');
+  await ensureColumn('menu_items', 'specPotLife', 'specPotLife VARCHAR(100) NULL');
+  await ensureColumn('menu_items', 'relatedProductIds', 'relatedProductIds TEXT NULL');
 
   // Seed admin user
   const [existingAdmins] = await conn.query("SELECT id FROM users WHERE role = 'ADMIN' LIMIT 1");
