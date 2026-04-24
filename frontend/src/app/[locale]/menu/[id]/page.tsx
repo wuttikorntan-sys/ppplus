@@ -210,8 +210,9 @@ export default function ProductDetailPage() {
         <div className="grid lg:grid-cols-5 gap-6 lg:gap-8">
           {/* LEFT — image + downloads (2/5) */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ x: -20 }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.4 }}
             className="lg:col-span-2 space-y-4"
           >
             {/* Image card */}
@@ -339,8 +340,9 @@ export default function ProductDetailPage() {
 
           {/* RIGHT — info (3/5) */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ x: 20 }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.4 }}
             className="lg:col-span-3 space-y-5"
           >
             {/* Title block */}
@@ -493,7 +495,7 @@ export default function ProductDetailPage() {
 
         {/* Video embed (below the fold) */}
         {product.videoUrl && (
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-12">
+          <motion.div initial={{ y: 20 }} whileInView={{ y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.4 }} className="mt-12">
             <h2 className="text-2xl font-bold text-[#2D2D2D] dark:text-white mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
               <Play className="w-6 h-6 text-[#F5841F]" /> {th ? 'วิดีโอสาธิต' : 'Demo Video'}
             </h2>
