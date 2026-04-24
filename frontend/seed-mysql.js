@@ -288,6 +288,114 @@ async function main() {
     console.log('Color formulas seeded.');
   }
 
+  // Seed sample menu items (products)
+  const [existingItems] = await conn.query('SELECT COUNT(*) as cnt FROM menu_items');
+  if (existingItems[0].cnt === 0) {
+    const [catRows] = await conn.query('SELECT id, nameEn FROM categories');
+    const catByName = {};
+    for (const c of catRows) catByName[c.nameEn] = c.id;
+
+    const productDefaults = [
+      {
+        category: '2K Topcoat',
+        nameTh: 'สี 2K ท็อปโคท ซุปเปอร์ไวท์',
+        nameEn: '2K Topcoat Super White',
+        descriptionTh: 'สีพ่นรถยนต์ 2K คุณภาพสูง สีขาวสด ทนทานต่อสภาพอากาศ',
+        descriptionEn: 'High-quality 2K automotive topcoat, bright white, weather resistant',
+        price: 1290, brand: 'PP Plus', colorCode: '#FFFFFF', colorName: 'Super White',
+        finishType: 'Gloss', size: '4', unit: 'L', mixingRatio: '2:1:10%',
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop',
+      },
+      {
+        category: 'Basecoat',
+        nameTh: 'สีเบสโค้ท เมทัลลิก ซิลเวอร์',
+        nameEn: 'Basecoat Metallic Silver',
+        descriptionTh: 'สีเบสโค้ทเมทัลลิกเงิน ประกายสวย พร้อมพ่น',
+        descriptionEn: 'Premium silver metallic basecoat, brilliant sparkle, ready-to-spray',
+        price: 890, brand: 'PP Plus', colorCode: '#C0C0C0', colorName: 'Metallic Silver',
+        finishType: 'Satin', size: '1', unit: 'L', mixingRatio: '1:1',
+        image: 'https://images.unsplash.com/photo-1611791485487-ea5a58ed5f31?w=600&h=600&fit=crop',
+      },
+      {
+        category: 'Clear Coat',
+        nameTh: 'เคลียร์โค้ท 2K เงาลึก',
+        nameEn: '2K Clear Coat High Gloss',
+        descriptionTh: 'เคลียร์โค้ท 2K ให้เงางามสูง ปกป้องสีจากรังสี UV',
+        descriptionEn: '2K clear coat with high gloss finish, UV protection',
+        price: 1450, brand: 'PP Plus', colorCode: null, colorName: null,
+        finishType: 'Gloss', size: '4', unit: 'L', mixingRatio: '2:1',
+        image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&h=600&fit=crop',
+      },
+      {
+        category: 'Primer / Surfacer',
+        nameTh: 'ไพร์เมอร์ เซอร์เฟสเซอร์ สีเทา',
+        nameEn: 'Primer Surfacer Grey',
+        descriptionTh: 'ไพร์เมอร์สีเทา ช่วยยึดเกาะ ปกปิดรอยขูดขีด',
+        descriptionEn: 'Grey primer surfacer for optimal adhesion and defect coverage',
+        price: 750, brand: 'PP Plus', colorCode: '#808080', colorName: 'Grey',
+        finishType: 'Matte', size: '1', unit: 'L', mixingRatio: '4:1:10%',
+        image: 'https://images.unsplash.com/photo-1581092786450-7ef25f46d4b8?w=600&h=600&fit=crop',
+      },
+      {
+        category: 'Epoxy Primer',
+        nameTh: 'อีพ็อกซี่ ไพร์เมอร์ กันสนิม',
+        nameEn: 'Epoxy Primer Anti-Rust',
+        descriptionTh: 'อีพ็อกซี่ไพร์เมอร์กันสนิม เกาะเหล็กดี ป้องกันสนิม',
+        descriptionEn: 'Anti-rust epoxy primer, excellent metal adhesion',
+        price: 1100, brand: 'PP Plus', colorCode: null, colorName: null,
+        finishType: 'Matte', size: '1', unit: 'L', mixingRatio: '1:1',
+        image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600&h=600&fit=crop',
+      },
+      {
+        category: 'Thinner',
+        nameTh: 'ทินเนอร์ 2K เกรดพรีเมียม',
+        nameEn: 'Premium 2K Thinner',
+        descriptionTh: 'ทินเนอร์สำหรับสี 2K แห้งเร็ว ไม่เกิดฝ้า',
+        descriptionEn: 'Premium thinner for 2K paint, fast-drying, no blush',
+        price: 420, brand: 'PP Plus', colorCode: null, colorName: null,
+        finishType: null, size: '4', unit: 'L', mixingRatio: null,
+        image: 'https://images.unsplash.com/photo-1582913130063-8318329fa089?w=600&h=600&fit=crop',
+      },
+      {
+        category: 'Hardener',
+        nameTh: 'ฮาร์ดเดนเนอร์ 2K',
+        nameEn: '2K Hardener',
+        descriptionTh: 'ฮาร์ดเดนเนอร์สำหรับสี 2K ทำให้สีแข็งตัวเร็ว',
+        descriptionEn: 'Hardener for 2K paint, fast curing, glossy finish',
+        price: 680, brand: 'PP Plus', colorCode: null, colorName: null,
+        finishType: null, size: '1', unit: 'L', mixingRatio: null,
+        image: 'https://images.unsplash.com/photo-1617104551722-3b2d51366400?w=600&h=600&fit=crop',
+      },
+      {
+        category: 'Spray Gun',
+        nameTh: 'ปืนพ่นสี HVLP 1.3mm',
+        nameEn: 'HVLP Spray Gun 1.3mm',
+        descriptionTh: 'ปืนพ่นสี HVLP หัวพ่น 1.3mm ละออง ละเอียด ประหยัดสี',
+        descriptionEn: 'HVLP spray gun with 1.3mm nozzle, fine atomization, paint saving',
+        price: 2590, brand: 'PP Plus', colorCode: null, colorName: null,
+        finishType: null, size: null, unit: null, mixingRatio: null,
+        image: 'https://images.unsplash.com/photo-1625047509168-a7026f36de04?w=600&h=600&fit=crop',
+      },
+    ];
+
+    let inserted = 0;
+    for (let i = 0; i < productDefaults.length; i++) {
+      const p = productDefaults[i];
+      const categoryId = catByName[p.category];
+      if (!categoryId) continue;
+      await conn.query(
+        `INSERT INTO menu_items
+          (categoryId, nameTh, nameEn, descriptionTh, descriptionEn, price, image, isAvailable, sortOrder,
+           brand, colorCode, colorName, finishType, size, unit, mixingRatio)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [categoryId, p.nameTh, p.nameEn, p.descriptionTh, p.descriptionEn, p.price, p.image, i,
+         p.brand, p.colorCode, p.colorName, p.finishType, p.size, p.unit, p.mixingRatio]
+      );
+      inserted++;
+    }
+    console.log(`Menu items seeded: ${inserted} products.`);
+  }
+
   await conn.end();
   console.log('Done!');
 }
