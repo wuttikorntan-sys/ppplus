@@ -236,20 +236,20 @@ export default function HomePage() {
         {!featuredLoading && featuredItems.length > 0 && (<>
         {/* Mobile: touch-scrollable horizontal list */}
         <div className="lg:hidden overflow-x-auto px-4 pb-4 -mx-0 scrollbar-hide">
-          <div className="flex gap-3 w-max">
+          <div className="flex gap-3 w-max items-stretch">
             {featuredItems.map((item, idx) => (
-              <Link key={idx} href={`/menu/${item.id}` as '/menu'} className="flex-shrink-0 w-48">
-                <div className="bg-white rounded-2xl overflow-hidden shadow-sm active:shadow-lg transition-all">
-                  <div className="relative h-36 w-full overflow-hidden bg-gray-100">
+              <Link key={idx} href={`/menu/${item.id}` as '/menu'} className="flex-shrink-0 w-48 flex">
+                <div className="bg-white rounded-2xl overflow-hidden shadow-sm active:shadow-lg transition-all flex flex-col w-full">
+                  <div className="relative h-36 w-full overflow-hidden bg-gray-100 shrink-0">
                     {item.image ? (
                       <img src={item.image} alt={locale === 'th' ? item.nameTh : item.nameEn} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-300"><Palette className="w-10 h-10" /></div>
                     )}
                   </div>
-                  <div className="p-3">
-                    <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-sm" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
-                    <p className="text-[#F5841F] font-bold text-center text-base">฿{Number(item.price).toLocaleString()}</p>
+                  <div className="p-3 flex flex-col flex-1">
+                    <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-sm line-clamp-2 min-h-[2.5rem]" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
+                    <p className="text-[#F5841F] font-bold text-center text-base mt-auto">฿{Number(item.price).toLocaleString()}</p>
                   </div>
                 </div>
               </Link>
@@ -259,20 +259,20 @@ export default function HomePage() {
 
         {/* Desktop: marquee auto-scroll */}
         <div className="relative hidden lg:block">
-          <div className="flex animate-marquee">
+          <div className="flex animate-marquee items-stretch">
             {[...featuredItems, ...featuredItems, ...featuredItems, ...featuredItems].map((item, idx) => (
-              <div key={idx} className="flex-shrink-0 w-72 mx-3">
-                <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
-                  <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+              <div key={idx} className="flex-shrink-0 w-72 mx-3 flex">
+                <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 flex flex-col w-full">
+                  <div className="relative h-48 w-full overflow-hidden bg-gray-100 shrink-0">
                     {item.image ? (
                       <img src={item.image} alt={locale === 'th' ? item.nameTh : item.nameEn} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-300"><Palette className="w-12 h-12" /></div>
                     )}
                   </div>
-                  <div className="p-5">
-                    <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-base" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
-                    <p className="text-[#F5841F] font-bold text-center text-lg">฿{Number(item.price).toLocaleString()}</p>
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="font-semibold text-[#2D2D2D] text-center mb-1 text-base line-clamp-2 min-h-[3rem]" style={{ fontFamily: 'var(--font-heading)' }}>{locale === 'th' ? item.nameTh : item.nameEn}</h3>
+                    <p className="text-[#F5841F] font-bold text-center text-lg mt-auto">฿{Number(item.price).toLocaleString()}</p>
                   </div>
                 </div>
               </div>
