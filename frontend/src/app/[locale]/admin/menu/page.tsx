@@ -383,6 +383,7 @@ export default function AdminMenuPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
+                <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide w-12">ID</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'รูป' : 'Image'}</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'ชื่อ' : 'Name'}</th>
                 <th className="text-left px-4 py-3 font-medium text-gray-500 text-xs uppercase tracking-wide">{th ? 'หมวดหมู่' : 'Category'}</th>
@@ -394,6 +395,7 @@ export default function AdminMenuPage() {
             <tbody className="divide-y divide-gray-50">
               {filtered.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50/50 transition">
+                  <td className="px-4 py-3 text-gray-400 text-xs font-mono">#{item.id}</td>
                   <td className="px-4 py-3">
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 shrink-0">
                       {item.image ? (
@@ -410,7 +412,7 @@ export default function AdminMenuPage() {
                   <td className="px-4 py-3">
                     <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md">{th ? item.category?.nameTh : item.category?.nameEn}</span>
                   </td>
-                  <td className="px-4 py-3 font-semibold text-[#1C1C1E]">?{Number(item.price).toLocaleString()}</td>
+                  <td className="px-4 py-3 font-semibold text-[#1C1C1E]">฿{Number(item.price).toLocaleString()}</td>
                   <td className="px-4 py-3">
                     <button onClick={() => toggleAvailable(item)}
                       className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition ${item.isAvailable ? 'bg-green-50 text-green-700 hover:bg-green-100' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}>
@@ -427,7 +429,7 @@ export default function AdminMenuPage() {
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan={6} className="px-4 py-12 text-center text-gray-400 text-sm">{th ? 'ไม่พบสินค้า' : 'No items found'}</td></tr>
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-gray-400 text-sm">{th ? 'ไม่พบสินค้า' : 'No items found'}</td></tr>
               )}
             </tbody>
           </table>
