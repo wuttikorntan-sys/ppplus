@@ -206,12 +206,13 @@ export default function AdminMenuPage() {
       safetyNotesTh: item.safetyNotesTh || '',
       safetyNotesEn: item.safetyNotesEn || '',
     });
-    // Parse applicationMethod text back into 3 structured steps
+    // Parse applicationMethod text back into structured steps (supports any count, min 3)
     const thSteps = parseStepsFromText(item.applicationMethodTh, 'th');
     const enSteps = parseStepsFromText(item.applicationMethodEn, 'en');
-    const merged = defaultSteps.map((d, i) => ({
-      titleTh:   thSteps[i]?.titleTh   ?? d.titleTh,
-      titleEn:   enSteps[i]?.titleEn   ?? d.titleEn,
+    const stepCount = Math.max(thSteps.length, enSteps.length, defaultSteps.length);
+    const merged: StepField[] = Array.from({ length: stepCount }, (_, i) => ({
+      titleTh:   thSteps[i]?.titleTh   ?? '',
+      titleEn:   enSteps[i]?.titleEn   ?? '',
       bulletsTh: thSteps[i]?.bulletsTh ?? '',
       bulletsEn: enSteps[i]?.bulletsEn ?? '',
     }));
@@ -246,6 +247,15 @@ export default function AdminMenuPage() {
     setImagePreview(null);
     setRemoveImage(true);
     if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const addStep = () => {
+    setSteps([...steps, { titleTh: '', titleEn: '', bulletsTh: '', bulletsEn: '' }]);
+  };
+
+  const removeStep = (index: number) => {
+    if (steps.length <= 1) return;
+    setSteps(steps.filter((_, i) => i !== index));
   };
 
   const handleTdsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -624,11 +634,11 @@ export default function AdminMenuPage() {
                         className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm resize-none" rows={4} />
                     </div>
                   </div>
-                  {/* Application Guide — structured 3-step editor */}
+                  {/* Application Guide — dynamic step editor */}
                   <div className="border border-gray-100 rounded-xl p-4 bg-gray-50/50">
                     <div className="flex items-center justify-between mb-3">
                       <p className="text-sm font-semibold text-gray-700">
-                        {th ? 'วิธีใช้งาน (Application Guide) – 3 ขั้นตอน' : 'Application Guide – 3 Steps'}
+                        {th ? `วิธีใช้งาน (Application Guide) – ${steps.length} ขั้นตอน` : `Application Guide – ${steps.length} Steps`}
                       </p>
                       <p className="text-[11px] text-gray-400">
                         {th ? 'แต่ละ bullet ขึ้นบรรทัดใหม่' : 'One bullet per line'}
@@ -636,8 +646,21 @@ export default function AdminMenuPage() {
                     </div>
                     <div className="space-y-3">
                       {steps.map((s, i) => (
-                        <div key={i} className="bg-white border border-gray-100 rounded-lg p-3">
-                          <div className="text-xs font-bold text-[#F5841F] mb-2">{th ? `ขั้นที่ ${i + 1}` : `Step ${i + 1}`}</div>
+                        <div key={i} className="bg-white border border-gray-100 rounded-lg p-3 relative">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="text-xs font-bold text-[#F5841F]">{th ? `ขั้นที่ ${i + 1}` : `Step ${i + 1}`}</div>
+                            {steps.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeStep(i)}
+                                title={th ? `ลบขั้นที่ ${i + 1}` : `Remove Step ${i + 1}`}
+                                aria-label={th ? `ลบขั้นที่ ${i + 1}` : `Remove Step ${i + 1}`}
+                                className="w-6 h-6 rounded-md text-gray-400 hover:bg-red-50 hover:text-red-500 flex items-center justify-center transition"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
                           <div className="grid grid-cols-2 gap-2 mb-2">
                             <input
                               value={s.titleTh}
@@ -671,6 +694,14 @@ export default function AdminMenuPage() {
                         </div>
                       ))}
                     </div>
+                    <button
+                      type="button"
+                      onClick={addStep}
+                      className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border-2 border-dashed border-gray-300 text-sm font-medium text-gray-500 hover:border-[#F5841F] hover:text-[#F5841F] hover:bg-[#F5841F]/5 transition"
+                    >
+                      <Plus className="w-4 h-4" />
+                      {th ? `เพิ่มขั้นที่ ${steps.length + 1}` : `Add Step ${steps.length + 1}`}
+                    </button>
                   </div>
 
                   {/* Safety & Storage */}
