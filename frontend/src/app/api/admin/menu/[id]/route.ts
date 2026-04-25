@@ -78,10 +78,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const updateData: Record<string, unknown> = { ...data };
     const imagePath = await saveUploadedFile(formData, 'image');
     if (imagePath) updateData.image = imagePath;
+    else if (formData.get('removeImage') === '1') updateData.image = null;
     const tdsPath = await saveUploadedDocument(formData, 'tdsFile');
     if (tdsPath) updateData.tdsFile = tdsPath;
+    else if (formData.get('removeTdsFile') === '1') updateData.tdsFile = null;
     const sdsPath = await saveUploadedDocument(formData, 'sdsFile');
     if (sdsPath) updateData.sdsFile = sdsPath;
+    else if (formData.get('removeSdsFile') === '1') updateData.sdsFile = null;
 
     const item = await db.menuItems.update(id, updateData);
     if (!item) throw new ApiError('ไม่พบสินค้า', 404);

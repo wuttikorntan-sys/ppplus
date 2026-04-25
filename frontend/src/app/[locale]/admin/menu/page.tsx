@@ -131,6 +131,7 @@ export default function AdminMenuPage() {
   const [form, setForm] = useState(emptyForm);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [removeImage, setRemoveImage] = useState(false);
   const [tdsFile, setTdsFile] = useState<File | null>(null);
   const [tdsPreview, setTdsPreview] = useState<string | null>(null);
   const [sdsFile, setSdsFile] = useState<File | null>(null);
@@ -166,6 +167,7 @@ export default function AdminMenuPage() {
     setForm(emptyForm);
     setImageFile(null);
     setImagePreview(null);
+    setRemoveImage(false);
     setTdsFile(null);
     setTdsPreview(null);
     setSdsFile(null);
@@ -216,6 +218,7 @@ export default function AdminMenuPage() {
     setSteps(merged);
     setImageFile(null);
     setImagePreview(item.image || null);
+    setRemoveImage(false);
     setTdsFile(null);
     setTdsPreview(item.tdsFile || null);
     setSdsFile(null);
@@ -232,9 +235,17 @@ export default function AdminMenuPage() {
       return;
     }
     setImageFile(file);
+    setRemoveImage(false);
     const reader = new FileReader();
     reader.onloadend = () => setImagePreview(reader.result as string);
     reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    setRemoveImage(true);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleTdsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -303,6 +314,7 @@ export default function AdminMenuPage() {
       if (form.specPotLife) formData.append('specPotLife', form.specPotLife);
       if (form.relatedProductIds) formData.append('relatedProductIds', form.relatedProductIds);
       if (imageFile) formData.append('image', imageFile);
+      else if (removeImage && editingId) formData.append('removeImage', '1');
       if (tdsFile) formData.append('tdsFile', tdsFile);
       if (sdsFile) formData.append('sdsFile', sdsFile);
 
@@ -456,6 +468,15 @@ export default function AdminMenuPage() {
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
                         <p className="text-white text-sm font-medium">{th ? 'เปลี่ยนรูป' : 'Change Image'}</p>
                       </div>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleRemoveImage(); }}
+                        title={th ? 'ลบรูป' : 'Remove image'}
+                        aria-label={th ? 'ลบรูป' : 'Remove image'}
+                        className="absolute top-2 right-2 z-10 w-7 h-7 rounded-full bg-white/90 hover:bg-red-500 hover:text-white text-gray-600 shadow-md flex items-center justify-center transition"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </>
                   ) : (
                     <div className="text-center">
@@ -465,6 +486,11 @@ export default function AdminMenuPage() {
                     </div>
                   )}
                 </div>
+                {removeImage && editingId && (
+                  <p className="text-xs text-red-500 mt-1.5">
+                    {th ? 'รูปจะถูกลบเมื่อกด "บันทึก"' : 'Image will be removed when you click "Save"'}
+                  </p>
+                )}
                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageChange} className="hidden" />
               </div>
               <div className="grid grid-cols-2 gap-4">
