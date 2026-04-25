@@ -12,6 +12,8 @@ import {
   ClipboardCheck,
   SprayCan,
   Layers,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
@@ -108,6 +110,18 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [related, setRelated] = useState<RelatedProduct[]>([]);
+  const [relatedPage, setRelatedPage] = useState(0);
+
+  const RELATED_PER_PAGE = 2;
+  const relatedTotalPages = Math.max(1, Math.ceil(related.length / RELATED_PER_PAGE));
+  const relatedVisible = related.slice(
+    relatedPage * RELATED_PER_PAGE,
+    (relatedPage + 1) * RELATED_PER_PAGE,
+  );
+
+  useEffect(() => {
+    setRelatedPage(0);
+  }, [related]);
 
   useEffect(() => {
     async function fetchProduct() {
@@ -312,7 +326,7 @@ export default function ProductDetailPage() {
                   {th ? 'ใช้คู่กับ' : 'Used With'}
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {related.map((r) => (
+                  {relatedVisible.map((r) => (
                     <Link
                       key={r.id}
                       href={`/menu/${r.id}` as '/menu'}
@@ -334,6 +348,45 @@ export default function ProductDetailPage() {
                     </Link>
                   ))}
                 </div>
+
+                {relatedTotalPages > 1 && (
+                  <div className="flex items-center justify-center gap-1.5 mt-4">
+                    <button
+                      type="button"
+                      onClick={() => setRelatedPage((p) => Math.max(0, p - 1))}
+                      disabled={relatedPage === 0}
+                      aria-label={th ? 'ก่อนหน้า' : 'Previous'}
+                      className="w-7 h-7 flex items-center justify-center rounded-full text-[#64748B] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    {Array.from({ length: relatedTotalPages }).map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setRelatedPage(i)}
+                        aria-label={`${th ? 'หน้า' : 'Page'} ${i + 1}`}
+                        aria-current={i === relatedPage ? 'page' : undefined}
+                        className={`min-w-[28px] h-7 px-2 rounded-full text-xs font-semibold transition ${
+                          i === relatedPage
+                            ? 'bg-[#F5841F] text-white shadow-sm'
+                            : 'text-[#64748B] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10'
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setRelatedPage((p) => Math.min(relatedTotalPages - 1, p + 1))}
+                      disabled={relatedPage >= relatedTotalPages - 1}
+                      aria-label={th ? 'ถัดไป' : 'Next'}
+                      className="w-7 h-7 flex items-center justify-center rounded-full text-[#64748B] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </motion.div>
