@@ -3,9 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { motion } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, MapPin, Phone, Mail, Clock, Target, Palette, ShieldCheck, Truck, Navigation, Beaker, Car } from 'lucide-react';
-import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { api } from '@/lib/api';
@@ -31,14 +29,30 @@ interface FeaturedProduct {
 }
 
 // Unsplash params: auto=format → WebP/AVIF when supported; q=70 keeps the file
-// small (a paint-shop hero behind a dark gradient doesn't need q=80). w=1280
-// is plenty when the image is unoptimized: any device above that resamples.
+// small. We deliberately leave `w` off here so srcsetFor() can build the
+// responsive set without colliding with an existing width.
 const defaultSlides: { type: 'video' | 'image'; src: string; poster?: string }[] = [
-  { type: 'image', src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1280&q=70&auto=format&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1280&q=70&auto=format&fit=crop' },
-  { type: 'video', src: 'https://videos.pexels.com/video-files/5532771/5532771-sd_640_360_25fps.mp4', poster: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=1280&q=70&auto=format&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1280&q=70&auto=format&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?q=70&auto=format&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?q=70&auto=format&fit=crop' },
+  { type: 'video', src: 'https://videos.pexels.com/video-files/5532771/5532771-sd_640_360_25fps.mp4', poster: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?q=70&auto=format&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=70&auto=format&fit=crop' },
 ];
+
+// Build a `?w=N` query for a known-resizable URL. Both /api/uploads/[...path]
+// (our own route) and images.unsplash.com (imgix) accept the same param.
+function withWidth(src: string, w: number): string {
+  if (!src) return src;
+  // Strip any existing `w=` so we don't create duplicates that some CDNs
+  // resolve inconsistently.
+  const cleaned = src.replace(/([?&])w=\d+/g, (_, sep) => sep).replace(/[?&]+$/, '');
+  const sep = cleaned.includes('?') ? '&' : '?';
+  return `${cleaned}${sep}w=${w}`;
+}
+
+const HERO_WIDTHS = [320, 640, 960, 1280, 1600];
+function srcsetFor(src: string): string {
+  return HERO_WIDTHS.map((w) => `${withWidth(src, w)} ${w}w`).join(', ');
+}
 
 interface HeroSlideData {
   id: number;
@@ -200,17 +214,21 @@ export default function HomePage() {
           return (
             <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${isActive ? 'opacity-100 z-[1]' : 'opacity-0 z-0'}`}>
               {slide.type === 'video' ? (
-                <video autoPlay loop muted playsInline poster={slide.poster} className="w-full h-full object-cover"><source src={slide.src} type="video/mp4" /></video>
+                <video autoPlay loop muted playsInline poster={slide.poster ? withWidth(slide.poster, 1280) : undefined} className="w-full h-full object-cover"><source src={slide.src} type="video/mp4" /></video>
               ) : (
-                <Image
-                  src={slide.src}
-                  alt="PP Plus"
-                  fill
-                  className="object-cover"
+                /* Plain <img> + srcset since `images: { unoptimized: true }`
+                   strips srcset from <Image>; mobile downloads ~640px instead
+                   of the full source. */
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={withWidth(slide.src, 1280)}
+                  srcSet={srcsetFor(slide.src)}
                   sizes="100vw"
-                  priority={idx === 0}
-                  fetchPriority={idx === 0 ? 'high' : 'auto'}
+                  alt="PP Plus"
+                  className="absolute inset-0 w-full h-full object-cover"
                   loading={idx === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  fetchPriority={idx === 0 ? 'high' : 'auto'}
                 />
               )}
             </div>
@@ -225,7 +243,7 @@ export default function HomePage() {
           ))}
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
+          <div className="text-center anim-fade-up">
             {/* Reserve up to 2 lines for hero text so the data swap (defaults → site-content)
                 doesn't push the CTA buttons down and trigger CLS. */}
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-3 leading-[1.05] [text-wrap:balance]" style={{ fontFamily: 'var(--font-heading)', minHeight: 'calc(2 * 1.05em)' }}>{c('hero.title')}</h1>
@@ -235,17 +253,17 @@ export default function HomePage() {
               <Link href="/menu" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 bg-[#F5841F] text-white font-semibold rounded-lg hover:bg-[#26a89c] transition-all transform hover:scale-105 text-sm sm:text-base">{c('hero.cta_menu')}</Link>
               <Link href="/quote" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-[#1C1C1E] transition-all text-sm sm:text-base">{c('hero.cta_contact')}</Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Featured Products */}
       <section className="py-20 bg-[#FAFAFA] overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+          <div className="text-center mb-12 anim-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{c('featured.title')}</h2>
             <p className="text-[#64748B] text-lg">{c('featured.subtitle')}</p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Reserve carousel-equivalent height so loading/error/empty states don't cause CLS */}
@@ -282,7 +300,9 @@ export default function HomePage() {
                   <div className="relative h-36 w-full overflow-hidden bg-gray-100 shrink-0">
                     {item.image ? (
                       <img
-                        src={item.image}
+                        src={withWidth(item.image, 320)}
+                        srcSet={`${withWidth(item.image, 320)} 320w, ${withWidth(item.image, 640)} 640w`}
+                        sizes="192px"
                         alt={locale === 'th' ? item.nameTh : item.nameEn}
                         loading="lazy"
                         decoding="async"
@@ -313,7 +333,9 @@ export default function HomePage() {
                   <div className="relative h-48 w-full overflow-hidden bg-gray-100 shrink-0">
                     {item.image ? (
                       <img
-                        src={item.image}
+                        src={withWidth(item.image, 480)}
+                        srcSet={`${withWidth(item.image, 320)} 320w, ${withWidth(item.image, 480)} 480w, ${withWidth(item.image, 640)} 640w`}
+                        sizes="288px"
                         alt={locale === 'th' ? item.nameTh : item.nameEn}
                         loading="lazy"
                         decoding="async"
@@ -347,23 +369,27 @@ export default function HomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <div className="anim-fade-right">
               <p className="text-[#F5841F] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('welcome.tagline')}</p>
               <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('welcome.title')}</h2>
               <p className="text-[#64748B] leading-relaxed mb-8">{c('welcome.text')}</p>
               <Link href="/about" className="inline-flex items-center gap-2 text-[#1C1C1E] hover:text-[#F5841F] font-medium transition-colors">{c('welcome.cta')} <ArrowRight className="w-4 h-4" /></Link>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
+            </div>
+            <div className="relative anim-fade-left">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <img
-                  src={c('welcome.image') || 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&h=600&fit=crop&auto=format&q=80'}
-                  alt="Automotive paint workshop"
-                  loading="lazy"
-                  decoding="async"
-                  width={800}
-                  height={600}
-                  className="w-full h-full object-cover"
-                />
+                {(() => { const s = c('welcome.image') || 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?h=600&fit=crop&auto=format&q=80'; return (
+                  <img
+                    src={withWidth(s, 800)}
+                    srcSet={[400, 600, 800, 1200].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    alt="Automotive paint workshop"
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
+                    className="w-full h-full object-cover"
+                  />
+                ); })()}
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -371,7 +397,7 @@ export default function HomePage() {
                   <p className="text-xs uppercase tracking-wider">{c('welcome.years_label')}</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -380,17 +406,21 @@ export default function HomePage() {
       <section className="py-20 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative order-1">
+            <div className="relative order-1 anim-fade-right">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <img
-                  src={c('brands.image') || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=600&fit=crop&auto=format&q=80'}
-                  alt="Paint products"
-                  loading="lazy"
-                  decoding="async"
-                  width={800}
-                  height={600}
-                  className="w-full h-full object-cover"
-                />
+                {(() => { const s = c('brands.image') || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?h=600&fit=crop&auto=format&q=80'; return (
+                  <img
+                    src={withWidth(s, 800)}
+                    srcSet={[400, 600, 800, 1200].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    alt="Paint products"
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
+                    className="w-full h-full object-cover"
+                  />
+                ); })()}
               </div>
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#F5841F] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -398,14 +428,14 @@ export default function HomePage() {
                   <p className="text-xs uppercase tracking-wider">{c('brands.badge_label')}</p>
                 </div>
               </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="order-2">
+            </div>
+            <div className="order-2 anim-fade-left">
               <p className="text-[#F5841F] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('brands.tagline')}</p>
               <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('brands.title')}</h2>
               <p className="text-[#64748B] leading-relaxed mb-4">{c('brands.text1')}</p>
               <p className="text-[#64748B] leading-relaxed mb-8">{c('brands.text2')}</p>
               <Link href="/menu" className="inline-flex items-center gap-2 text-[#1C1C1E] hover:text-[#F5841F] font-medium transition-colors">{c('brands.cta')} <ArrowRight className="w-4 h-4" /></Link>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -414,24 +444,28 @@ export default function HomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <div className="anim-fade-right">
               <p className="text-[#F5841F] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('services.tagline')}</p>
               <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{c('services.title')}</h2>
               <p className="text-[#64748B] leading-relaxed mb-4">{c('services.text1')}</p>
               <p className="text-[#64748B] leading-relaxed mb-8">{c('services.text2')}</p>
               <Link href="/color-matching" className="inline-flex items-center gap-2 text-[#1C1C1E] hover:text-[#F5841F] font-medium transition-colors">{c('services.cta')} <ArrowRight className="w-4 h-4" /></Link>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
+            </div>
+            <div className="relative anim-fade-left">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <img
-                  src={c('services.image') || 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=800&h=600&fit=crop&auto=format&q=80'}
-                  alt="Color matching service"
-                  loading="lazy"
-                  decoding="async"
-                  width={800}
-                  height={600}
-                  className="w-full h-full object-cover"
-                />
+                {(() => { const s = c('services.image') || 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?h=600&fit=crop&auto=format&q=80'; return (
+                  <img
+                    src={withWidth(s, 800)}
+                    srcSet={[400, 600, 800, 1200].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    alt="Color matching service"
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
+                    className="w-full h-full object-cover"
+                  />
+                ); })()}
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -439,7 +473,7 @@ export default function HomePage() {
                   <p className="text-xs uppercase tracking-wider">{c('services.badge_label')}</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -447,10 +481,10 @@ export default function HomePage() {
       {/* Why PP Plus */}
       <section className="py-20 bg-[#FAFAFA] relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
+          <div className="text-center mb-14 anim-fade-up">
             <p className="text-[#1C1C1E] uppercase tracking-[0.3em] text-sm font-medium mb-3">{c('experience.tagline')}</p>
             <h2 className="text-3xl md:text-5xl font-bold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>{c('experience.title')}</h2>
-          </motion.div>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
               { icon: Target, titleKey: 'experience.card1_title', descKey: 'experience.card1_desc' },
@@ -458,13 +492,13 @@ export default function HomePage() {
               { icon: Beaker, titleKey: 'experience.card3_title', descKey: 'experience.card3_desc' },
               { icon: Truck, titleKey: 'experience.card4_title', descKey: 'experience.card4_desc' },
             ].map((item, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="text-center group bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 hover:shadow-md transition-all">
+              <div key={idx} style={{ animationDelay: `${idx * 100}ms` }} className="text-center group bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 hover:shadow-md transition-all anim-fade-up">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-5 rounded-2xl bg-[#1C1C1E]/10 border border-[#1C1C1E]/15 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <item.icon className="w-5 h-5 sm:w-7 sm:h-7 text-[#1C1C1E]" />
                 </div>
                 <h3 className="text-sm sm:text-lg font-semibold text-[#2D2D2D] mb-1 sm:mb-2" style={{ fontFamily: 'var(--font-heading)' }}>{c(item.titleKey)}</h3>
                 <p className="text-[#64748B] text-xs sm:text-sm leading-relaxed line-clamp-3">{c(item.descKey)}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -476,12 +510,12 @@ export default function HomePage() {
       {/* Contact / Map */}
       <section className="bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+          <div className="text-center mb-10 anim-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{c('contact.title')}</h2>
             <p className="text-[#64748B] text-lg">{c('contact.subtitle')}</p>
-          </motion.div>
+          </div>
           <div className="grid lg:grid-cols-3 gap-6">
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-2 bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm overflow-hidden anim-fade-right">
               <div className="h-[350px] md:h-[400px]">
                 <iframe src={c('location.map_embed')} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="PP Plus" />
               </div>
@@ -490,8 +524,8 @@ export default function HomePage() {
                   <Navigation className="w-4 h-4" />{locale === 'th' ? 'นำทางไปร้าน' : 'Get Directions'}
                 </a>
               </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="flex flex-col gap-4">
+            </div>
+            <div className="flex flex-col gap-4 anim-fade-left">
               <div className="bg-white rounded-2xl p-5 shadow-sm flex items-center gap-4">
                 <div className="w-12 h-12 bg-[#1C1C1E]/10 rounded-xl flex items-center justify-center shrink-0"><MapPin className="w-6 h-6 text-[#1C1C1E]" /></div>
                 <div><h3 className="font-semibold text-[#2D2D2D] text-sm">{locale === 'th' ? 'ที่อยู่' : 'Address'}</h3><p className="text-[#64748B] text-sm">{c('location.address')}</p></div>
@@ -512,7 +546,7 @@ export default function HomePage() {
                   <p className="text-[#64748B] text-sm">{c('location.hours2')}</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

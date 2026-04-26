@@ -26,6 +26,24 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* CSS-only mount animations — used on the homepage to replace framer-motion
+   on the critical path. They use transform + opacity (compositor only) so
+   they don't cost layout / paint.
+   Respect prefers-reduced-motion for users who opt out. */
+@keyframes ppFadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ppFadeRight { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes ppFadeLeft  { from { opacity: 0; transform: translateX(24px); }  to { opacity: 1; transform: translateX(0); } }
+
+.anim-fade-up    { animation: ppFadeUp 0.6s cubic-bezier(.2,.7,.2,1) both; }
+.anim-fade-right { animation: ppFadeRight 0.6s cubic-bezier(.2,.7,.2,1) both; }
+.anim-fade-left  { animation: ppFadeLeft 0.6s cubic-bezier(.2,.7,.2,1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up,
+  .anim-fade-right,
+  .anim-fade-left { animation: none; }
+}
+
 /* Dark mode */
 html.dark {
   color-scheme: dark;
