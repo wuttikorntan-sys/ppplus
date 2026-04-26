@@ -64,10 +64,23 @@ const withPWA = withPWAInit({
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Strip unused exports from heavy barrel-imported libs.
+  // optimizePackageImports handles per-icon imports for lucide-react and tree-shakes
+  // framer-motion / date-fns / react-icons automatically — no modularizeImports needed.
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
     },
+    optimizePackageImports: [
+      'framer-motion',
+      'lucide-react',
+      'react-icons',
+      'date-fns',
+    ],
+  },
+  compiler: {
+    // Drop console.* in production builds (smaller JS, less work at runtime)
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
   async rewrites() {
     return [

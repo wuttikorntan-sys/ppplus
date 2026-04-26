@@ -7,9 +7,16 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, MapPin, Phone, Mail, Clock, Target, Palette, ShieldCheck, Truck, Navigation, Beaker, Car } from 'lucide-react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import Popup from '@/components/Popup';
-import GoogleReviews from '@/components/GoogleReviews';
+import dynamic from 'next/dynamic';
 import { api } from '@/lib/api';
+
+// Defer non-critical components: they run their own /api fetches and aren't
+// part of the LCP. Lazy-loading them keeps the initial JS bundle small.
+const Popup = dynamic(() => import('@/components/Popup'), { ssr: false });
+const GoogleReviews = dynamic(() => import('@/components/GoogleReviews'), {
+  ssr: false,
+  loading: () => <div className="py-16 min-h-[600px]" aria-hidden />,
+});
 
 interface ContentMap {
   [key: string]: { th: string; en: string };
@@ -178,7 +185,16 @@ export default function HomePage() {
             {slide.type === 'video' ? (
               <video autoPlay loop muted playsInline poster={slide.poster} className="w-full h-full object-cover"><source src={slide.src} type="video/mp4" /></video>
             ) : (
-              <Image src={slide.src} alt="PP Plus" fill className="object-cover" sizes="100vw" priority={idx === 0} />
+              <Image
+                src={slide.src}
+                alt="PP Plus"
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority={idx === 0}
+                fetchPriority={idx === 0 ? 'high' : 'auto'}
+                loading={idx === 0 ? 'eager' : 'lazy'}
+              />
             )}
           </div>
         ))}
@@ -212,14 +228,15 @@ export default function HomePage() {
           </motion.div>
         </div>
 
+        {/* Reserve carousel-equivalent height so loading/error/empty states don't cause CLS */}
         {featuredLoading && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[280px] lg:min-h-[340px]">
             <div className="w-8 h-8 border-4 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 
         {!featuredLoading && featuredError && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center min-h-[280px] lg:min-h-[340px] flex flex-col items-center justify-center">
             <p className="text-red-500 text-sm">
               {locale === 'th' ? 'โหลดสินค้าไม่สำเร็จ' : 'Failed to load products'}
             </p>
@@ -228,7 +245,7 @@ export default function HomePage() {
         )}
 
         {!featuredLoading && !featuredError && featuredItems.length === 0 && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center min-h-[280px] lg:min-h-[340px] flex items-center justify-center">
             <p className="text-gray-400 text-sm">
               {locale === 'th' ? 'ยังไม่มีสินค้าที่จะแสดง' : 'No products to display yet'}
             </p>

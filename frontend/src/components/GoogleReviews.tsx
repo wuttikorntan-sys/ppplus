@@ -227,18 +227,20 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
             </div>
           </div>
 
-          {/* Rating summary — show only when data loaded */}
-          {data && (
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <span className="text-4xl font-bold text-[#2D2D2D] dark:text-white">{data.rating.toFixed(1)}</span>
-              <div>
-                <Stars rating={data.rating} size="md" />
-                <p className="text-gray-400 text-xs mt-0.5">
-                  {data.totalReviews.toLocaleString()} {locale === 'th' ? 'รีวิว' : 'reviews'}
-                </p>
-              </div>
-            </div>
-          )}
+          {/* Rating summary — reserve space (h ~52px) even while loading to avoid CLS */}
+          <div className="flex items-center justify-center gap-3 mb-3 min-h-[52px]">
+            {data && (
+              <>
+                <span className="text-4xl font-bold text-[#2D2D2D] dark:text-white">{data.rating.toFixed(1)}</span>
+                <div>
+                  <Stars rating={data.rating} size="md" />
+                  <p className="text-gray-400 text-xs mt-0.5">
+                    {data.totalReviews.toLocaleString()} {locale === 'th' ? 'รีวิว' : 'reviews'}
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
 
           <h2 className="text-2xl md:text-3xl font-bold text-[#2D2D2D] dark:text-white mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
             {locale === 'th' ? 'รีวิวจากลูกค้า' : 'Customer Reviews'}
@@ -246,10 +248,10 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
           <p className="text-gray-400 text-sm">Google Reviews</p>
         </motion.div>
 
-        {/* Cards — loading / data / empty */}
+        {/* Cards — loading / data / empty (same grid + count to avoid CLS) */}
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => <SkeletonCard key={i} />)}
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => <SkeletonCard key={i} />)}
           </div>
         ) : data && data.reviews.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">

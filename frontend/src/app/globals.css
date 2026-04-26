@@ -13,8 +13,10 @@
   --color-accent-dark: #D4700E;
   --color-text: #2D2D2D;
   --color-dark: #0A0A0A;
-  --font-heading: 'Inter', 'Kanit', sans-serif;
-  --font-body: 'Inter', 'Kanit', sans-serif;
+  /* --font-heading and --font-body are set on <html> by next/font (Kanit + Inter)
+     in src/app/[locale]/layout.tsx; we provide a system fallback only. */
+  --font-heading: 'Kanit', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', 'Kanit', system-ui, sans-serif;
 }
 
 body {
