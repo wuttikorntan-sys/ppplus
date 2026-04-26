@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { getGoogleConfig } from '@/lib/google-config';
 
 const CACHE_FILE = path.join(process.cwd(), 'data', 'google-reviews-cache.json');
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
@@ -36,9 +37,8 @@ async function writeCache(data: CachedData) {
 }
 
 export async function GET() {
-  // Read settings from DB
-  const apiKey = process.env.GOOGLE_PLACES_API_KEY || '';
-  const placeId = process.env.GOOGLE_PLACE_ID || '';
+  // Admin-managed values in site_contents take precedence over env vars
+  const { apiKey, placeId } = await getGoogleConfig();
 
   if (!apiKey || !placeId) {
     return NextResponse.json({ success: false, error: 'Google Places API not configured', useMock: true }, { status: 200 });

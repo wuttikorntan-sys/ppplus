@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { z } from 'zod';
+import { db } from '@/lib/db';
 import { requireAdmin, handleError } from '@/lib/api-server';
+import { getGoogleConfig, GOOGLE_API_KEY_KEY, GOOGLE_PLACE_ID_KEY } from '@/lib/google-config';
+
+const settingsSchema = z.object({
+  apiKey: z.string().optional(),
+  placeId: z.string().optional(),
+});
+
+function maskKey(key: string): string {
+  if (!key) return '';
+  if (key.length <= 8) return '••••';
+  return key.slice(0, 4) + '••••' + key.slice(-4);
+}
 
 const CACHE_FILE = path.join(process.cwd(), 'data', 'google-reviews-cache.json');
 
@@ -69,17 +83,50 @@ async function fetchFromGoogle(apiKey: string, placeId: string): Promise<{ ok: t
 export async function GET(req: NextRequest) {
   try {
     requireAdmin(req);
-    const apiKey = process.env.GOOGLE_PLACES_API_KEY || '';
-    const placeId = process.env.GOOGLE_PLACE_ID || '';
+    const { apiKey, placeId } = await getGoogleConfig();
     const cache = await readCache();
+    // Detect whether values come from DB vs env, so admin knows the source
+    const all = await db.siteContents.findMany();
+    const dbApiKey = all.find((c) => c.key === GOOGLE_API_KEY_KEY)?.valueTh || '';
+    const dbPlaceId = all.find((c) => c.key === GOOGLE_PLACE_ID_KEY)?.valueTh || '';
     return NextResponse.json({
       success: true,
       data: {
         configured: Boolean(apiKey && placeId),
-        placeIdPreview: placeId ? placeId.slice(0, 6) + '...' + placeId.slice(-4) : null,
+        // Never return the raw key — admin only needs to know it's set
+        apiKeyPreview: apiKey ? maskKey(apiKey) : null,
+        placeIdPreview: placeId ? maskKey(placeId) : null,
+        // Where each value came from
+        apiKeySource: dbApiKey ? 'db' : (process.env.GOOGLE_PLACES_API_KEY ? 'env' : null),
+        placeIdSource: dbPlaceId ? 'db' : (process.env.GOOGLE_PLACE_ID ? 'env' : null),
+        // Show admin the full Place ID (less sensitive, useful for debugging)
+        placeIdValue: placeId,
         cache,
       },
     });
+  } catch (err) {
+    return handleError(err);
+  }
+}
+
+// PUT — save credentials to site_contents
+export async function PUT(req: NextRequest) {
+  try {
+    requireAdmin(req);
+    const body = await req.json();
+    const data = settingsSchema.parse(body);
+    const updates: { key: string; valueTh: string; valueEn: string; type?: string }[] = [];
+    if (typeof data.apiKey === 'string') {
+      updates.push({ key: GOOGLE_API_KEY_KEY, valueTh: data.apiKey.trim(), valueEn: data.apiKey.trim(), type: 'secret' });
+    }
+    if (typeof data.placeId === 'string') {
+      updates.push({ key: GOOGLE_PLACE_ID_KEY, valueTh: data.placeId.trim(), valueEn: data.placeId.trim(), type: 'secret' });
+    }
+    if (updates.length === 0) {
+      return NextResponse.json({ success: false, error: 'No fields to update' }, { status: 400 });
+    }
+    await Promise.all(updates.map((u) => db.siteContents.upsert(u)));
+    return NextResponse.json({ success: true });
   } catch (err) {
     return handleError(err);
   }
@@ -89,10 +136,9 @@ export async function POST(req: NextRequest) {
   // Force refresh: re-fetch from Google and overwrite the on-disk cache
   try {
     requireAdmin(req);
-    const apiKey = process.env.GOOGLE_PLACES_API_KEY || '';
-    const placeId = process.env.GOOGLE_PLACE_ID || '';
+    const { apiKey, placeId } = await getGoogleConfig();
     if (!apiKey || !placeId) {
-      return NextResponse.json({ success: false, error: 'Google Places API not configured (env: GOOGLE_PLACES_API_KEY, GOOGLE_PLACE_ID)' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Google Places API not configured — set API Key and Place ID in admin settings' }, { status: 400 });
     }
     const result = await fetchFromGoogle(apiKey, placeId);
     if (!result.ok) {

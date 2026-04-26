@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { Star, Check, X as XIcon, Eye, EyeOff, RefreshCw, AlertTriangle, CheckCircle2, ExternalLink } from 'lucide-react';
+import { Star, Check, X as XIcon, Eye, EyeOff, RefreshCw, AlertTriangle, CheckCircle2, ExternalLink, Save, KeyRound } from 'lucide-react';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -26,7 +26,11 @@ interface GoogleReview {
 
 interface GoogleConfig {
   configured: boolean;
+  apiKeyPreview: string | null;
   placeIdPreview: string | null;
+  apiKeySource: 'db' | 'env' | null;
+  placeIdSource: 'db' | 'env' | null;
+  placeIdValue: string;
   cache: {
     fetchedAt: number;
     rating: number;
@@ -47,6 +51,10 @@ export default function AdminReviewsPage() {
   const [google, setGoogle] = useState<GoogleConfig | null>(null);
   const [googleLoading, setGoogleLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [showCredsForm, setShowCredsForm] = useState(false);
+  const [creds, setCreds] = useState({ apiKey: '', placeId: '' });
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [savingCreds, setSavingCreds] = useState(false);
 
   const fetchReviews = () => {
     api.get<{ success: boolean; data: Review[] }>('/admin/reviews')
@@ -107,6 +115,28 @@ export default function AdminReviewsPage() {
       toast.error(th ? 'บันทึกไม่สำเร็จ' : 'Failed to save');
     } finally {
       setSavingToggle(false);
+    }
+  };
+
+  const saveCreds = async () => {
+    if (!creds.apiKey.trim() && !creds.placeId.trim()) {
+      toast.error(th ? 'กรุณากรอกอย่างน้อย 1 ช่อง' : 'Please fill at least one field');
+      return;
+    }
+    setSavingCreds(true);
+    try {
+      const payload: { apiKey?: string; placeId?: string } = {};
+      if (creds.apiKey.trim()) payload.apiKey = creds.apiKey.trim();
+      if (creds.placeId.trim()) payload.placeId = creds.placeId.trim();
+      await api.put('/admin/reviews/google', payload);
+      toast.success(th ? 'บันทึกการตั้งค่าเรียบร้อย' : 'Settings saved');
+      setCreds({ apiKey: '', placeId: '' });
+      setShowCredsForm(false);
+      fetchGoogleConfig();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : (th ? 'บันทึกไม่สำเร็จ' : 'Failed to save'));
+    } finally {
+      setSavingCreds(false);
     }
   };
 
@@ -202,40 +232,125 @@ export default function AdminReviewsPage() {
           <div className="py-6 flex justify-center">
             <div className="w-6 h-6 border-2 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : !google?.configured ? (
-          <div className="flex items-start gap-2.5 bg-amber-50 text-amber-700 rounded-lg p-4">
-            <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-            <div className="text-sm">
-              <p className="font-medium">{th ? 'ยังไม่ได้ตั้งค่า Google API' : 'Google API not configured'}</p>
-              <p className="mt-1 text-amber-600">
-                {th
-                  ? 'ตั้งค่า env: '
-                  : 'Set env: '}
-                <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs">GOOGLE_PLACES_API_KEY</code>
-                <span className="mx-1">+</span>
-                <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs">GOOGLE_PLACE_ID</code>
-                {th ? ' ในไฟล์ .env แล้ว restart' : ' in .env then restart'}
-              </p>
-              <p className="mt-2 text-xs text-amber-600">
-                {th ? 'ขณะนี้หน้าเว็บจะใช้รีวิวตัวอย่าง (mock) แทน' : 'The homepage falls back to mock reviews until configured.'}
-              </p>
-            </div>
-          </div>
         ) : (
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-3 text-sm">
-              <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1.5 rounded-full font-medium">
-                <CheckCircle2 className="w-4 h-4" />
-                {th ? 'เชื่อมต่อแล้ว' : 'Connected'}
-              </span>
-              {google.placeIdPreview && (
-                <span className="text-xs text-gray-500">
-                  Place ID: <code className="bg-gray-100 px-1.5 py-0.5 rounded">{google.placeIdPreview}</code>
+            {/* Status banner */}
+            {!google?.configured ? (
+              <div className="flex items-start gap-2.5 bg-amber-50 text-amber-700 rounded-lg p-4">
+                <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
+                <div className="text-sm flex-1">
+                  <p className="font-medium">{th ? 'ยังไม่ได้ตั้งค่า Google API' : 'Google API not configured'}</p>
+                  <p className="mt-1 text-amber-600 text-xs">
+                    {th
+                      ? 'กรอก API Key + Place ID ด้านล่างเพื่อดึงรีวิวจริง — ถ้ายังไม่กรอก หน้าเว็บจะใช้รีวิวตัวอย่าง (mock) แทน'
+                      : 'Enter your API Key + Place ID below to pull live reviews. The homepage falls back to mock reviews until configured.'}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowCredsForm(true)}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded-lg hover:bg-amber-700 transition"
+                >
+                  <KeyRound className="w-3.5 h-3.5" /> {th ? 'ตั้งค่าเลย' : 'Configure'}
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1.5 rounded-full font-medium text-sm">
+                  <CheckCircle2 className="w-4 h-4" />
+                  {th ? 'เชื่อมต่อแล้ว' : 'Connected'}
                 </span>
-              )}
-            </div>
+                <button
+                  type="button"
+                  onClick={() => { setShowCredsForm((v) => !v); setCreds({ apiKey: '', placeId: '' }); }}
+                  className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <KeyRound className="w-3.5 h-3.5" />
+                  {showCredsForm ? (th ? 'ปิดฟอร์ม' : 'Hide form') : (th ? 'แก้ไขข้อมูล' : 'Edit credentials')}
+                </button>
+              </div>
+            )}
 
-            {google.cache ? (
+            {/* Credentials form */}
+            {(showCredsForm || !google?.configured) && (
+              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50/50 space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    {th ? 'Google Places API Key' : 'Google Places API Key'}
+                    {google?.apiKeyPreview && (
+                      <span className="ml-2 text-[11px] text-gray-400 font-normal">
+                        {th ? 'ตอนนี้:' : 'current:'} <code className="bg-gray-200 px-1.5 py-0.5 rounded">{google.apiKeyPreview}</code>
+                        {google.apiKeySource === 'env' && <span className="ml-1 italic">(env)</span>}
+                      </span>
+                    )}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showApiKey ? 'text' : 'password'}
+                      value={creds.apiKey}
+                      onChange={(e) => setCreds({ ...creds, apiKey: e.target.value })}
+                      placeholder={th ? 'AIzaSy... (ปล่อยว่าง = ไม่เปลี่ยน)' : 'AIzaSy... (leave blank to keep)'}
+                      className="w-full pr-20 px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowApiKey((v) => !v)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-gray-500 hover:text-gray-800"
+                    >
+                      {showApiKey ? (th ? 'ซ่อน' : 'Hide') : (th ? 'แสดง' : 'Show')}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    {th ? 'Google Place ID' : 'Google Place ID'}
+                    {google?.placeIdValue && (
+                      <span className="ml-2 text-[11px] text-gray-400 font-normal">
+                        {th ? 'ตอนนี้:' : 'current:'} <code className="bg-gray-200 px-1.5 py-0.5 rounded">{google.placeIdValue}</code>
+                        {google.placeIdSource === 'env' && <span className="ml-1 italic">(env)</span>}
+                      </span>
+                    )}
+                  </label>
+                  <input
+                    type="text"
+                    value={creds.placeId}
+                    onChange={(e) => setCreds({ ...creds, placeId: e.target.value })}
+                    placeholder={th ? 'ChIJ... (ปล่อยว่าง = ไม่เปลี่ยน)' : 'ChIJ... (leave blank to keep)'}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm font-mono"
+                  />
+                  <p className="text-[11px] text-gray-400 mt-1">
+                    {th
+                      ? 'หา Place ID ของร้านได้ที่ '
+                      : 'Find your Place ID at '}
+                    <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="noopener noreferrer" className="text-[#F5841F] hover:underline">
+                      Google Place ID Finder ↗
+                    </a>
+                  </p>
+                </div>
+                <div className="flex gap-2 justify-end pt-1">
+                  {google?.configured && (
+                    <button
+                      type="button"
+                      onClick={() => { setShowCredsForm(false); setCreds({ apiKey: '', placeId: '' }); }}
+                      className="px-3.5 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition"
+                    >
+                      {th ? 'ยกเลิก' : 'Cancel'}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={saveCreds}
+                    disabled={savingCreds}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50"
+                  >
+                    <Save className="w-4 h-4" />
+                    {savingCreds ? (th ? 'กำลังบันทึก...' : 'Saving...') : (th ? 'บันทึกการตั้งค่า' : 'Save settings')}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {google?.configured && (google.cache ? (
               <>
                 <div className="flex items-center gap-4 bg-gray-50 rounded-lg p-4">
                   <div>
@@ -282,7 +397,7 @@ export default function AdminReviewsPage() {
               </>
             ) : (
               <p className="text-sm text-gray-500">{th ? 'ยังไม่มี cache — กด "ดึงข้อมูลใหม่" เพื่อดึงครั้งแรก' : 'No cache yet — click "Refresh now" to fetch the first time'}</p>
-            )}
+            ))}
           </div>
         )}
       </div>
