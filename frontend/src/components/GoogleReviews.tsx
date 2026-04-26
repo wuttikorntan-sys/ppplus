@@ -165,8 +165,21 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
 export default function GoogleReviews({ locale, reviewUrl }: { locale: string; reviewUrl?: string }) {
   const [data, setData] = useState<GoogleReviewsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [enabled, setEnabled] = useState(true);
 
   useEffect(() => {
+    // Read the on/off flag — admin can hide the whole section.
+    // Default: enabled (so missing config doesn't accidentally hide it).
+    fetch('/api/site-content')
+      .then((r) => r.json())
+      .then((r) => {
+        const flag = r?.data?.['reviews.section.enabled']?.th
+          ?? r?.data?.['reviews.section.enabled']?.en
+          ?? '1';
+        setEnabled(flag !== '0');
+      })
+      .catch(() => { /* default enabled */ });
+
     fetch('/api/google-reviews')
       .then((r) => r.json())
       .then((r) => {
@@ -185,6 +198,8 @@ export default function GoogleReviews({ locale, reviewUrl }: { locale: string; r
   }, []);
 
   const defaultReviewUrl = reviewUrl || 'https://g.page/r/CU2GmSihx5JtEBM/review';
+
+  if (!enabled) return null;
 
   return (
     <section className="py-16 bg-gradient-to-b from-[#FAFAFA] to-white dark:from-[#121212] dark:to-[#1a1a1a] relative overflow-hidden">
