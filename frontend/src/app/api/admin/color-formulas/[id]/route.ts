@@ -31,6 +31,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const file = formData.get('image') as File | null;
     if (file && file.size > 0) {
       updateData.image = await saveUploadedFile(formData, 'image');
+    } else if (formData.get('removeImage') === '1') {
+      updateData.image = null;
     }
 
     const formula = await db.colorFormulas.update(formulaId, updateData);

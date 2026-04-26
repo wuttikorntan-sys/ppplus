@@ -48,6 +48,7 @@ export default function AdminColorFormulasPage() {
   const [form, setForm] = useState(emptyForm);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [removeImage, setRemoveImage] = useState(false);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,7 +70,7 @@ export default function AdminColorFormulasPage() {
   });
 
   const openNew = () => {
-    setEditingId(null); setForm(emptyForm); setImageFile(null); setImagePreview(null); setShowForm(true);
+    setEditingId(null); setForm(emptyForm); setImageFile(null); setImagePreview(null); setRemoveImage(false); setShowForm(true);
   };
 
   const openEdit = (f: ColorFormula) => {
@@ -78,12 +79,25 @@ export default function AdminColorFormulasPage() {
       carBrand: f.carBrand, colorCode: f.colorCode, colorNameTh: f.colorNameTh || '', colorNameEn: f.colorNameEn || '',
       yearRange: f.yearRange || '', formulaType: f.formulaType, deltaE: f.deltaE?.toString() || '', isActive: f.isActive,
     });
-    setImageFile(null); setImagePreview(f.image || null); setShowForm(true);
+    setImageFile(null); setImagePreview(f.image || null); setRemoveImage(false); setShowForm(true);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) { setImageFile(file); const r = new FileReader(); r.onloadend = () => setImagePreview(r.result as string); r.readAsDataURL(file); }
+    if (file) {
+      setImageFile(file);
+      setRemoveImage(false);
+      const r = new FileReader();
+      r.onloadend = () => setImagePreview(r.result as string);
+      r.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    setRemoveImage(true);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleSave = async () => {
@@ -102,6 +116,7 @@ export default function AdminColorFormulasPage() {
       fd.append('deltaE', form.deltaE);
       fd.append('isActive', String(form.isActive));
       if (imageFile) fd.append('image', imageFile);
+      else if (removeImage && editingId) fd.append('removeImage', '1');
 
       if (editingId) {
         await api.upload(`/admin/color-formulas/${editingId}`, fd, 'PUT');
@@ -228,11 +243,31 @@ export default function AdminColorFormulasPage() {
                 <div onClick={() => fileInputRef.current?.click()}
                   className="relative border-2 border-dashed border-gray-200 rounded-xl h-32 flex items-center justify-center cursor-pointer hover:border-[#1C1C1E]/40 transition group overflow-hidden">
                   {imagePreview ? (
-                    <><img src={imagePreview} alt="" className="object-cover w-full h-full" /><div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"><p className="text-white text-sm font-medium">{th ? 'เปลี่ยนรูป' : 'Change'}</p></div></>
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={imagePreview} alt="" className="object-cover w-full h-full" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <p className="text-white text-sm font-medium">{th ? 'เปลี่ยนรูป' : 'Change'}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleRemoveImage(); }}
+                        title={th ? 'ลบรูป' : 'Remove image'}
+                        aria-label={th ? 'ลบรูป' : 'Remove image'}
+                        className="absolute top-2 right-2 z-10 w-7 h-7 rounded-full bg-white/90 hover:bg-red-500 hover:text-white text-gray-600 shadow-md flex items-center justify-center transition"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </>
                   ) : (
                     <div className="text-center"><Upload className="w-8 h-8 text-gray-300 mx-auto mb-2" /><p className="text-sm text-gray-400">{th ? 'คลิกอัปโหลด' : 'Click to upload'}</p></div>
                   )}
                 </div>
+                {removeImage && editingId && (
+                  <p className="text-xs text-red-500 mt-1.5">
+                    {th ? 'รูปจะถูกลบเมื่อกด "บันทึก"' : 'Image will be removed when you click "Save"'}
+                  </p>
+                )}
                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageChange} className="hidden" />
               </div>
               <div className="grid grid-cols-2 gap-4">
