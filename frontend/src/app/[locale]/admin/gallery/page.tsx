@@ -18,10 +18,14 @@ interface GalleryImage {
   isActive: boolean;
 }
 
+// Keep these in sync with the public gallery filter categories
+// (frontend/src/app/[locale]/gallery/page.tsx)
 const categories = [
-  { value: 'restaurant', labelTh: 'บรรยากาศร้าน', labelEn: 'Restaurant' },
-  { value: 'food', labelTh: 'อาหาร', labelEn: 'Food' },
-  { value: 'events', labelTh: 'อีเวนท์', labelEn: 'Events' },
+  { value: 'projects',     labelTh: 'ผลงาน',         labelEn: 'Projects' },
+  { value: 'before_after', labelTh: 'ก่อน & หลัง',   labelEn: 'Before & After' },
+  { value: 'shop',         labelTh: 'ร้านของเรา',    labelEn: 'Our Shop' },
+  { value: 'color_mixing', labelTh: 'ผสมสี',         labelEn: 'Color Mixing' },
+  { value: 'events',       labelTh: 'กิจกรรม',       labelEn: 'Events' },
 ];
 
 export default function AdminGalleryPage() {
@@ -34,7 +38,7 @@ export default function AdminGalleryPage() {
   const [editing, setEditing] = useState<GalleryImage | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [form, setForm] = useState({ category: 'food', labelTh: '', labelEn: '', sortOrder: 0, isActive: true });
+  const [form, setForm] = useState({ category: 'projects', labelTh: '', labelEn: '', sortOrder: 0, isActive: true });
 
   const fetchImages = async () => {
     try {
@@ -50,10 +54,15 @@ export default function AdminGalleryPage() {
 
   const openAdd = () => {
     setEditing(null);
-    setForm({ category: 'food', labelTh: '', labelEn: '', sortOrder: 0, isActive: true });
+    setForm({ category: 'projects', labelTh: '', labelEn: '', sortOrder: 0, isActive: true });
     setFile(null);
     setPreview(null);
     setShowModal(true);
+  };
+
+  const handleClearImage = () => {
+    setFile(null);
+    setPreview(null);
   };
 
   const openEdit = (img: GalleryImage) => {
@@ -178,10 +187,23 @@ export default function AdminGalleryPage() {
               {/* Image upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{locale === 'th' ? 'รูปภาพ' : 'Image'} *</label>
-                {preview && (
-                  <div className="relative h-40 w-full mb-2 rounded-lg overflow-hidden">
+                {preview ? (
+                  <div className="relative h-40 w-full mb-2 rounded-lg overflow-hidden bg-gray-50">
                     <Image src={preview} alt="Preview" fill className="object-cover" sizes="400px" />
+                    <button
+                      type="button"
+                      onClick={handleClearImage}
+                      title={th ? 'ลบรูป' : 'Remove image'}
+                      aria-label={th ? 'ลบรูป' : 'Remove image'}
+                      className="absolute top-2 right-2 z-10 w-7 h-7 rounded-full bg-white/90 hover:bg-red-500 hover:text-white text-gray-600 shadow-md flex items-center justify-center transition"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
+                ) : (
+                  <p className="text-xs text-gray-400 mb-2">
+                    {th ? 'ยังไม่มีรูป — เลือกไฟล์ด้านล่าง' : 'No image — pick a file below'}
+                  </p>
                 )}
                 <input type="file" accept="image/*" onChange={handleFile} className="w-full text-sm border rounded-lg p-2" />
               </div>
@@ -222,7 +244,7 @@ export default function AdminGalleryPage() {
                 <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border rounded-lg text-sm font-medium hover:bg-gray-50 transition">
                   {locale === 'th' ? 'ยกเลิก' : 'Cancel'}
                 </button>
-                <button onClick={handleSave} disabled={!editing && !file} className="flex-1 px-4 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
+                <button onClick={handleSave} disabled={!preview} className="flex-1 px-4 py-2 bg-[#1C1C1E] text-white rounded-lg text-sm font-medium hover:bg-[#1C1C1E]/90 transition disabled:opacity-50">
                   {locale === 'th' ? 'บันทึก' : 'Save'}
                 </button>
               </div>
