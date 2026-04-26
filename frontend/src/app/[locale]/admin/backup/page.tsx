@@ -16,6 +16,7 @@ import {
   Clock,
   ImageIcon,
   FolderArchive,
+  Package2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useConfirm } from '@/components/ConfirmDialog';
@@ -38,6 +39,13 @@ export default function BackupPage() {
   const [importingImages, setImportingImages] = useState(false);
   const [selectedImgFile, setSelectedImgFile] = useState<File | null>(null);
   const [imgImportResult, setImgImportResult] = useState<{ success: boolean; message: string } | null>(null);
+
+  // Full (combined SQL + images) backup states
+  const fullFileRef = useRef<HTMLInputElement>(null);
+  const [exportingFull, setExportingFull] = useState(false);
+  const [importingFull, setImportingFull] = useState(false);
+  const [selectedFullFile, setSelectedFullFile] = useState<File | null>(null);
+  const [fullImportResult, setFullImportResult] = useState<{ success: boolean; message: string } | null>(null);
 
   /* ── Export / Backup ── */
   const handleExport = async () => {
@@ -230,6 +238,89 @@ export default function BackupPage() {
     }
   };
 
+  /* ── Full backup (SQL + images combined) ── */
+  const handleExportFull = async () => {
+    setExportingFull(true);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await fetch('/api/admin/backup/full', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Full backup failed');
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const timestamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `ppplus-full-backup-${timestamp}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(th ? 'สำรองข้อมูลทั้งหมดสำเร็จ' : 'Full backup exported successfully');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : (th ? 'สำรองข้อมูลล้มเหลว' : 'Backup failed'));
+    } finally {
+      setExportingFull(false);
+    }
+  };
+
+  const handleFullFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (file && !file.name.toLowerCase().endsWith('.zip')) {
+      toast.error(th ? 'กรุณาเลือกไฟล์ .zip เท่านั้น' : 'Please select a .zip file only');
+      return;
+    }
+    setSelectedFullFile(file);
+    setFullImportResult(null);
+  };
+
+  const handleImportFull = async () => {
+    if (!selectedFullFile) return;
+    const ok = await confirm({
+      title: th ? 'ยืนยันการกู้คืนข้อมูลทั้งหมด' : 'Confirm full restore',
+      message: th
+        ? 'การกู้คืนจะเขียนทับฐานข้อมูลและรูปภาพทั้งหมด ต้องการดำเนินการต่อหรือไม่?'
+        : 'This will overwrite the entire database AND all uploaded files. Continue?',
+      confirmText: th ? 'กู้คืน' : 'Restore',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!ok) return;
+
+    setImportingFull(true);
+    setFullImportResult(null);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const formData = new FormData();
+      formData.append('file', selectedFullFile);
+      const res = await fetch('/api/admin/backup/full', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setFullImportResult({ success: true, message: data.data.message });
+        toast.success(th ? 'กู้คืนข้อมูลสำเร็จ' : 'Full restore successful');
+        setSelectedFullFile(null);
+        if (fullFileRef.current) fullFileRef.current.value = '';
+      } else {
+        setFullImportResult({ success: false, message: data.error });
+        toast.error(data.error);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Restore failed';
+      setFullImportResult({ success: false, message: msg });
+      toast.error(msg);
+    } finally {
+      setImportingFull(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -240,6 +331,121 @@ export default function BackupPage() {
         </h1>
         <p className="text-gray-500 mt-1">
           {th ? 'สำรองข้อมูลฐานข้อมูลเป็นไฟล์ SQL หรือนำเข้าจากไฟล์ SQL' : 'Export database backup as SQL or import from SQL file'}
+        </p>
+      </div>
+
+      {/* ── Full Backup (Combined) ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-br from-[#1C1C1E] to-[#2D2D2D] rounded-2xl shadow-lg p-6 text-white"
+      >
+        <div className="flex items-start justify-between gap-4 mb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-[#F5841F]/20 flex items-center justify-center shrink-0">
+              <Package2 className="w-6 h-6 text-[#F5841F]" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold">
+                {th ? 'สำรองทุกอย่างในไฟล์เดียว' : 'Full Backup (One File)'}
+              </h2>
+              <p className="text-sm text-white/60 mt-0.5">
+                {th
+                  ? 'รวมฐานข้อมูล (.sql) + รูปภาพและเอกสารที่อัปโหลดทั้งหมดไว้ใน .zip ไฟล์เดียว'
+                  : 'Bundles the database dump and every uploaded image/PDF into a single .zip'}
+              </p>
+            </div>
+          </div>
+          <span className="hidden sm:inline-flex items-center gap-1 bg-[#F5841F]/20 text-[#F5841F] text-[11px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
+            {th ? 'แนะนำ' : 'Recommended'}
+          </span>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-3">
+          {/* Export */}
+          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+            <div className="flex items-center gap-2 mb-2 text-sm font-semibold">
+              <Download className="w-4 h-4 text-[#F5841F]" />
+              {th ? 'ดาวน์โหลด' : 'Download'}
+            </div>
+            <p className="text-xs text-white/60 mb-3">
+              {th ? 'รวม SQL + รูปไว้ใน .zip ไฟล์เดียว' : 'SQL + images in one .zip'}
+            </p>
+            <button
+              onClick={handleExportFull}
+              disabled={exportingFull}
+              className="w-full py-2.5 bg-[#F5841F] text-white rounded-lg font-semibold hover:bg-[#F5841F]/90 transition disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+            >
+              {exportingFull ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {th ? 'กำลังสำรอง...' : 'Exporting...'}
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  {th ? 'ดาวน์โหลด Full Backup' : 'Download Full Backup'}
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Restore */}
+          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+            <div className="flex items-center gap-2 mb-2 text-sm font-semibold">
+              <Upload className="w-4 h-4 text-[#F5841F]" />
+              {th ? 'กู้คืน' : 'Restore'}
+            </div>
+            <p className="text-xs text-white/60 mb-3">
+              {th ? 'อัปโหลดไฟล์ .zip ที่สำรองไว้ — เขียนทับทั้ง DB และรูป' : 'Upload a backup .zip — overwrites DB and files'}
+            </p>
+            <div
+              onClick={() => fullFileRef.current?.click()}
+              className="border border-dashed border-white/20 rounded-lg p-2 text-center cursor-pointer hover:border-[#F5841F]/60 hover:bg-white/5 transition mb-2 text-xs"
+            >
+              {selectedFullFile ? (
+                <>
+                  <p className="text-[#F5841F] font-medium truncate">{selectedFullFile.name}</p>
+                  <p className="text-white/50 mt-0.5">{(selectedFullFile.size / (1024 * 1024)).toFixed(2)} MB</p>
+                </>
+              ) : (
+                <p className="text-white/60 py-1">{th ? 'คลิกเพื่อเลือก .zip' : 'Click to select .zip'}</p>
+              )}
+              <input ref={fullFileRef} type="file" accept=".zip" onChange={handleFullFileChange} className="hidden" />
+            </div>
+            <button
+              onClick={handleImportFull}
+              disabled={importingFull || !selectedFullFile}
+              className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-lg font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2 text-sm border border-white/10"
+            >
+              {importingFull ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {th ? 'กำลังกู้คืน...' : 'Restoring...'}
+                </>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4" />
+                  {th ? 'กู้คืนข้อมูลทั้งหมด' : 'Restore Full Backup'}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {fullImportResult && (
+          <div className={`mt-4 rounded-xl p-3 text-sm border ${fullImportResult.success ? 'bg-green-500/10 border-green-500/30 text-green-300' : 'bg-red-500/10 border-red-500/30 text-red-300'}`}>
+            <div className="flex items-start gap-2">
+              {fullImportResult.success ? <CheckCircle className="w-4 h-4 mt-0.5 shrink-0" /> : <XCircle className="w-4 h-4 mt-0.5 shrink-0" />}
+              <p>{fullImportResult.message}</p>
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      <div className="border-t border-gray-200 pt-2">
+        <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold">
+          {th ? 'หรือสำรองแยกประเภท' : 'Or back up by type'}
         </p>
       </div>
 
