@@ -208,9 +208,11 @@ export default function HomePage() {
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-heading)' }}>{c('hero.title')}</h1>
-            <p className="text-xl md:text-2xl text-[#F5841F] font-medium mb-4 tracking-wide" style={{ fontFamily: 'var(--font-heading)' }}>{c('hero.subtitle')}</p>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-10">{c('hero.description')}</p>
+            {/* Reserve up to 2 lines for hero text so the data swap (defaults → site-content)
+                doesn't push the CTA buttons down and trigger CLS. */}
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-3 leading-[1.05] [text-wrap:balance]" style={{ fontFamily: 'var(--font-heading)', minHeight: 'calc(2 * 1.05em)' }}>{c('hero.title')}</h1>
+            <p className="text-xl md:text-2xl text-[#F5841F] font-medium mb-4 tracking-wide leading-snug [text-wrap:balance]" style={{ fontFamily: 'var(--font-heading)', minHeight: 'calc(2 * 1.375em)' }}>{c('hero.subtitle')}</p>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-10 leading-relaxed [text-wrap:balance]" style={{ minHeight: 'calc(3 * 1.625em)' }}>{c('hero.description')}</p>
             <div className="flex flex-row gap-3 justify-center px-4">
               <Link href="/menu" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 bg-[#F5841F] text-white font-semibold rounded-lg hover:bg-[#26a89c] transition-all transform hover:scale-105 text-sm sm:text-base">{c('hero.cta_menu')}</Link>
               <Link href="/quote" className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-[#1C1C1E] transition-all text-sm sm:text-base">{c('hero.cta_contact')}</Link>
