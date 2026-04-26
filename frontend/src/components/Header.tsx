@@ -23,6 +23,7 @@ export default function Header() {
     { href: '/' as const, label: t('home') },
     { href: '/menu' as const, label: t('menu') },
     { href: '/color-matching' as const, label: t('color_matching') },
+    { href: '/gallery' as const, label: t('gallery') },
     { href: '/b2b' as const, label: t('b2b') },
     { href: '/blog' as const, label: t('blog') },
     { href: '/about' as const, label: t('about') },
