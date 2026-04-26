@@ -3,7 +3,7 @@
 import { useCart } from '@/lib/cart';
 import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { ShoppingCart, X, Plus, Minus, Trash2, FileText } from 'lucide-react';
+import { ShoppingCart, X, Plus, Minus, Trash2, FileText, CreditCard } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -120,12 +120,20 @@ export default function CartDrawer() {
                     </span>
                   </div>
                   <Link
-                    href="/quote"
+                    href="/checkout"
                     onClick={() => setIsOpen(false)}
                     className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#F5841F] text-white rounded-xl font-semibold hover:bg-[#F5841F]/90 active:scale-[0.98] transition text-sm shadow-lg shadow-[#F5841F]/20"
                   >
+                    <CreditCard className="w-4 h-4" />
+                    {th ? 'สั่งซื้อสินค้า' : 'Place Order'}
+                  </Link>
+                  <Link
+                    href="/quote"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 bg-white border border-gray-200 dark:bg-white/5 dark:border-white/10 text-[#1C1C1E] dark:text-white rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-white/10 active:scale-[0.98] transition text-sm"
+                  >
                     <FileText className="w-4 h-4" />
-                    {th ? 'ขอใบเสนอราคา' : 'Request a Quote'}
+                    {th ? 'ขอใบเสนอราคาแทน' : 'Request a Quote Instead'}
                   </Link>
                   <p className="text-[10px] text-gray-400 text-center">{th ? '* ราคาอาจเปลี่ยนแปลงตามปริมาณและโปรโมชั่น' : '* Prices may vary based on quantity and promotions'}</p>
                 </div>

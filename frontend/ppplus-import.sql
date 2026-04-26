@@ -125,6 +125,14 @@ CALL ppplus_add_column('menu_items', 'safetyNotesEn',     '`safetyNotesEn` TEXT 
 CALL ppplus_add_column('popups', 'buttonUrl',    '`buttonUrl` VARCHAR(500) NULL');
 CALL ppplus_add_column('popups', 'targetPages',  '`targetPages` VARCHAR(255) NOT NULL DEFAULT ''*''');
 
+-- orders: customer info for guest checkout + delivery details
+CALL ppplus_add_column('orders', 'customerName',    '`customerName` VARCHAR(200) NULL');
+CALL ppplus_add_column('orders', 'customerPhone',   '`customerPhone` VARCHAR(50) NULL');
+CALL ppplus_add_column('orders', 'customerEmail',   '`customerEmail` VARCHAR(200) NULL');
+CALL ppplus_add_column('orders', 'customerAddress', '`customerAddress` TEXT NULL');
+CALL ppplus_add_column('orders', 'notes',           '`notes` TEXT NULL');
+CALL ppplus_add_column('orders', 'paymentMethod',   '`paymentMethod` VARCHAR(50) NULL');
+
 DROP PROCEDURE IF EXISTS ppplus_add_column;
 
 -- ============================================

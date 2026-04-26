@@ -236,6 +236,12 @@ export interface OrderRecord {
   status: 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED';
   totalAmount: string;
   orderType: string;
+  customerName: string | null;
+  customerPhone: string | null;
+  customerEmail: string | null;
+  customerAddress: string | null;
+  notes: string | null;
+  paymentMethod: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -977,14 +983,38 @@ export const db = {
       const arr = rows as any[];
       return arr.length ? (mapRow(arr[0]) as OrderRecord) : undefined;
     },
-    async create(data: { userId?: number | null; totalAmount: number; orderType?: string; items: { menuItemId: number; quantity: number; price: number }[]; paymentMethod?: string }): Promise<OrderRecord> {
+    async create(data: {
+      userId?: number | null;
+      totalAmount: number;
+      orderType?: string;
+      items: { menuItemId: number; quantity: number; price: number }[];
+      paymentMethod?: string;
+      customerName?: string | null;
+      customerPhone?: string | null;
+      customerEmail?: string | null;
+      customerAddress?: string | null;
+      notes?: string | null;
+    }): Promise<OrderRecord> {
       const conn = await pool.getConnection();
       try {
         await conn.beginTransaction();
         const ts = now();
         const [res] = await conn.query(
-          'INSERT INTO orders (userId, totalAmount, orderType, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)',
-          [data.userId ?? null, data.totalAmount, data.orderType || 'ONLINE', ts, ts],
+          `INSERT INTO orders (userId, totalAmount, orderType, customerName, customerPhone, customerEmail, customerAddress, notes, paymentMethod, createdAt, updatedAt)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            data.userId ?? null,
+            data.totalAmount,
+            data.orderType || 'ONLINE',
+            data.customerName ?? null,
+            data.customerPhone ?? null,
+            data.customerEmail ?? null,
+            data.customerAddress ?? null,
+            data.notes ?? null,
+            data.paymentMethod ?? null,
+            ts,
+            ts,
+          ],
         );
         const orderId = (res as mysql.ResultSetHeader).insertId;
         for (const item of data.items) {
