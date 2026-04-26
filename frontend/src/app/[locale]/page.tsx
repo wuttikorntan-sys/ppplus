@@ -23,11 +23,13 @@ interface FeaturedProduct {
   image: string | null;
 }
 
+// Unsplash params: auto=format gives WebP/AVIF when supported; q=80 trims bytes;
+// w=1600 is wider than any common viewport while still ~half the bytes of 1920.
 const defaultSlides: { type: 'video' | 'image'; src: string; poster?: string }[] = [
-  { type: 'image', src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=1080&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1920&h=1080&fit=crop' },
-  { type: 'video', src: 'https://videos.pexels.com/video-files/5532771/5532771-sd_640_360_25fps.mp4', poster: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=1920&h=1080&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&h=1080&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1600&q=80&auto=format&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1600&q=80&auto=format&fit=crop' },
+  { type: 'video', src: 'https://videos.pexels.com/video-files/5532771/5532771-sd_640_360_25fps.mp4', poster: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=1600&q=80&auto=format&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1600&q=80&auto=format&fit=crop' },
 ];
 
 interface HeroSlideData {
@@ -242,7 +244,15 @@ export default function HomePage() {
                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm active:shadow-lg transition-all flex flex-col w-full">
                   <div className="relative h-36 w-full overflow-hidden bg-gray-100 shrink-0">
                     {item.image ? (
-                      <img src={item.image} alt={locale === 'th' ? item.nameTh : item.nameEn} className="w-full h-full object-cover" />
+                      <img
+                        src={item.image}
+                        alt={locale === 'th' ? item.nameTh : item.nameEn}
+                        loading="lazy"
+                        decoding="async"
+                        width={192}
+                        height={144}
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-300"><Palette className="w-10 h-10" /></div>
                     )}
@@ -265,7 +275,15 @@ export default function HomePage() {
                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 flex flex-col w-full">
                   <div className="relative h-48 w-full overflow-hidden bg-gray-100 shrink-0">
                     {item.image ? (
-                      <img src={item.image} alt={locale === 'th' ? item.nameTh : item.nameEn} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+                      <img
+                        src={item.image}
+                        alt={locale === 'th' ? item.nameTh : item.nameEn}
+                        loading="lazy"
+                        decoding="async"
+                        width={288}
+                        height={192}
+                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-300"><Palette className="w-12 h-12" /></div>
                     )}
@@ -300,7 +318,15 @@ export default function HomePage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <img src={c('welcome.image') || 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&h=600&fit=crop'} alt="Automotive paint workshop" className="w-full h-full object-cover" />
+                <img
+                  src={c('welcome.image') || 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&h=600&fit=crop&auto=format&q=80'}
+                  alt="Automotive paint workshop"
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={600}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -319,7 +345,15 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative order-1">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <img src={c('brands.image') || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=600&fit=crop'} alt="Paint products" className="w-full h-full object-cover" />
+                <img
+                  src={c('brands.image') || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=800&h=600&fit=crop&auto=format&q=80'}
+                  alt="Paint products"
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={600}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#F5841F] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">
@@ -352,7 +386,15 @@ export default function HomePage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-                <img src={c('services.image') || 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=800&h=600&fit=crop'} alt="Color matching service" className="w-full h-full object-cover" />
+                <img
+                  src={c('services.image') || 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=800&h=600&fit=crop&auto=format&q=80'}
+                  alt="Color matching service"
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={600}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C1C1E] rounded-2xl flex items-center justify-center shadow-lg">
                 <div className="text-center text-white">

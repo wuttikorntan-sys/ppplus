@@ -1,6 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import sharp from 'sharp';
 import { ApiError } from '@/lib/api-server';
+
+// Tuning for uploaded images
+const MAX_IMAGE_WIDTH = 1920; // Resize anything wider; preserves smaller images
+const WEBP_QUALITY = 82;
 
 // Persistent uploads directory OUTSIDE the git-managed project
 // On Hostinger: /home/u626866170/uploads  (set via UPLOADS_DIR env var)
@@ -37,18 +42,38 @@ export async function saveUploadedFile(formData: FormData, fieldName: string): P
   if (file.size > maxSize) {
     throw new ApiError(isVideo ? 'วิดีโอต้องมีขนาดไม่เกิน 100MB' : 'ไฟล์ต้องมีขนาดไม่เกิน 10MB', 400);
   }
-  const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext;
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  // Optimize images: downscale wide images and re-encode as WebP.
+  // Skip GIFs (animation) and videos — written through as-is.
+  let outputBuffer: Buffer = buffer;
+  let outputExt = ext;
+  if (!isVideo && ext !== '.gif') {
+    try {
+      const img = sharp(buffer, { failOn: 'none' });
+      const meta = await img.metadata();
+      const pipeline = (meta.width && meta.width > MAX_IMAGE_WIDTH)
+        ? img.resize({ width: MAX_IMAGE_WIDTH, withoutEnlargement: true })
+        : img;
+      outputBuffer = await pipeline.webp({ quality: WEBP_QUALITY }).toBuffer();
+      outputExt = '.webp';
+    } catch (err) {
+      // Bad/unsupported image → fall back to original bytes so the upload
+      // still succeeds (admin can re-upload a fixed file later)
+      console.warn('Image optimization skipped:', err instanceof Error ? err.message : err);
+    }
+  }
+
+  const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9) + outputExt;
   const filePath = path.join(UPLOADS_DIR, uniqueName);
 
-  const buffer = Buffer.from(await file.arrayBuffer());
   try {
-    // Ensure directory exists
     const dirPath = path.dirname(filePath);
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
     }
-    fs.writeFileSync(filePath, buffer);
-    console.log(`File saved: ${filePath} (${buffer.length} bytes)`);
+    fs.writeFileSync(filePath, outputBuffer);
+    console.log(`File saved: ${filePath} (${outputBuffer.length} bytes, original ${buffer.length} bytes)`);
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
     console.error(`File write error: ${filePath} - ${errMsg}`);
