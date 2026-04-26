@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
       featuresTh: (formData.get('featuresTh') as string) || '',
       buttonText: (formData.get('buttonText') as string) || 'Explore Menu',
       buttonTextTh: (formData.get('buttonTextTh') as string) || 'สำรวจเมนู',
+      buttonUrl: (formData.get('buttonUrl') as string) || null,
+      targetPages: (formData.get('targetPages') as string) || '*',
       isActive: formData.get('isActive') === 'true',
     });
 

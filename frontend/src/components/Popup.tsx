@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { X, Star, CheckCircle2, Clock, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,20 +22,35 @@ interface PopupData {
   featuresTh?: string;
   buttonText?: string;
   buttonTextTh?: string;
+  buttonUrl?: string | null;
+  targetPages?: string;
   active: boolean;
+}
+
+// Map a Next.js pathname to one of the popup target-page keys
+// (kept in sync with the picker in /admin/popups).
+function pageKeyFromPath(pathname: string | null): string {
+  if (!pathname) return 'home';
+  // Strip leading /th or /en
+  const stripped = pathname.replace(/^\/(th|en)(?=\/|$)/, '') || '/';
+  if (stripped === '/' || stripped === '') return 'home';
+  const seg = stripped.split('/').filter(Boolean)[0] || 'home';
+  return seg;
 }
 
 export default function Popup({ locale }: { locale: string }) {
   const [popup, setPopup] = useState<PopupData | null>(null);
   const [visible, setVisible] = useState(false);
   const [googleRating, setGoogleRating] = useState<number | null>(null);
+  const pathname = usePathname();
   const th = locale === 'th';
 
   useEffect(() => {
     const dismissed = sessionStorage.getItem('popup_dismissed');
     if (dismissed) return;
 
-    api.get<{ success: boolean; data: PopupData[] }>('/popups?active=true')
+    const page = pageKeyFromPath(pathname);
+    api.get<{ success: boolean; data: PopupData[] }>(`/popups?active=true&page=${encodeURIComponent(page)}`)
       .then((res) => {
         if (res.data && res.data.length > 0) {
           setPopup(res.data[0]);
@@ -50,7 +66,7 @@ export default function Popup({ locale }: { locale: string }) {
         if (r.success && r.data?.rating) setGoogleRating(r.data.rating);
       })
       .catch(() => {});
-  }, []);
+  }, [pathname]);
 
   const close = () => {
     setVisible(false);
@@ -187,12 +203,24 @@ export default function Popup({ locale }: { locale: string }) {
               )}
 
               {/* CTA Button */}
-              <button
-                onClick={close}
-                className="w-full py-3 bg-gradient-to-r from-[#1C1C1E] to-[#F5841F] hover:from-[#F5841F] hover:to-[#1C1C1E] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#1C1C1E]/25 text-sm"
-              >
-                {buttonLabel}
-              </button>
+              {popup?.buttonUrl ? (
+                <a
+                  href={popup.buttonUrl}
+                  onClick={close}
+                  target={popup.buttonUrl.startsWith('http') ? '_blank' : undefined}
+                  rel={popup.buttonUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="block text-center w-full py-3 bg-gradient-to-r from-[#1C1C1E] to-[#F5841F] hover:from-[#F5841F] hover:to-[#1C1C1E] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#1C1C1E]/25 text-sm"
+                >
+                  {buttonLabel}
+                </a>
+              ) : (
+                <button
+                  onClick={close}
+                  className="w-full py-3 bg-gradient-to-r from-[#1C1C1E] to-[#F5841F] hover:from-[#F5841F] hover:to-[#1C1C1E] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#1C1C1E]/25 text-sm"
+                >
+                  {buttonLabel}
+                </button>
+              )}
             </div>
           </motion.div>
         </motion.div>

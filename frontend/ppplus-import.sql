@@ -121,6 +121,10 @@ CALL ppplus_add_column('menu_items', 'relatedProductIds', '`relatedProductIds` T
 CALL ppplus_add_column('menu_items', 'safetyNotesTh',     '`safetyNotesTh` TEXT NULL');
 CALL ppplus_add_column('menu_items', 'safetyNotesEn',     '`safetyNotesEn` TEXT NULL');
 
+-- popups: button URL + page targeting
+CALL ppplus_add_column('popups', 'buttonUrl',    '`buttonUrl` VARCHAR(500) NULL');
+CALL ppplus_add_column('popups', 'targetPages',  '`targetPages` VARCHAR(255) NOT NULL DEFAULT ''*''');
+
 DROP PROCEDURE IF EXISTS ppplus_add_column;
 
 -- ============================================

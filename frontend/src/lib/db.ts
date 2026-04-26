@@ -142,6 +142,9 @@ export interface PopupRecord {
   featuresTh: string;
   buttonText: string;
   buttonTextTh: string;
+  buttonUrl: string | null;
+  /** Comma-separated page keys to show this popup on, or "*" for every page. */
+  targetPages: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -483,9 +486,9 @@ export const db = {
     async create(data: Omit<PopupRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<PopupRecord> {
       const ts = now();
       const [res] = await pool.query(
-        `INSERT INTO popups (title, titleTh, description, descriptionTh, imageUrl, badge, tags, tagsTh, features, featuresTh, buttonText, buttonTextTh, isActive, createdAt, updatedAt)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [data.title, data.titleTh, data.description, data.descriptionTh, data.imageUrl, data.badge, data.tags, data.tagsTh, data.features, data.featuresTh, data.buttonText, data.buttonTextTh, data.isActive ? 1 : 0, ts, ts],
+        `INSERT INTO popups (title, titleTh, description, descriptionTh, imageUrl, badge, tags, tagsTh, features, featuresTh, buttonText, buttonTextTh, buttonUrl, targetPages, isActive, createdAt, updatedAt)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [data.title, data.titleTh, data.description, data.descriptionTh, data.imageUrl, data.badge, data.tags, data.tagsTh, data.features, data.featuresTh, data.buttonText, data.buttonTextTh, data.buttonUrl, data.targetPages || '*', data.isActive ? 1 : 0, ts, ts],
       );
       const id = (res as mysql.ResultSetHeader).insertId;
       const [rows] = await pool.query('SELECT * FROM popups WHERE id = ? LIMIT 1', [id]);
@@ -496,7 +499,7 @@ export const db = {
       if (!(check as any[]).length) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
-      const allowed = ['title', 'titleTh', 'description', 'descriptionTh', 'imageUrl', 'badge', 'tags', 'tagsTh', 'features', 'featuresTh', 'buttonText', 'buttonTextTh', 'isActive'] as const;
+      const allowed = ['title', 'titleTh', 'description', 'descriptionTh', 'imageUrl', 'badge', 'tags', 'tagsTh', 'features', 'featuresTh', 'buttonText', 'buttonTextTh', 'buttonUrl', 'targetPages', 'isActive'] as const;
       for (const k of allowed) {
         if (k in data) {
           const v = data[k];
