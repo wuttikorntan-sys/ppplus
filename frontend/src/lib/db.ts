@@ -890,7 +890,13 @@ export const db = {
       if (!(check as any[]).length) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
-      if ('status' in data) { fields.push('status = ?'); vals.push(data.status); }
+      const allowed = ['companyName', 'contactPerson', 'phone', 'email', 'businessType', 'province', 'message', 'status'] as const;
+      for (const k of allowed) {
+        if (k in data) {
+          fields.push(`${k} = ?`);
+          vals.push(data[k]);
+        }
+      }
       if (fields.length === 0) {
         const [rows] = await pool.query('SELECT * FROM b2b_applications WHERE id = ? LIMIT 1', [id]);
         return mapRow((rows as any[])[0]) as B2bApplicationRecord;
@@ -899,6 +905,10 @@ export const db = {
       await pool.query(`UPDATE b2b_applications SET ${fields.join(', ')} WHERE id = ?`, vals);
       const [rows] = await pool.query('SELECT * FROM b2b_applications WHERE id = ? LIMIT 1', [id]);
       return mapRow((rows as any[])[0]) as B2bApplicationRecord;
+    },
+    async delete(id: number): Promise<boolean> {
+      const [res] = await pool.query('DELETE FROM b2b_applications WHERE id = ?', [id]);
+      return (res as mysql.ResultSetHeader).affectedRows > 0;
     },
   },
 
@@ -928,7 +938,13 @@ export const db = {
       if (!(check as any[]).length) return undefined;
       const fields: string[] = [];
       const vals: unknown[] = [];
-      if ('status' in data) { fields.push('status = ?'); vals.push(data.status); }
+      const allowed = ['name', 'phone', 'email', 'company', 'productId', 'productName', 'quantity', 'message', 'cartItems', 'status'] as const;
+      for (const k of allowed) {
+        if (k in data) {
+          fields.push(`${k} = ?`);
+          vals.push(data[k]);
+        }
+      }
       if (fields.length === 0) {
         const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);
         return mapRow((rows as any[])[0]) as QuoteRequestRecord;
@@ -937,6 +953,10 @@ export const db = {
       await pool.query(`UPDATE quote_requests SET ${fields.join(', ')} WHERE id = ?`, vals);
       const [rows] = await pool.query('SELECT * FROM quote_requests WHERE id = ? LIMIT 1', [id]);
       return mapRow((rows as any[])[0]) as QuoteRequestRecord;
+    },
+    async delete(id: number): Promise<boolean> {
+      const [res] = await pool.query('DELETE FROM quote_requests WHERE id = ?', [id]);
+      return (res as mysql.ResultSetHeader).affectedRows > 0;
     },
   },
 
