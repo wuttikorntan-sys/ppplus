@@ -18,23 +18,27 @@ interface GalleryImage {
   isActive: boolean;
 }
 
-type Category = { value: string; labelTh: string; labelEn: string };
+type Category = { value: string; labelTh: string; labelEn: string; sortOrder?: number };
 
-// Built-in defaults — also act as the public gallery filter categories
-// (frontend/src/app/[locale]/gallery/page.tsx)
-const defaultCategories: Category[] = [
-  { value: 'projects',     labelTh: 'ผลงาน',         labelEn: 'Projects' },
-  { value: 'before_after', labelTh: 'ก่อน & หลัง',   labelEn: 'Before & After' },
-  { value: 'shop',         labelTh: 'ร้านของเรา',    labelEn: 'Our Shop' },
-  { value: 'color_mixing', labelTh: 'ผสมสี',         labelEn: 'Color Mixing' },
-  { value: 'events',       labelTh: 'กิจกรรม',       labelEn: 'Events' },
+// Seed for first-time visitors and as a fallback if site_contents has nothing.
+// The full list is editable from /admin/gallery-categories.
+const seedCategories: Category[] = [
+  { value: 'projects',     labelTh: 'ผลงาน',         labelEn: 'Projects',         sortOrder: 1 },
+  { value: 'before_after', labelTh: 'ก่อน & หลัง',   labelEn: 'Before & After',   sortOrder: 2 },
+  { value: 'shop',         labelTh: 'ร้านของเรา',    labelEn: 'Our Shop',         sortOrder: 3 },
+  { value: 'color_mixing', labelTh: 'ผสมสี',         labelEn: 'Color Mixing',     sortOrder: 4 },
+  { value: 'events',       labelTh: 'กิจกรรม',       labelEn: 'Events',           sortOrder: 5 },
 ];
 
-const CATEGORIES_KEY = 'gallery.categories.custom';
-const HIDDEN_DEFAULTS_KEY = 'gallery.categories.hiddenDefaults';
+const LIST_KEY = 'gallery.categories.list';
+const LEGACY_CUSTOM_KEY = 'gallery.categories.custom';
+const LEGACY_HIDDEN_KEY = 'gallery.categories.hiddenDefaults';
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s-]+/g, '_').slice(0, 40) || `cat_${Date.now()}`;
+
+const sortByOrder = (arr: Category[]) =>
+  [...arr].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 
 export default function AdminGalleryPage() {
   const locale = useLocale();
@@ -48,14 +52,10 @@ export default function AdminGalleryPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [form, setForm] = useState({ category: 'projects', labelTh: '', labelEn: '', sortOrder: 0, isActive: true });
 
-  const [customCategories, setCustomCategories] = useState<Category[]>([]);
-  const [hiddenDefaults, setHiddenDefaults] = useState<string[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>(seedCategories);
   const [showAddCat, setShowAddCat] = useState(false);
   const [newCat, setNewCat] = useState({ labelTh: '', labelEn: '' });
   const [savingCat, setSavingCat] = useState(false);
-
-  const visibleDefaults = defaultCategories.filter((c) => !hiddenDefaults.includes(c.value));
-  const allCategories: Category[] = [...visibleDefaults, ...customCategories];
 
   const fetchImages = async () => {
     try {
@@ -70,17 +70,29 @@ export default function AdminGalleryPage() {
   const fetchCategoriesConfig = async () => {
     try {
       const res = await api.get<{ success: boolean; data: Record<string, { th: string; en: string }> }>('/site-content');
-      const rawCustom = res.data?.[CATEGORIES_KEY]?.th || res.data?.[CATEGORIES_KEY]?.en || '';
-      if (rawCustom) {
-        const parsed = JSON.parse(rawCustom);
-        if (Array.isArray(parsed)) setCustomCategories(parsed);
+      const raw = res.data?.[LIST_KEY]?.th || res.data?.[LIST_KEY]?.en || '';
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setAllCategories(sortByOrder(parsed));
+          return;
+        }
       }
-      const rawHidden = res.data?.[HIDDEN_DEFAULTS_KEY]?.th || res.data?.[HIDDEN_DEFAULTS_KEY]?.en || '';
-      if (rawHidden) {
-        const parsed = JSON.parse(rawHidden);
-        if (Array.isArray(parsed)) setHiddenDefaults(parsed.filter((v): v is string => typeof v === 'string'));
-      }
-    } catch { /* ignore — falls back to defaults only */ }
+      // Migrate from legacy keys if present
+      const rawCustom = res.data?.[LEGACY_CUSTOM_KEY]?.th || res.data?.[LEGACY_CUSTOM_KEY]?.en || '';
+      const rawHidden = res.data?.[LEGACY_HIDDEN_KEY]?.th || res.data?.[LEGACY_HIDDEN_KEY]?.en || '';
+      const oldCustom: Category[] = rawCustom ? (JSON.parse(rawCustom) as Category[]).filter((c) => c && c.value) : [];
+      const oldHidden: string[] = rawHidden
+        ? (JSON.parse(rawHidden) as unknown[]).filter((v): v is string => typeof v === 'string')
+        : [];
+      const survivingDefaults = seedCategories.filter((c) => !oldHidden.includes(c.value));
+      const baseOrder = survivingDefaults.length;
+      const merged = sortByOrder([
+        ...survivingDefaults,
+        ...oldCustom.map((c, i) => ({ ...c, sortOrder: c.sortOrder ?? baseOrder + i + 1 })),
+      ]);
+      if (merged.length > 0) setAllCategories(merged);
+    } catch { /* ignore — falls back to seedCategories */ }
   };
 
   useEffect(() => { fetchImages(); fetchCategoriesConfig(); }, []);
@@ -97,16 +109,17 @@ export default function AdminGalleryPage() {
       toast.error(th ? 'มีหมวดนี้อยู่แล้ว' : 'Category already exists');
       return;
     }
-    const next = [...customCategories, { value, labelTh, labelEn }];
+    const sortOrder = (allCategories[allCategories.length - 1]?.sortOrder ?? 0) + 1;
+    const next = sortByOrder([...allCategories, { value, labelTh, labelEn, sortOrder }]);
     setSavingCat(true);
     try {
       await api.put('/admin/site-content', [{
-        key: CATEGORIES_KEY,
+        key: LIST_KEY,
         valueTh: JSON.stringify(next),
         valueEn: JSON.stringify(next),
         type: 'json',
       }]);
-      setCustomCategories(next);
+      setAllCategories(next);
       setForm((f) => ({ ...f, category: value }));
       setNewCat({ labelTh: '', labelEn: '' });
       setShowAddCat(false);
@@ -115,64 +128,6 @@ export default function AdminGalleryPage() {
       toast.error(th ? 'เพิ่มไม่สำเร็จ' : 'Failed to add');
     } finally {
       setSavingCat(false);
-    }
-  };
-
-  const handleDeleteCategory = async (value: string) => {
-    const isDefault = defaultCategories.some((c) => c.value === value);
-    const ok = await confirm({
-      title: th ? 'ยืนยันการลบ' : 'Confirm delete',
-      message: th
-        ? `ต้องการลบหมวดนี้ใช่หรือไม่? รูปที่อยู่ในหมวดนี้จะยังอยู่ในฐานข้อมูล${isDefault ? ' (เป็นหมวดเริ่มต้น — สามารถกู้คืนได้ภายหลัง)' : ''}`
-        : `Delete this category? Existing images will stay in the database${isDefault ? ' (built-in category — can be restored later).' : '.'}`,
-      confirmText: th ? 'ลบ' : 'Delete',
-      cancelText: th ? 'ยกเลิก' : 'Cancel',
-      variant: 'danger',
-    });
-    if (!ok) return;
-    try {
-      if (isDefault) {
-        const nextHidden = [...hiddenDefaults, value];
-        await api.put('/admin/site-content', [{
-          key: HIDDEN_DEFAULTS_KEY,
-          valueTh: JSON.stringify(nextHidden),
-          valueEn: JSON.stringify(nextHidden),
-          type: 'json',
-        }]);
-        setHiddenDefaults(nextHidden);
-      } else {
-        const nextCustom = customCategories.filter((c) => c.value !== value);
-        await api.put('/admin/site-content', [{
-          key: CATEGORIES_KEY,
-          valueTh: JSON.stringify(nextCustom),
-          valueEn: JSON.stringify(nextCustom),
-          type: 'json',
-        }]);
-        setCustomCategories(nextCustom);
-      }
-      if (form.category === value) {
-        const fallback = [...visibleDefaults, ...customCategories].find((c) => c.value !== value)?.value || 'projects';
-        setForm((f) => ({ ...f, category: fallback }));
-      }
-      toast.success(th ? 'ลบหมวดเรียบร้อย' : 'Category deleted');
-    } catch {
-      toast.error(th ? 'ลบไม่สำเร็จ' : 'Failed to delete');
-    }
-  };
-
-  const handleRestoreDefault = async (value: string) => {
-    const nextHidden = hiddenDefaults.filter((v) => v !== value);
-    try {
-      await api.put('/admin/site-content', [{
-        key: HIDDEN_DEFAULTS_KEY,
-        valueTh: JSON.stringify(nextHidden),
-        valueEn: JSON.stringify(nextHidden),
-        type: 'json',
-      }]);
-      setHiddenDefaults(nextHidden);
-      toast.success(th ? 'กู้คืนหมวดแล้ว' : 'Category restored');
-    } catch {
-      toast.error(th ? 'กู้คืนไม่สำเร็จ' : 'Failed to restore');
     }
   };
 
@@ -337,20 +292,9 @@ export default function AdminGalleryPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{locale === 'th' ? 'หมวดหมู่' : 'Category'}</label>
                 <div className="flex gap-2">
                   <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="flex-1 border rounded-lg px-3 py-2 text-sm">
-                    {visibleDefaults.length > 0 && (
-                      <optgroup label={th ? 'หมวดเริ่มต้น' : 'Default'}>
-                        {visibleDefaults.map(c => (
-                          <option key={c.value} value={c.value}>{locale === 'th' ? c.labelTh : c.labelEn}</option>
-                        ))}
-                      </optgroup>
-                    )}
-                    {customCategories.length > 0 && (
-                      <optgroup label={th ? 'หมวดที่เพิ่มเอง' : 'Custom'}>
-                        {customCategories.map(c => (
-                          <option key={c.value} value={c.value}>{locale === 'th' ? c.labelTh : c.labelEn}</option>
-                        ))}
-                      </optgroup>
-                    )}
+                    {allCategories.map(c => (
+                      <option key={c.value} value={c.value}>{locale === 'th' ? c.labelTh : c.labelEn}</option>
+                    ))}
                   </select>
                   <button
                     type="button"
@@ -401,66 +345,12 @@ export default function AdminGalleryPage() {
                   </div>
                 )}
 
-                {!showAddCat && (
-                  <>
-                    {(visibleDefaults.length > 0 || customCategories.length > 0) && (
-                      <div className="mt-2">
-                        <p className="text-[11px] text-gray-400 mb-1">
-                          {th ? 'จัดการหมวด — กด X เพื่อลบ' : 'Manage — click X to remove'}
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {visibleDefaults.map((c) => (
-                            <span key={c.value} className="inline-flex items-center gap-1 text-[11px] bg-blue-50 text-blue-700 pl-2 pr-1 py-0.5 rounded-full">
-                              {locale === 'th' ? c.labelTh : c.labelEn}
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteCategory(c.value)}
-                                title={th ? 'ลบหมวด (กู้คืนได้)' : 'Hide category (restorable)'}
-                                className="w-4 h-4 flex items-center justify-center rounded-full text-blue-400 hover:bg-red-500 hover:text-white transition"
-                              >
-                                <X className="w-3 h-3" />
-                              </button>
-                            </span>
-                          ))}
-                          {customCategories.map((c) => (
-                            <span key={c.value} className="inline-flex items-center gap-1 text-[11px] bg-gray-100 text-gray-600 pl-2 pr-1 py-0.5 rounded-full">
-                              {locale === 'th' ? c.labelTh : c.labelEn}
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteCategory(c.value)}
-                                title={th ? 'ลบหมวด' : 'Delete category'}
-                                className="w-4 h-4 flex items-center justify-center rounded-full text-gray-400 hover:bg-red-500 hover:text-white transition"
-                              >
-                                <X className="w-3 h-3" />
-                              </button>
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {hiddenDefaults.length > 0 && (
-                      <div className="mt-2">
-                        <p className="text-[11px] text-gray-400 mb-1">
-                          {th ? 'หมวดที่ซ่อนไว้ — กดเพื่อกู้คืน' : 'Hidden — click to restore'}
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {defaultCategories
-                            .filter((c) => hiddenDefaults.includes(c.value))
-                            .map((c) => (
-                              <button
-                                key={c.value}
-                                type="button"
-                                onClick={() => handleRestoreDefault(c.value)}
-                                className="inline-flex items-center gap-1 text-[11px] bg-gray-50 text-gray-400 hover:text-gray-700 hover:bg-gray-100 line-through px-2 py-0.5 rounded-full transition"
-                              >
-                                {locale === 'th' ? c.labelTh : c.labelEn}
-                              </button>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+                <p className="mt-2 text-[11px] text-gray-400">
+                  {th ? 'แก้ไข/ลบหมวดหมู่ทั้งหมดได้ที่ ' : 'Manage all categories at '}
+                  <a href={`/${locale}/admin/gallery-categories`} className="text-[#F5841F] hover:underline">
+                    /admin/gallery-categories
+                  </a>
+                </p>
               </div>
 
               {/* Labels */}
