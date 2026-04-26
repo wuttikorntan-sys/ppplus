@@ -1,11 +1,29 @@
 import fs from 'fs';
 import path from 'path';
-import sharp from 'sharp';
 import { ApiError } from '@/lib/api-server';
 
 // Tuning for uploaded images
 const MAX_IMAGE_WIDTH = 1920; // Resize anything wider; preserves smaller images
 const WEBP_QUALITY = 82;
+
+// sharp depends on platform-specific native binaries. On hosts where those
+// aren't installed correctly the whole module throws on import, which
+// previously took down every admin route that calls saveUploadedFile
+// (menu, hero-slides, gallery, etc) with 500s. Load it defensively and
+// fall back to writing the original bytes when it isn't available.
+type SharpFactory = typeof import('sharp');
+let sharpModule: SharpFactory | null | undefined;
+function loadSharp(): SharpFactory | null {
+  if (sharpModule !== undefined) return sharpModule;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    sharpModule = require('sharp') as SharpFactory;
+  } catch (err) {
+    console.warn('[upload] sharp unavailable, image optimization disabled:', err instanceof Error ? err.message : err);
+    sharpModule = null;
+  }
+  return sharpModule;
+}
 
 // Persistent uploads directory OUTSIDE the git-managed project
 // On Hostinger: /home/u626866170/uploads  (set via UPLOADS_DIR env var)
@@ -48,7 +66,8 @@ export async function saveUploadedFile(formData: FormData, fieldName: string): P
   // Skip GIFs (animation) and videos — written through as-is.
   let outputBuffer: Buffer = buffer;
   let outputExt = ext;
-  if (!isVideo && ext !== '.gif') {
+  const sharp = loadSharp();
+  if (sharp && !isVideo && ext !== '.gif') {
     try {
       const img = sharp(buffer, { failOn: 'none' });
       const meta = await img.metadata();
