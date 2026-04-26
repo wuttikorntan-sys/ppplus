@@ -174,8 +174,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const isActive = (href: string) => {
     if (!pathname) return false;
-    if (href === '/admin') return pathname === '/admin' || pathname === `/${locale}/admin`;
-    return pathname.includes(href);
+    // Strip the locale prefix so /th/admin/foo behaves the same as /admin/foo
+    const path = pathname.replace(/^\/(th|en)(?=\/|$)/, '') || '/';
+    if (href === '/admin') return path === '/admin';
+    // Exact match OR href is the prefix of a sub-path (so /admin/gallery
+    // does NOT match /admin/gallery-categories)
+    return path === href || path.startsWith(href + '/');
   };
 
   const sidebarContent = (
