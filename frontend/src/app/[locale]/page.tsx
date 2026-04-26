@@ -30,13 +30,14 @@ interface FeaturedProduct {
   image: string | null;
 }
 
-// Unsplash params: auto=format gives WebP/AVIF when supported; q=80 trims bytes;
-// w=1600 is wider than any common viewport while still ~half the bytes of 1920.
+// Unsplash params: auto=format → WebP/AVIF when supported; q=70 keeps the file
+// small (a paint-shop hero behind a dark gradient doesn't need q=80). w=1280
+// is plenty when the image is unoptimized: any device above that resamples.
 const defaultSlides: { type: 'video' | 'image'; src: string; poster?: string }[] = [
-  { type: 'image', src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1600&q=80&auto=format&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1600&q=80&auto=format&fit=crop' },
-  { type: 'video', src: 'https://videos.pexels.com/video-files/5532771/5532771-sd_640_360_25fps.mp4', poster: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=1600&q=80&auto=format&fit=crop' },
-  { type: 'image', src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1600&q=80&auto=format&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1280&q=70&auto=format&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=1280&q=70&auto=format&fit=crop' },
+  { type: 'video', src: 'https://videos.pexels.com/video-files/5532771/5532771-sd_640_360_25fps.mp4', poster: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=1280&q=70&auto=format&fit=crop' },
+  { type: 'image', src: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1280&q=70&auto=format&fit=crop' },
 ];
 
 interface HeroSlideData {
@@ -170,8 +171,18 @@ export default function HomePage() {
   }, [heroSlides.length]);
 
   useEffect(() => {
-    const interval = setInterval(nextSlide, 6000);
-    return () => clearInterval(interval);
+    // Hold off the slideshow for a beat so the LCP image can settle without
+    // having to compete with the second slide preloading or the cross-fade.
+    const startDelay = setTimeout(() => {
+      const interval = setInterval(nextSlide, 6000);
+      // Stash the interval id on the timeout so the cleanup can clear it
+      (startDelay as unknown as { _interval?: ReturnType<typeof setInterval> })._interval = interval;
+    }, 3000);
+    return () => {
+      clearTimeout(startDelay);
+      const i = (startDelay as unknown as { _interval?: ReturnType<typeof setInterval> })._interval;
+      if (i) clearInterval(i);
+    };
   }, [nextSlide]);
 
   return (
@@ -180,24 +191,31 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="relative min-h-[85vh] flex items-center overflow-hidden">
-        {heroSlides.map((slide, idx) => (
-          <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-100 z-[1]' : 'opacity-0 z-0'}`}>
-            {slide.type === 'video' ? (
-              <video autoPlay loop muted playsInline poster={slide.poster} className="w-full h-full object-cover"><source src={slide.src} type="video/mp4" /></video>
-            ) : (
-              <Image
-                src={slide.src}
-                alt="PP Plus"
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority={idx === 0}
-                fetchPriority={idx === 0 ? 'high' : 'auto'}
-                loading={idx === 0 ? 'eager' : 'lazy'}
-              />
-            )}
-          </div>
-        ))}
+        {heroSlides.map((slide, idx) => {
+          // Only mount the current slide and its immediate neighbours so the
+          // browser doesn't fetch every hero image upfront on slow networks.
+          const isActive = idx === currentSlide;
+          const isNeighbour = idx === (currentSlide + 1) % heroSlides.length || idx === (currentSlide - 1 + heroSlides.length) % heroSlides.length;
+          if (!isActive && !isNeighbour) return null;
+          return (
+            <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${isActive ? 'opacity-100 z-[1]' : 'opacity-0 z-0'}`}>
+              {slide.type === 'video' ? (
+                <video autoPlay loop muted playsInline poster={slide.poster} className="w-full h-full object-cover"><source src={slide.src} type="video/mp4" /></video>
+              ) : (
+                <Image
+                  src={slide.src}
+                  alt="PP Plus"
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                  priority={idx === 0}
+                  fetchPriority={idx === 0 ? 'high' : 'auto'}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                />
+              )}
+            </div>
+          );
+        })}
         <div className="absolute inset-0 bg-gradient-to-br from-[#1C1C1E]/85 via-[#1C1C1E]/50 to-[#F5841F]/30 z-[2]" />
         <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-all" aria-label="Previous"><ChevronLeft className="w-6 h-6" /></button>
         <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-all" aria-label="Next"><ChevronRight className="w-6 h-6" /></button>

@@ -91,13 +91,11 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    // Let Next.js compress + serve responsive WebP/AVIF for <Image> usages.
-    // sharp is already in dependencies; the standalone output bundles it.
-    // unoptimized: true was previously set, which disabled all of this.
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [360, 640, 750, 828, 1080, 1200, 1600, 1920],
-    imageSizes: [64, 96, 128, 192, 256, 384],
-    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+    // Hostinger's standalone runtime can't handle on-demand /_next/image
+    // efficiently — enabling it slowed LCP and TBT badly. Stay unoptimized
+    // and rely on the upload pipeline (sharp → WebP) + Unsplash's own
+    // ?auto=format&q=80 to keep bytes down.
+    unoptimized: true,
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

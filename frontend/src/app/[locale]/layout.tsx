@@ -10,18 +10,22 @@ import { Toaster } from 'react-hot-toast';
 import LayoutShell from '@/components/LayoutShell';
 
 // next/font self-hosts the font files at build time, so the browser doesn't
-// need to make a render-blocking request to fonts.googleapis.com / gstatic.com.
+// need a render-blocking request to fonts.googleapis.com / gstatic.com.
+// Trim weights to what the UI actually uses (audited via grep) to roughly
+// halve the font payload on mobile.
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '500', '700'],
   display: 'swap',
   variable: '--font-body',
+  preload: true,
 });
 const kanit = Kanit({
   subsets: ['latin', 'thai'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['600', '700'],
   display: 'swap',
   variable: '--font-heading',
+  preload: true,
 });
 
 export default async function LocaleLayout({

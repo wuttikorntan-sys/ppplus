@@ -1,13 +1,18 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import FloatingReservation from '@/components/FloatingReservation';
-import CartDrawer from '@/components/CartDrawer';
-import ThemeTransitionOverlay from '@/components/ThemeTransitionOverlay';
-import InstallPWA from '@/components/InstallPWA';
-import BottomBar from '@/components/BottomBar';
+
+// These widgets aren't part of the LCP and shouldn't block hydration.
+// Loading them with next/dynamic keeps the initial JS bundle small,
+// which directly cuts TBT on mobile.
+const CartDrawer = dynamic(() => import('@/components/CartDrawer'), { ssr: false });
+const FloatingReservation = dynamic(() => import('@/components/FloatingReservation'), { ssr: false });
+const ThemeTransitionOverlay = dynamic(() => import('@/components/ThemeTransitionOverlay'), { ssr: false });
+const InstallPWA = dynamic(() => import('@/components/InstallPWA'), { ssr: false });
+const BottomBar = dynamic(() => import('@/components/BottomBar'), { ssr: false });
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
