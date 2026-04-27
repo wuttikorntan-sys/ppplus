@@ -267,16 +267,16 @@ export default function MenuPage() {
         {loading ? (
           <div className="text-center py-20 text-gray-400">{locale === 'th' ? 'กำลังโหลด...' : 'Loading...'}</div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 items-stretch">
             {filteredItems.map((item, idx) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.04, duration: 0.4 }}
-                className="bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group"
+                className="bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
               >
-                <Link href={`/menu/${item.id}` as '/menu/[id]'} className="relative aspect-square md:aspect-[4/3] w-full overflow-hidden block cursor-pointer">
+                <Link href={`/menu/${item.id}` as '/menu/[id]'} className="relative aspect-square md:aspect-[4/3] w-full overflow-hidden block cursor-pointer flex-shrink-0">
                   <Image
                     src={item.image || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?w=600&h=450&fit=crop'}
                     alt={locale === 'th' ? item.nameTh : item.nameEn}
@@ -300,12 +300,12 @@ export default function MenuPage() {
                   )}
                   <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/30 to-transparent" />
                 </Link>
-                <div className="p-3 md:p-5">
+                <div className="p-3 md:p-5 flex flex-col flex-1">
                   <span className="hidden md:inline-block text-xs text-[#F5841F] font-semibold tracking-wide uppercase mb-1">
                     {locale === 'th' ? item.category?.nameTh : item.category?.nameEn}
                   </span>
                   <Link href={`/menu/${item.id}` as '/menu/[id]'} className="block">
-                    <h3 className="font-semibold text-[#2D2D2D] text-sm md:text-lg leading-snug mb-0.5 md:mb-1.5 line-clamp-2 hover:text-[#F5841F] transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
+                    <h3 className="font-semibold text-[#2D2D2D] text-sm md:text-lg leading-snug mb-0.5 md:mb-1.5 line-clamp-2 min-h-[2.6em] hover:text-[#F5841F] transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
                       {locale === 'th' ? item.nameTh : item.nameEn}
                     </h3>
                   </Link>
@@ -318,7 +318,7 @@ export default function MenuPage() {
                   {item.finishType && (
                     <p className="text-[#64748B] text-xs hidden md:block">{locale === 'th' ? 'เนื้อสี: ' : 'Finish: '}{item.finishType}</p>
                   )}
-                  <div className="mt-2 md:mt-3 flex gap-2">
+                  <div className="mt-auto pt-2 md:pt-3 flex gap-2">
                     <button
                       onClick={() => handleAddToCart(item)}
                       className="flex-1 flex items-center justify-center gap-1.5 text-xs md:text-sm font-medium py-1.5 md:py-2 rounded-lg bg-[#F5841F] text-white hover:bg-[#F5841F]/90 transition"

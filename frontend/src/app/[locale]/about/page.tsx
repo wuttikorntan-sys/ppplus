@@ -7,14 +7,40 @@ import { ShieldCheck, Target, Beaker, Factory, Award, FlaskConical, Microscope }
 import Image from 'next/image';
 import { api } from '@/lib/api';
 
+interface TeamMember {
+  image: string;
+  nameTh: string;
+  nameEn: string;
+  roleTh: string;
+  roleEn: string;
+}
+
 export default function AboutPage() {
   const t = useTranslations('about');
   const locale = useLocale();
   const [headerImg, setHeaderImg] = useState('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&h=600&fit=crop');
+  const [members, setMembers] = useState<TeamMember[]>([]);
 
   useEffect(() => {
     api.get<{ success: boolean; data: Record<string, { th: string; en: string }> }>('/site-content')
-      .then((r) => { if (r.data?.['header.about']?.th) setHeaderImg(r.data['header.about'].th); })
+      .then((r) => {
+        if (r.data?.['header.about']?.th) setHeaderImg(r.data['header.about'].th);
+        const list: TeamMember[] = [];
+        for (let i = 1; i <= 6; i++) {
+          const img = r.data?.[`team.member${i}.image`]?.th;
+          if (!img) continue;
+          const nameRec = r.data?.[`team.member${i}.name`];
+          const roleRec = r.data?.[`team.member${i}.role`];
+          list.push({
+            image: img,
+            nameTh: nameRec?.th || '',
+            nameEn: nameRec?.en || nameRec?.th || '',
+            roleTh: roleRec?.th || '',
+            roleEn: roleRec?.en || roleRec?.th || '',
+          });
+        }
+        setMembers(list);
+      })
       .catch(() => {});
   }, []);
 
@@ -114,14 +140,54 @@ export default function AboutPage() {
 
       {/* Team */}
       <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-6 relative bg-[#1C1C1E]/10 flex items-center justify-center">
-              <Factory className="w-12 h-12 text-[#1C1C1E]" />
-            </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
             <h2 className="text-3xl font-bold text-[#2D2D2D] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>{t('team.title')}</h2>
-            <p className="text-[#64748B] text-lg">{t('team.text')}</p>
+            <p className="text-[#64748B] text-lg max-w-3xl mx-auto">{t('team.text')}</p>
           </motion.div>
+
+          {members.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 max-w-5xl mx-auto">
+              {members.map((m, idx) => {
+                const name = locale === 'th' ? m.nameTh : m.nameEn;
+                const role = locale === 'th' ? m.roleTh : m.roleEn;
+                return (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="text-center"
+                  >
+                    <div className="aspect-square rounded-2xl overflow-hidden mx-auto mb-4 bg-gray-100 relative shadow-sm">
+                      <Image
+                        src={m.image}
+                        alt={name || `Team member ${idx + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      />
+                    </div>
+                    {name && (
+                      <h3 className="text-base md:text-lg font-semibold text-[#2D2D2D]" style={{ fontFamily: 'var(--font-heading)' }}>
+                        {name}
+                      </h3>
+                    )}
+                    {role && (
+                      <p className="text-[#F5841F] text-sm font-medium mt-1">{role}</p>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <div className="w-24 h-24 rounded-full overflow-hidden relative bg-[#1C1C1E]/10 flex items-center justify-center">
+                <Factory className="w-12 h-12 text-[#1C1C1E]" />
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
