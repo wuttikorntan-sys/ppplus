@@ -347,11 +347,19 @@ export const db = {
   /* ── categories ── */
   categories: {
     async findMany(): Promise<CategoryRecord[]> {
-      const [rows] = await pool.query('SELECT * FROM categories ORDER BY sortOrder ASC');
+      const [rows] = await pool.query('SELECT * FROM categories ORDER BY sortOrder ASC, id ASC');
       return (rows as any[]).map(mapRow) as CategoryRecord[];
     },
     async findById(id: number): Promise<CategoryRecord | undefined> {
       const [rows] = await pool.query('SELECT * FROM categories WHERE id = ? LIMIT 1', [id]);
+      const arr = rows as any[];
+      return arr.length ? (mapRow(arr[0]) as CategoryRecord) : undefined;
+    },
+    async findByNames(nameTh: string, nameEn: string): Promise<CategoryRecord | undefined> {
+      const [rows] = await pool.query(
+        'SELECT * FROM categories WHERE nameTh = ? AND nameEn = ? ORDER BY id ASC LIMIT 1',
+        [nameTh, nameEn],
+      );
       const arr = rows as any[];
       return arr.length ? (mapRow(arr[0]) as CategoryRecord) : undefined;
     },
@@ -376,6 +384,72 @@ export const db = {
       vals.push(id);
       await pool.query(`UPDATE categories SET ${fields.join(', ')} WHERE id = ?`, vals);
       return (await this.findById(id))!;
+    },
+    async updateId(oldId: number, newId: number): Promise<CategoryRecord | undefined> {
+      if (oldId === newId) return this.findById(oldId);
+      if (!Number.isInteger(newId) || newId <= 0) {
+        throw new Error('ID ต้องเป็นจำนวนเต็มบวก');
+      }
+      const existing = await this.findById(oldId);
+      if (!existing) return undefined;
+      const conflict = await this.findById(newId);
+      if (conflict) throw new Error(`มี Category ID ${newId} อยู่แล้ว`);
+
+      const conn = await pool.getConnection();
+      try {
+        await conn.query('SET FOREIGN_KEY_CHECKS = 0');
+        await conn.beginTransaction();
+        await conn.query('UPDATE categories SET id = ? WHERE id = ?', [newId, oldId]);
+        await conn.query('UPDATE menu_items SET categoryId = ? WHERE categoryId = ?', [newId, oldId]);
+        await conn.commit();
+        await conn.query('SET FOREIGN_KEY_CHECKS = 1');
+        // Bump AUTO_INCREMENT so future inserts don't collide
+        await conn.query('ALTER TABLE categories AUTO_INCREMENT = ?', [newId + 1]).catch(() => {});
+        return await this.findById(newId);
+      } catch (err) {
+        await conn.rollback().catch(() => {});
+        await conn.query('SET FOREIGN_KEY_CHECKS = 1').catch(() => {});
+        throw err;
+      } finally {
+        conn.release();
+      }
+    },
+    async removeDuplicates(): Promise<{ removedCategories: number; movedItems: number; groups: number }> {
+      const conn = await pool.getConnection();
+      try {
+        const [dupRows] = await conn.query(
+          `SELECT nameTh, nameEn, GROUP_CONCAT(id ORDER BY id ASC) AS ids, COUNT(*) AS cnt
+           FROM categories
+           GROUP BY nameTh, nameEn
+           HAVING COUNT(*) > 1`,
+        );
+        const groups = dupRows as any[];
+        if (groups.length === 0) return { removedCategories: 0, movedItems: 0, groups: 0 };
+
+        await conn.beginTransaction();
+        let removedCategories = 0;
+        let movedItems = 0;
+        for (const g of groups) {
+          const ids = String(g.ids).split(',').map((s: string) => parseInt(s, 10)).filter(Number.isFinite);
+          if (ids.length < 2) continue;
+          const keeper = ids[0];
+          const others = ids.slice(1);
+          const [moveRes] = await conn.query(
+            'UPDATE menu_items SET categoryId = ? WHERE categoryId IN (?)',
+            [keeper, others],
+          );
+          movedItems += (moveRes as mysql.ResultSetHeader).affectedRows;
+          const [delRes] = await conn.query('DELETE FROM categories WHERE id IN (?)', [others]);
+          removedCategories += (delRes as mysql.ResultSetHeader).affectedRows;
+        }
+        await conn.commit();
+        return { removedCategories, movedItems, groups: groups.length };
+      } catch (err) {
+        await conn.rollback().catch(() => {});
+        throw err;
+      } finally {
+        conn.release();
+      }
     },
     async delete(id: number): Promise<boolean> {
       const [res] = await pool.query('DELETE FROM categories WHERE id = ?', [id]);
@@ -460,6 +534,46 @@ export const db = {
     async delete(id: number): Promise<boolean> {
       const [res] = await pool.query('DELETE FROM menu_items WHERE id = ?', [id]);
       return (res as mysql.ResultSetHeader).affectedRows > 0;
+    },
+    async updateId(oldId: number, newId: number): Promise<MenuItemRecord | undefined> {
+      if (oldId === newId) return this.findById(oldId) as Promise<MenuItemRecord | undefined>;
+      if (!Number.isInteger(newId) || newId <= 0) {
+        throw new Error('ID ต้องเป็นจำนวนเต็มบวก');
+      }
+      const existing = await this.findById(oldId);
+      if (!existing) return undefined;
+      const conflict = await this.findById(newId);
+      if (conflict) throw new Error(`มีสินค้า ID ${newId} อยู่แล้ว`);
+
+      const conn = await pool.getConnection();
+      try {
+        await conn.query('SET FOREIGN_KEY_CHECKS = 0');
+        await conn.beginTransaction();
+        await conn.query('UPDATE menu_items SET id = ? WHERE id = ?', [newId, oldId]);
+        await conn.query('UPDATE order_items SET menuItemId = ? WHERE menuItemId = ?', [newId, oldId]);
+        // Patch CSV soft references in relatedProductIds
+        const [related] = await conn.query(
+          "SELECT id, relatedProductIds FROM menu_items WHERE relatedProductIds IS NOT NULL AND relatedProductIds <> ''",
+        );
+        const oldStr = String(oldId);
+        const newStr = String(newId);
+        for (const row of related as any[]) {
+          const ids = String(row.relatedProductIds).split(',').map((s: string) => s.trim()).filter(Boolean);
+          if (!ids.includes(oldStr)) continue;
+          const updated = ids.map((s: string) => (s === oldStr ? newStr : s)).join(',');
+          await conn.query('UPDATE menu_items SET relatedProductIds = ? WHERE id = ?', [updated, row.id]);
+        }
+        await conn.commit();
+        await conn.query('SET FOREIGN_KEY_CHECKS = 1');
+        await conn.query('ALTER TABLE menu_items AUTO_INCREMENT = ?', [newId + 1]).catch(() => {});
+        return (await this.findById(newId)) as MenuItemRecord | undefined;
+      } catch (err) {
+        await conn.rollback().catch(() => {});
+        await conn.query('SET FOREIGN_KEY_CHECKS = 1').catch(() => {});
+        throw err;
+      } finally {
+        conn.release();
+      }
     },
     async count(): Promise<number> {
       const [rows] = await pool.query('SELECT COUNT(*) as cnt FROM menu_items');

@@ -1,9 +1,9 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Edit, Trash2, X, GripVertical } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Copy } from 'lucide-react';
 import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { useConfirm } from '@/components/ConfirmDialog';
@@ -16,7 +16,7 @@ interface Category {
   _count?: { items: number };
 }
 
-const emptyForm = { nameTh: '', nameEn: '', sortOrder: '0' };
+const emptyForm = { id: '', nameTh: '', nameEn: '', sortOrder: '0' };
 
 export default function AdminCategoriesPage() {
   const locale = useLocale();
@@ -28,6 +28,19 @@ export default function AdminCategoriesPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [deduping, setDeduping] = useState(false);
+
+  const duplicateCount = useMemo(() => {
+    const seen = new Map<string, number>();
+    let extra = 0;
+    for (const c of categories) {
+      const key = `${c.nameTh}|${c.nameEn}`;
+      const n = (seen.get(key) ?? 0) + 1;
+      seen.set(key, n);
+      if (n > 1) extra++;
+    }
+    return extra;
+  }, [categories]);
 
   const fetchCategories = () => {
     setLoading(true);
@@ -47,8 +60,36 @@ export default function AdminCategoriesPage() {
 
   const openEdit = (cat: Category) => {
     setEditingId(cat.id);
-    setForm({ nameTh: cat.nameTh, nameEn: cat.nameEn, sortOrder: cat.sortOrder.toString() });
+    setForm({ id: cat.id.toString(), nameTh: cat.nameTh, nameEn: cat.nameEn, sortOrder: cat.sortOrder.toString() });
     setShowForm(true);
+  };
+
+  const handleDedupe = async () => {
+    const confirmed = await confirm({
+      title: th ? 'ลบหมวดหมู่ซ้ำ' : 'Remove duplicates',
+      message: th
+        ? `พบ ${duplicateCount} หมวดหมู่ซ้ำ ระบบจะรวมสินค้าไปยัง ID ที่ต่ำสุดและลบตัวซ้ำ ดำเนินการต่อ?`
+        : `Found ${duplicateCount} duplicates. Items will be moved to the lowest ID and the duplicates removed. Continue?`,
+      confirmText: th ? 'ดำเนินการ' : 'Proceed',
+      cancelText: th ? 'ยกเลิก' : 'Cancel',
+      variant: 'danger',
+    });
+    if (!confirmed) return;
+    setDeduping(true);
+    try {
+      const res = await api.post<{ success: boolean; data: { removedCategories: number; movedItems: number; groups: number } }>('/admin/categories/dedupe', {});
+      const { removedCategories, movedItems } = res.data;
+      toast.success(
+        th
+          ? `ลบ ${removedCategories} หมวดหมู่ ย้าย ${movedItems} สินค้า`
+          : `Removed ${removedCategories} categories, moved ${movedItems} items`,
+      );
+      fetchCategories();
+    } catch {
+      toast.error(th ? 'ลบไม่สำเร็จ' : 'Failed to dedupe');
+    } finally {
+      setDeduping(false);
+    }
   };
 
   const handleDelete = async (cat: Category) => {
@@ -78,18 +119,28 @@ export default function AdminCategoriesPage() {
     }
     setSaving(true);
     try {
-      const body = { nameTh: form.nameTh, nameEn: form.nameEn, sortOrder: parseInt(form.sortOrder) || 0 };
       if (editingId) {
+        const body: { nameTh: string; nameEn: string; sortOrder: number; newId?: number } = {
+          nameTh: form.nameTh,
+          nameEn: form.nameEn,
+          sortOrder: parseInt(form.sortOrder) || 0,
+        };
+        const parsedId = parseInt(form.id);
+        if (Number.isFinite(parsedId) && parsedId > 0 && parsedId !== editingId) {
+          body.newId = parsedId;
+        }
         await api.put(`/admin/categories/${editingId}`, body);
         toast.success(th ? 'อัปเดตเรียบร้อย' : 'Updated');
       } else {
+        const body = { nameTh: form.nameTh, nameEn: form.nameEn, sortOrder: parseInt(form.sortOrder) || 0 };
         await api.post('/admin/categories', body);
         toast.success(th ? 'เพิ่มเรียบร้อย' : 'Created');
       }
       setShowForm(false);
       fetchCategories();
-    } catch {
-      toast.error(th ? 'เกิดข้อผิดพลาด' : 'Error');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : '';
+      toast.error(msg || (th ? 'เกิดข้อผิดพลาด' : 'Error'));
     } finally {
       setSaving(false);
     }
@@ -102,11 +153,32 @@ export default function AdminCategoriesPage() {
           <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-heading)' }}>
             {th ? 'จัดการหมวดหมู่' : 'Category Management'}
           </h1>
-          <p className="text-sm text-gray-500 mt-0.5">{categories.length} {th ? 'หมวดหมู่' : 'categories'}</p>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {categories.length} {th ? 'หมวดหมู่' : 'categories'}
+            {duplicateCount > 0 && (
+              <span className="ml-2 inline-flex items-center gap-1 text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-md">
+                <Copy className="w-3 h-3" /> {duplicateCount} {th ? 'ซ้ำ' : 'duplicates'}
+              </span>
+            )}
+          </p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-lg font-medium hover:bg-[#1C1C1E]-light transition text-sm shadow-sm">
-          <Plus className="w-4 h-4" /> {th ? 'เพิ่มหมวดหมู่' : 'Add Category'}
-        </button>
+        <div className="flex items-center gap-2">
+          {duplicateCount > 0 && (
+            <button
+              onClick={handleDedupe}
+              disabled={deduping}
+              className="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-lg font-medium hover:bg-red-100 transition text-sm disabled:opacity-50"
+            >
+              <Trash2 className="w-4 h-4" />
+              {deduping
+                ? th ? 'กำลังลบ...' : 'Removing...'
+                : th ? 'ลบที่ซ้ำ' : 'Remove Duplicates'}
+            </button>
+          )}
+          <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-[#1C1C1E] text-white rounded-lg font-medium hover:bg-[#1C1C1E]-light transition text-sm shadow-sm">
+            <Plus className="w-4 h-4" /> {th ? 'เพิ่มหมวดหมู่' : 'Add Category'}
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -161,6 +233,20 @@ export default function AdminCategoriesPage() {
               <button onClick={() => setShowForm(false)} className="p-1.5 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5 text-gray-400" /></button>
             </div>
             <div className="p-6 space-y-4">
+              {editingId !== null && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    ID {th ? '(ระวัง: เปลี่ยนแล้วสินค้าจะตามไปด้วย)' : '(warning: items will follow)'}
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={form.id}
+                    onChange={(e) => setForm({ ...form, id: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm"
+                  />
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (ไทย)' : 'Name (Thai)'} *</label>
                 <input value={form.nameTh} onChange={(e) => setForm({ ...form, nameTh: e.target.value })}

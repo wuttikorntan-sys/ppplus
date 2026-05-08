@@ -111,6 +111,7 @@ interface Category {
 }
 
 const emptyForm = {
+  id: '',
   nameTh: '', nameEn: '', descriptionTh: '', descriptionEn: '', price: '', categoryId: '', isAvailable: true, sortOrder: '0',
   brand: '', colorCode: '', colorName: '', finishType: '', coverageArea: '', size: '', unit: 'L',
   mixingRatio: '', featuresTh: '', featuresEn: '', videoUrl: '',
@@ -179,6 +180,7 @@ export default function AdminMenuPage() {
   const openEdit = (item: MenuItem) => {
     setEditingId(item.id);
     setForm({
+      id: item.id.toString(),
       nameTh: item.nameTh,
       nameEn: item.nameEn,
       descriptionTh: item.descriptionTh || '',
@@ -323,6 +325,12 @@ export default function AdminMenuPage() {
       if (form.specFlashPoint) formData.append('specFlashPoint', form.specFlashPoint);
       if (form.specPotLife) formData.append('specPotLife', form.specPotLife);
       if (form.relatedProductIds) formData.append('relatedProductIds', form.relatedProductIds);
+      if (editingId !== null) {
+        const parsedId = parseInt(form.id);
+        if (Number.isFinite(parsedId) && parsedId > 0 && parsedId !== editingId) {
+          formData.append('newId', String(parsedId));
+        }
+      }
       if (imageFile) formData.append('image', imageFile);
       else if (removeImage && editingId) formData.append('removeImage', '1');
       if (tdsFile) formData.append('tdsFile', tdsFile);
@@ -503,6 +511,20 @@ export default function AdminMenuPage() {
                 )}
                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageChange} className="hidden" />
               </div>
+              {editingId !== null && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    ID {th ? '(ระวัง: order/related products จะตามไปด้วย)' : '(warning: orders & related products will follow)'}
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={form.id}
+                    onChange={(e) => setForm({ ...form, id: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm font-mono"
+                  />
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (ไทย)' : 'Name (Thai)'} *</label>

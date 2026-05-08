@@ -44,6 +44,25 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const formData = await req.formData();
 
+    const newIdRaw = formData.get('newId');
+    let workingId = id;
+    if (newIdRaw !== null && newIdRaw !== '') {
+      const newId = parseInt(newIdRaw as string);
+      if (!Number.isFinite(newId) || newId <= 0) {
+        throw new ApiError('ID ใหม่ต้องเป็นจำนวนเต็มบวก', 400);
+      }
+      if (newId !== id) {
+        try {
+          const moved = await db.menuItems.updateId(id, newId);
+          if (!moved) throw new ApiError('ไม่พบสินค้า', 404);
+          workingId = newId;
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : 'ไม่สามารถเปลี่ยน ID ได้';
+          throw new ApiError(msg, 409);
+        }
+      }
+    }
+
     const data = menuItemSchema.partial().parse({
       categoryId: formData.get('categoryId') ? parseInt(formData.get('categoryId') as string) : undefined,
       nameTh: formData.get('nameTh') as string || undefined,
@@ -86,7 +105,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (sdsPath) updateData.sdsFile = sdsPath;
     else if (formData.get('removeSdsFile') === '1') updateData.sdsFile = null;
 
-    const item = await db.menuItems.update(id, updateData);
+    const item = await db.menuItems.update(workingId, updateData);
     if (!item) throw new ApiError('ไม่พบสินค้า', 404);
     return NextResponse.json({ success: true, data: item });
   } catch (err) {

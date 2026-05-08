@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
-import { requireAdmin, handleError } from '@/lib/api-server';
+import { requireAdmin, handleError, ApiError } from '@/lib/api-server';
 
 export async function GET(req: NextRequest) {
   try {
@@ -23,7 +23,16 @@ export async function POST(req: NextRequest) {
       sortOrder: z.number().int().optional(),
     }).parse(body);
 
-    const category = await db.categories.create({ nameTh: data.nameTh, nameEn: data.nameEn, sortOrder: data.sortOrder ?? 0 });
+    const dup = await db.categories.findByNames(data.nameTh.trim(), data.nameEn.trim());
+    if (dup) {
+      throw new ApiError(`มีหมวดหมู่ "${data.nameTh}" อยู่แล้ว (ID ${dup.id})`, 409);
+    }
+
+    const category = await db.categories.create({
+      nameTh: data.nameTh.trim(),
+      nameEn: data.nameEn.trim(),
+      sortOrder: data.sortOrder ?? 0,
+    });
     return NextResponse.json({ success: true, data: category }, { status: 201 });
   } catch (err) {
     return handleError(err);

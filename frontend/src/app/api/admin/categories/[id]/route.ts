@@ -14,10 +14,28 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const data = z.object({
       nameTh: z.string().min(1),
       nameEn: z.string().min(1),
-      sortOrder: z.number().int().optional(),
+      sortOrder: z.number().int(),
+      newId: z.number().int().positive(),
     }).partial().parse(body);
 
-    const category = await db.categories.update(id, data);
+    let workingId = id;
+    if (typeof data.newId === 'number' && data.newId !== id) {
+      try {
+        const moved = await db.categories.updateId(id, data.newId);
+        if (!moved) throw new ApiError('ไม่พบหมวดหมู่', 404);
+        workingId = data.newId;
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : 'ไม่สามารถเปลี่ยน ID ได้';
+        throw new ApiError(msg, 409);
+      }
+    }
+
+    const updates: { nameTh?: string; nameEn?: string; sortOrder?: number } = {};
+    if (data.nameTh !== undefined) updates.nameTh = data.nameTh.trim();
+    if (data.nameEn !== undefined) updates.nameEn = data.nameEn.trim();
+    if (data.sortOrder !== undefined) updates.sortOrder = data.sortOrder;
+
+    const category = await db.categories.update(workingId, updates);
     if (!category) throw new ApiError('ไม่พบหมวดหมู่', 404);
     return NextResponse.json({ success: true, data: category });
   } catch (err) {
