@@ -13,7 +13,7 @@ const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_TDS_SIZE = 10 * 1024 * 1024; // 10MB
 
 interface MenuItem {
-  id: number;
+  id: string;
   nameTh: string;
   nameEn: string;
   descriptionTh: string;
@@ -128,7 +128,7 @@ export default function AdminMenuPage() {
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -159,7 +159,7 @@ export default function AdminMenuPage() {
 
   const filtered = items.filter((i) => {
     const matchSearch = search === '' || i.nameTh.includes(search) || i.nameEn.toLowerCase().includes(search.toLowerCase());
-    const matchCat = filterCat === '' || i.categoryId === parseInt(filterCat);
+    const matchCat = filterCat === '' || String(i.categoryId) === filterCat;
     return matchSearch && matchCat;
   });
 
@@ -180,7 +180,7 @@ export default function AdminMenuPage() {
   const openEdit = (item: MenuItem) => {
     setEditingId(item.id);
     setForm({
-      id: item.id.toString(),
+      id: item.id,
       nameTh: item.nameTh,
       nameEn: item.nameEn,
       descriptionTh: item.descriptionTh || '',
@@ -326,10 +326,12 @@ export default function AdminMenuPage() {
       if (form.specPotLife) formData.append('specPotLife', form.specPotLife);
       if (form.relatedProductIds) formData.append('relatedProductIds', form.relatedProductIds);
       if (editingId !== null) {
-        const parsedId = parseInt(form.id);
-        if (Number.isFinite(parsedId) && parsedId > 0 && parsedId !== editingId) {
-          formData.append('newId', String(parsedId));
+        const trimmedId = form.id.trim();
+        if (trimmedId && trimmedId !== editingId) {
+          formData.append('newId', trimmedId);
         }
+      } else if (form.id.trim()) {
+        formData.append('id', form.id.trim());
       }
       if (imageFile) formData.append('image', imageFile);
       else if (removeImage && editingId) formData.append('removeImage', '1');
@@ -352,7 +354,7 @@ export default function AdminMenuPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     const ok = await confirm({
       title: th ? 'ยืนยันการลบ' : 'Confirm delete',
       message: th ? 'ต้องการลบสินค้านี้ใช่หรือไม่?' : 'Delete this item?',
@@ -425,7 +427,7 @@ export default function AdminMenuPage() {
             <tbody className="divide-y divide-gray-50">
               {filtered.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50/50 transition">
-                  <td className="px-4 py-3 text-gray-400 text-xs font-mono">#{item.id}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs font-mono">{item.id}</td>
                   <td className="px-4 py-3">
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 shrink-0">
                       {item.image ? (
@@ -511,20 +513,24 @@ export default function AdminMenuPage() {
                 )}
                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageChange} className="hidden" />
               </div>
-              {editingId !== null && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    ID {th ? '(ระวัง: order/related products จะตามไปด้วย)' : '(warning: orders & related products will follow)'}
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={form.id}
-                    onChange={(e) => setForm({ ...form, id: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm font-mono"
-                  />
-                </div>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  ID {editingId !== null
+                    ? (th ? '(ระวัง: order/related products จะตามไปด้วย)' : '(warning: orders & related products will follow)')
+                    : (th ? '(ปล่อยว่างให้ระบบสร้างให้)' : '(leave blank to auto-generate)')}
+                </label>
+                <input
+                  type="text"
+                  value={form.id}
+                  onChange={(e) => setForm({ ...form, id: e.target.value })}
+                  placeholder={editingId !== null ? '' : 'SRR001'}
+                  maxLength={64}
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm font-mono"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  {th ? 'รับ A-Z, 0-9, ภาษาไทย, _ - . ความยาว 1-64 ตัวอักษร' : 'A-Z, 0-9, Thai, _ - . (1-64 chars)'}
+                </p>
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ชื่อ (ไทย)' : 'Name (Thai)'} *</label>

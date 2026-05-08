@@ -14,7 +14,7 @@ interface QuoteRequest {
   phone: string;
   email: string | null;
   company: string | null;
-  productId: number | null;
+  productId: string | null;
   productName: string | null;
   quantity: string | null;
   message: string | null;

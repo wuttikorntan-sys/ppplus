@@ -29,7 +29,7 @@ interface Category {
 }
 
 interface ProductDetail {
-  id: number;
+  id: string;
   categoryId: number;
   nameTh: string;
   nameEn: string;
@@ -63,7 +63,7 @@ interface ProductDetail {
 }
 
 interface RelatedProduct {
-  id: number;
+  id: string;
   nameTh: string;
   nameEn: string;
   image: string | null;
@@ -131,8 +131,8 @@ export default function ProductDetailPage() {
 
         const ids = (res.data.relatedProductIds || '')
           .split(/[,\s]+/)
-          .map((s) => parseInt(s.trim(), 10))
-          .filter((n) => Number.isFinite(n) && n > 0);
+          .map((s) => s.trim())
+          .filter(Boolean);
 
         if (ids.length > 0) {
           const all = await api.get<{ success: boolean; data: RelatedProduct[] }>(`/menu`);

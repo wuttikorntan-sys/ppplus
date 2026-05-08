@@ -65,7 +65,7 @@ export interface CategoryRecord {
 }
 
 export interface MenuItemRecord {
-  id: number;
+  id: string;
   categoryId: number;
   nameTh: string;
   nameEn: string;
@@ -220,7 +220,7 @@ export interface QuoteRequestRecord {
   phone: string;
   email: string | null;
   company: string | null;
-  productId: number | null;
+  productId: string | null;
   productName: string | null;
   quantity: string | null;
   message: string | null;
@@ -249,7 +249,7 @@ export interface OrderRecord {
 export interface OrderItemRecord {
   id: number;
   orderId: number;
-  menuItemId: number;
+  menuItemId: string;
   quantity: number;
   price: string;
   createdAt: string;
@@ -491,8 +491,8 @@ export const db = {
         return mapped;
       });
     },
-    async findById(id: number, includeCategory = false): Promise<(MenuItemRecord & { category?: CategoryRecord }) | undefined> {
-      const [rows] = await pool.query('SELECT * FROM menu_items WHERE id = ? LIMIT 1', [id]);
+    async findById(id: string | number, includeCategory = false): Promise<(MenuItemRecord & { category?: CategoryRecord }) | undefined> {
+      const [rows] = await pool.query('SELECT * FROM menu_items WHERE id = ? LIMIT 1', [String(id)]);
       const arr = rows as any[];
       if (!arr.length) return undefined;
       const item = mapRow(arr[0]) as MenuItemRecord & { category?: CategoryRecord };
@@ -503,17 +503,26 @@ export const db = {
       }
       return item;
     },
-    async create(data: Omit<MenuItemRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<MenuItemRecord> {
+    async create(data: Omit<MenuItemRecord, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }): Promise<MenuItemRecord> {
       const ts = now();
-      const [res] = await pool.query(
-        `INSERT INTO menu_items (categoryId, nameTh, nameEn, descriptionTh, descriptionEn, price, image, isAvailable, sortOrder, brand, colorCode, colorName, finishType, coverageArea, size, unit, mixingRatio, applicationMethodTh, applicationMethodEn, featuresTh, featuresEn, tdsFile, sdsFile, videoUrl, specColor, specDensity, specFlashPoint, specPotLife, relatedProductIds, safetyNotesTh, safetyNotesEn, createdAt, updatedAt)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [data.categoryId, data.nameTh, data.nameEn, data.descriptionTh, data.descriptionEn, data.price, data.image, data.isAvailable ? 1 : 0, data.sortOrder, data.brand, data.colorCode, data.colorName, data.finishType, data.coverageArea, data.size, data.unit, data.mixingRatio, data.applicationMethodTh, data.applicationMethodEn, data.featuresTh, data.featuresEn, data.tdsFile, data.sdsFile, data.videoUrl, data.specColor, data.specDensity, data.specFlashPoint, data.specPotLife, data.relatedProductIds, data.safetyNotesTh, data.safetyNotesEn, ts, ts],
+      const id = data.id && data.id.trim() ? data.id.trim() : await this._nextAutoId();
+      await pool.query(
+        `INSERT INTO menu_items (id, categoryId, nameTh, nameEn, descriptionTh, descriptionEn, price, image, isAvailable, sortOrder, brand, colorCode, colorName, finishType, coverageArea, size, unit, mixingRatio, applicationMethodTh, applicationMethodEn, featuresTh, featuresEn, tdsFile, sdsFile, videoUrl, specColor, specDensity, specFlashPoint, specPotLife, relatedProductIds, safetyNotesTh, safetyNotesEn, createdAt, updatedAt)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [id, data.categoryId, data.nameTh, data.nameEn, data.descriptionTh, data.descriptionEn, data.price, data.image, data.isAvailable ? 1 : 0, data.sortOrder, data.brand, data.colorCode, data.colorName, data.finishType, data.coverageArea, data.size, data.unit, data.mixingRatio, data.applicationMethodTh, data.applicationMethodEn, data.featuresTh, data.featuresEn, data.tdsFile, data.sdsFile, data.videoUrl, data.specColor, data.specDensity, data.specFlashPoint, data.specPotLife, data.relatedProductIds, data.safetyNotesTh, data.safetyNotesEn, ts, ts],
       );
-      const id = (res as mysql.ResultSetHeader).insertId;
       return (await this.findById(id)) as MenuItemRecord;
     },
-    async update(id: number, data: Partial<MenuItemRecord>): Promise<MenuItemRecord | undefined> {
+    async _nextAutoId(): Promise<string> {
+      // Generate a numeric-string ID one greater than the current max numeric ID
+      const [rows] = await pool.query(
+        "SELECT MAX(CAST(id AS UNSIGNED)) AS maxId FROM menu_items WHERE id REGEXP '^[0-9]+$'"
+      );
+      const maxId = (rows as any[])[0]?.maxId;
+      const next = (typeof maxId === 'number' ? maxId : Number(maxId) || 0) + 1;
+      return String(next);
+    },
+    async update(id: string | number, data: Partial<MenuItemRecord>): Promise<MenuItemRecord | undefined> {
       const existing = await this.findById(id);
       if (!existing) return undefined;
       const fields: string[] = [];
@@ -527,36 +536,37 @@ export const db = {
         }
       }
       if (fields.length === 0) return existing;
-      fields.push('updatedAt = ?'); vals.push(now()); vals.push(id);
+      fields.push('updatedAt = ?'); vals.push(now()); vals.push(String(id));
       await pool.query(`UPDATE menu_items SET ${fields.join(', ')} WHERE id = ?`, vals);
       return (await this.findById(id)) as MenuItemRecord;
     },
-    async delete(id: number): Promise<boolean> {
-      const [res] = await pool.query('DELETE FROM menu_items WHERE id = ?', [id]);
+    async delete(id: string | number): Promise<boolean> {
+      const [res] = await pool.query('DELETE FROM menu_items WHERE id = ?', [String(id)]);
       return (res as mysql.ResultSetHeader).affectedRows > 0;
     },
-    async updateId(oldId: number, newId: number): Promise<MenuItemRecord | undefined> {
-      if (oldId === newId) return this.findById(oldId) as Promise<MenuItemRecord | undefined>;
-      if (!Number.isInteger(newId) || newId <= 0) {
-        throw new Error('ID ต้องเป็นจำนวนเต็มบวก');
+    async updateId(oldId: string | number, newId: string): Promise<MenuItemRecord | undefined> {
+      const oldStr = String(oldId);
+      const newStr = String(newId).trim();
+      if (oldStr === newStr) return this.findById(oldStr) as Promise<MenuItemRecord | undefined>;
+      if (!newStr) throw new Error('ID ใหม่ห้ามว่าง');
+      if (!/^[A-Za-z0-9ก-๙_\-.]{1,64}$/.test(newStr)) {
+        throw new Error('ID รับเฉพาะตัวอักษร/ตัวเลข/_-. (1-64 ตัว)');
       }
-      const existing = await this.findById(oldId);
+      const existing = await this.findById(oldStr);
       if (!existing) return undefined;
-      const conflict = await this.findById(newId);
-      if (conflict) throw new Error(`มีสินค้า ID ${newId} อยู่แล้ว`);
+      const conflict = await this.findById(newStr);
+      if (conflict) throw new Error(`มีสินค้า ID "${newStr}" อยู่แล้ว`);
 
       const conn = await pool.getConnection();
       try {
         await conn.query('SET FOREIGN_KEY_CHECKS = 0');
         await conn.beginTransaction();
-        await conn.query('UPDATE menu_items SET id = ? WHERE id = ?', [newId, oldId]);
-        await conn.query('UPDATE order_items SET menuItemId = ? WHERE menuItemId = ?', [newId, oldId]);
+        await conn.query('UPDATE menu_items SET id = ? WHERE id = ?', [newStr, oldStr]);
+        await conn.query('UPDATE order_items SET menuItemId = ? WHERE menuItemId = ?', [newStr, oldStr]);
         // Patch CSV soft references in relatedProductIds
         const [related] = await conn.query(
           "SELECT id, relatedProductIds FROM menu_items WHERE relatedProductIds IS NOT NULL AND relatedProductIds <> ''",
         );
-        const oldStr = String(oldId);
-        const newStr = String(newId);
         for (const row of related as any[]) {
           const ids = String(row.relatedProductIds).split(',').map((s: string) => s.trim()).filter(Boolean);
           if (!ids.includes(oldStr)) continue;
@@ -565,8 +575,7 @@ export const db = {
         }
         await conn.commit();
         await conn.query('SET FOREIGN_KEY_CHECKS = 1');
-        await conn.query('ALTER TABLE menu_items AUTO_INCREMENT = ?', [newId + 1]).catch(() => {});
-        return (await this.findById(newId)) as MenuItemRecord | undefined;
+        return (await this.findById(newStr)) as MenuItemRecord | undefined;
       } catch (err) {
         await conn.rollback().catch(() => {});
         await conn.query('SET FOREIGN_KEY_CHECKS = 1').catch(() => {});
@@ -1121,7 +1130,7 @@ export const db = {
       userId?: number | null;
       totalAmount: number;
       orderType?: string;
-      items: { menuItemId: number; quantity: number; price: number }[];
+      items: { menuItemId: string; quantity: number; price: number }[];
       paymentMethod?: string;
       customerName?: string | null;
       customerPhone?: string | null;

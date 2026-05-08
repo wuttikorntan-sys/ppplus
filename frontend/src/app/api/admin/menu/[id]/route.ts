@@ -39,21 +39,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   try {
     requireAdmin(req);
     const { id: idStr } = await params;
-    const id = parseInt(idStr);
-    if (isNaN(id)) return NextResponse.json({ success: false, error: 'Invalid ID' }, { status: 400 });
+    if (!idStr) return NextResponse.json({ success: false, error: 'Invalid ID' }, { status: 400 });
 
     const formData = await req.formData();
 
     const newIdRaw = formData.get('newId');
-    let workingId = id;
+    let workingId: string = idStr;
     if (newIdRaw !== null && newIdRaw !== '') {
-      const newId = parseInt(newIdRaw as string);
-      if (!Number.isFinite(newId) || newId <= 0) {
-        throw new ApiError('ID ใหม่ต้องเป็นจำนวนเต็มบวก', 400);
-      }
-      if (newId !== id) {
+      const newId = String(newIdRaw).trim();
+      if (newId !== idStr) {
         try {
-          const moved = await db.menuItems.updateId(id, newId);
+          const moved = await db.menuItems.updateId(idStr, newId);
           if (!moved) throw new ApiError('ไม่พบสินค้า', 404);
           workingId = newId;
         } catch (e) {
@@ -117,10 +113,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   try {
     requireAdmin(req);
     const { id: idStr } = await params;
-    const id = parseInt(idStr);
-    if (isNaN(id)) return NextResponse.json({ success: false, error: 'Invalid ID' }, { status: 400 });
+    if (!idStr) return NextResponse.json({ success: false, error: 'Invalid ID' }, { status: 400 });
 
-    await db.menuItems.delete(id);
+    await db.menuItems.delete(idStr);
     return NextResponse.json({ success: true, message: 'ลบสินค้าเรียบร้อย' });
   } catch (err) {
     return handleError(err);

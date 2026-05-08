@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
-import { requireAdmin, handleError } from '@/lib/api-server';
+import { requireAdmin, handleError, ApiError } from '@/lib/api-server';
 import { saveUploadedFile, saveUploadedDocument } from '@/lib/upload';
 
 const menuItemSchema = z.object({
@@ -85,7 +85,17 @@ export async function POST(req: NextRequest) {
     const tdsPath = await saveUploadedDocument(formData, 'tdsFile');
     const sdsPath = await saveUploadedDocument(formData, 'sdsFile');
 
+    const customId = (formData.get('id') as string | null)?.trim() || undefined;
+    if (customId) {
+      if (!/^[A-Za-z0-9ก-๙_\-.]{1,64}$/.test(customId)) {
+        throw new ApiError('ID รับเฉพาะตัวอักษร/ตัวเลข/_-. (1-64 ตัว)', 400);
+      }
+      const exists = await db.menuItems.findById(customId);
+      if (exists) throw new ApiError(`มีสินค้า ID "${customId}" อยู่แล้ว`, 409);
+    }
+
     const item = await db.menuItems.create({
+      id: customId,
       ...data,
       isAvailable: data.isAvailable ?? true,
       sortOrder: data.sortOrder ?? 0,

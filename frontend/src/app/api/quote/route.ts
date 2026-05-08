@@ -15,7 +15,7 @@ function escapeHtml(str: string): string {
 }
 
 const cartItemSchema = z.object({
-  id: z.coerce.number(),
+  id: z.union([z.string().min(1), z.number()]).transform((v) => String(v)),
   nameTh: z.string(),
   nameEn: z.string(),
   price: z.coerce.number(),

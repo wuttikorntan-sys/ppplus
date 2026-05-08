@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
 export interface CartItem {
-  id: number;
+  id: string;
   nameTh: string;
   nameEn: string;
   price: number;
@@ -16,8 +16,8 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[];
   addItem: (item: Omit<CartItem, 'quantity'>, qty?: number) => void;
-  removeItem: (id: number) => void;
-  updateQuantity: (id: number, qty: number) => void;
+  removeItem: (id: string) => void;
+  updateQuantity: (id: string, qty: number) => void;
   clearCart: () => void;
   totalItems: number;
   isOpen: boolean;
@@ -36,7 +36,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setItems(JSON.parse(stored));
+      if (stored) {
+        // Coerce numeric IDs from older cart data into strings
+        const parsed = JSON.parse(stored) as CartItem[];
+        setItems(parsed.map((it) => ({ ...it, id: String(it.id) })));
+      }
     } catch {}
     setLoaded(true);
   }, []);
@@ -57,11 +61,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const removeItem = useCallback((id: number) => {
+  const removeItem = useCallback((id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   }, []);
 
-  const updateQuantity = useCallback((id: number, qty: number) => {
+  const updateQuantity = useCallback((id: string, qty: number) => {
     if (qty <= 0) {
       setItems((prev) => prev.filter((i) => i.id !== id));
     } else {

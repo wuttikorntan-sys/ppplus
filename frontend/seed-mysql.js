@@ -237,6 +237,46 @@ async function main() {
   await ensureColumn('menu_items', 'safetyNotesTh',     'safetyNotesTh TEXT NULL');
   await ensureColumn('menu_items', 'safetyNotesEn',     'safetyNotesEn TEXT NULL');
 
+  // Migration: menu_items.id INT AUTO_INCREMENT → VARCHAR(64)
+  // Lets admins use SKU-style IDs like "SRR001", "TOA-2K-001"
+  const [idCol] = await conn.query(
+    `SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'menu_items' AND COLUMN_NAME = 'id'`
+  );
+  if (idCol[0]?.DATA_TYPE && idCol[0].DATA_TYPE.toLowerCase() !== 'varchar') {
+    console.log('Migrating menu_items.id to VARCHAR(64)...');
+    await conn.query('SET FOREIGN_KEY_CHECKS = 0');
+    const [fks] = await conn.query(
+      `SELECT TABLE_NAME, CONSTRAINT_NAME
+       FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+       WHERE TABLE_SCHEMA = DATABASE()
+         AND REFERENCED_TABLE_NAME = 'menu_items' AND REFERENCED_COLUMN_NAME = 'id'`
+    );
+    for (const fk of fks) {
+      await conn.query(`ALTER TABLE \`${fk.TABLE_NAME}\` DROP FOREIGN KEY \`${fk.CONSTRAINT_NAME}\``);
+    }
+    await conn.query('ALTER TABLE menu_items MODIFY id VARCHAR(64) NOT NULL');
+    const [hasOrderItems] = await conn.query(
+      `SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.TABLES
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'order_items'`
+    );
+    if (hasOrderItems[0].cnt > 0) {
+      await conn.query('ALTER TABLE order_items MODIFY menuItemId VARCHAR(64) NOT NULL');
+      await conn.query(
+        'ALTER TABLE order_items ADD CONSTRAINT order_items_menuitem_fk FOREIGN KEY (menuItemId) REFERENCES menu_items(id) ON DELETE CASCADE'
+      );
+    }
+    const [qrCol] = await conn.query(
+      `SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'quote_requests' AND COLUMN_NAME = 'productId'`
+    );
+    if (qrCol[0]?.DATA_TYPE && qrCol[0].DATA_TYPE.toLowerCase() === 'int') {
+      await conn.query('ALTER TABLE quote_requests MODIFY productId VARCHAR(64) NULL');
+    }
+    await conn.query('SET FOREIGN_KEY_CHECKS = 1');
+    console.log('  ✓ menu_items.id is now VARCHAR(64)');
+  }
+
   // Seed admin user
   const [existingAdmins] = await conn.query("SELECT id FROM users WHERE role = 'ADMIN' LIMIT 1");
   if (!existingAdmins.length) {

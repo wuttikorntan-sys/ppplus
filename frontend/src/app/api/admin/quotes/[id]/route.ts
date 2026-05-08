@@ -9,7 +9,7 @@ const updateSchema = z.object({
   email: z.string().email().nullable().optional(),
   company: z.string().nullable().optional(),
   productName: z.string().nullable().optional(),
-  productId: z.number().int().positive().nullable().optional(),
+  productId: z.union([z.string().min(1), z.number().int().positive()]).transform((v) => String(v)).nullable().optional(),
   quantity: z.string().nullable().optional(),
   message: z.string().nullable().optional(),
   status: z.enum(['pending', 'quoted', 'closed']).optional(),

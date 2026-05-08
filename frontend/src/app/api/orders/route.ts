@@ -13,7 +13,7 @@ const orderSchema = z.object({
   items: z
     .array(
       z.object({
-        menuItemId: z.number().int().positive(),
+        menuItemId: z.union([z.string().min(1), z.number().int().positive()]).transform((v) => String(v)),
         quantity: z.number().int().positive(),
       }),
     )
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const data = orderSchema.parse(body);
 
     // Look up real prices server-side — never trust client-provided prices
-    const priced: { menuItemId: number; quantity: number; price: number }[] = [];
+    const priced: { menuItemId: string; quantity: number; price: number }[] = [];
     let total = 0;
     for (const item of data.items) {
       const product = await db.menuItems.findById(item.menuItemId);
