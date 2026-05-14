@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
         throw new ApiError(`Product "${product.nameTh || product.nameEn}" is no longer available`, 400);
       }
       const price = Number(product.price);
-      if (!isFinite(price) || price <= 0) {
+      if (!isFinite(price) || price < 0) {
         throw new ApiError(`Invalid price for product #${item.menuItemId}`, 400);
       }
       priced.push({ menuItemId: item.menuItemId, quantity: item.quantity, price });

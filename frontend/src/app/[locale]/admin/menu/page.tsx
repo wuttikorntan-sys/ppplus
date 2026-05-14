@@ -288,8 +288,8 @@ export default function AdminMenuPage() {
       return;
     }
     const priceNum = parseFloat(form.price);
-    if (!isFinite(priceNum) || priceNum <= 0) {
-      toast.error(th ? 'ราคาต้องมากกว่า 0' : 'Price must be greater than 0');
+    if (!isFinite(priceNum) || priceNum < 0) {
+      toast.error(th ? 'ราคาต้องไม่ติดลบ' : 'Price cannot be negative');
       return;
     }
     setSaving(true);
@@ -558,8 +558,9 @@ export default function AdminMenuPage() {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'ราคา (฿)' : 'Price (฿)'} *</label>
-                  <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })}
+                  <input type="number" min={0} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
+                  <p className="text-xs text-gray-400 mt-1">{th ? 'ใส่ 0 ได้ (สินค้าแถมฟรี)' : '0 allowed (free giveaway)'}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{th ? 'หมวดหมู่' : 'Category'} *</label>
@@ -628,10 +629,14 @@ export default function AdminMenuPage() {
                       <input type="number" value={form.size} onChange={(e) => setForm({ ...form, size: e.target.value })}
                         className="flex-1 px-3.5 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm" />
                       <select value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}
-                        className="w-20 px-2 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm">
+                        className="w-28 px-2 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-[#1C1C1E] focus:ring-2 focus:ring-[#1C1C1E]/10 transition text-sm">
                         <option value="L">L</option>
-                        <option value="ml">ml</option>
-                        <option value="gal">gal</option>
+                        <option value="KG">KG</option>
+                        <option value="ML">ML</option>
+                        <option value="Gallon">Gallon</option>
+                        <option value="Can">Can</option>
+                        <option value="Tin">Tin</option>
+                        <option value="Drum">Drum</option>
                       </select>
                     </div>
                   </div>

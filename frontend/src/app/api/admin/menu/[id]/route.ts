@@ -10,7 +10,7 @@ const menuItemSchema = z.object({
   nameEn: z.string().min(1),
   descriptionTh: z.string(),
   descriptionEn: z.string(),
-  price: z.number().positive(),
+  price: z.number().nonnegative(),
   isAvailable: z.boolean().optional(),
   sortOrder: z.number().int().optional(),
   brand: z.string().nullable().default(null),
