@@ -32,7 +32,9 @@ interface MenuItem {
   colorName: string | null;
   finishType: string | null;
   size: string | null;
+  unit?: string | null;
   mixingRatio: string | null;
+  relatedProductIds?: string | null;
   videoUrl: string | null;
   tdsFile: string | null;
   category: Category;
@@ -196,6 +198,17 @@ export default function MenuPage() {
     return matchCategory && matchSearch;
   });
 
+  const relatedNames = (csv: string | null | undefined) =>
+    (csv || '')
+      .split(/[,\s]+/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((id) => {
+        const p = items.find((x) => x.id === id);
+        return p ? (th ? p.nameTh : p.nameEn) : null;
+      })
+      .filter(Boolean);
+
   const categoryIcons: Record<number, React.ReactNode> = {
     1: <Car className="w-4 h-4" />,
     2: <Paintbrush className="w-4 h-4" />,
@@ -310,13 +323,17 @@ export default function MenuPage() {
                     </h3>
                   </Link>
                   {item.size && (
-                    <p className="text-[#64748B] text-xs md:text-sm">{item.size}</p>
+                    <p className="text-[#64748B] text-xs md:text-sm">
+                      {th ? 'ขนาดบรรจุ ' : 'Size '}{item.size}{item.unit ? ` ${item.unit}` : ''}
+                    </p>
                   )}
-                  {item.mixingRatio && (
-                    <p className="text-[#64748B] text-xs hidden md:block">{locale === 'th' ? 'สัดส่วนผสม: ' : 'Mix Ratio: '}{item.mixingRatio}</p>
+                  {item.colorName && (
+                    <p className="text-[#64748B] text-xs hidden md:block">{th ? 'เฉดสี: ' : 'Color: '}{item.colorName}</p>
                   )}
-                  {item.finishType && (
-                    <p className="text-[#64748B] text-xs hidden md:block">{locale === 'th' ? 'เนื้อสี: ' : 'Finish: '}{item.finishType}</p>
+                  {relatedNames(item.relatedProductIds).length > 0 && (
+                    <p className="text-[#64748B] text-xs hidden md:block line-clamp-1">
+                      {th ? 'ใช้งานร่วมกับ ' : 'Used with '}{relatedNames(item.relatedProductIds).join(', ')}
+                    </p>
                   )}
                   <div className="mt-auto pt-2 md:pt-3 flex gap-2">
                     <button
