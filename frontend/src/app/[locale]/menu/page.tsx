@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ChevronDown, Paintbrush, Droplets, SprayCan, Car, Layers, Wrench, Factory, Beaker, Shield, Disc, HardHat, FileText, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
+import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { useCart } from '@/lib/cart';
 import toast from 'react-hot-toast';
@@ -145,9 +146,14 @@ const sampleProducts: MenuItem[] = [
 export default function MenuPage() {
   const t = useTranslations('menu');
   const locale = useLocale();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [items, setItems] = useState<MenuItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(() => {
+    const c = searchParams.get('category');
+    return c ? Number(c) : null;
+  });
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
@@ -247,7 +253,11 @@ export default function MenuPage() {
             <div className="relative">
               <select
                 value={selectedCategory === null ? '' : String(selectedCategory)}
-                onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
+                onChange={(e) => {
+                  const val = e.target.value ? Number(e.target.value) : null;
+                  setSelectedCategory(val);
+                  router.replace((val ? `/menu?category=${val}` : '/menu') as '/menu');
+                }}
                 className="appearance-none w-24 sm:w-56 pl-3 sm:pl-4 pr-8 sm:pr-10 py-2.5 sm:py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#F5841F]/20 focus:border-[#F5841F] outline-none transition text-xs sm:text-sm"
               >
                 <option value="">{t('all')}</option>

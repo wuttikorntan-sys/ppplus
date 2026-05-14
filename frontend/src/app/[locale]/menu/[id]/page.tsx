@@ -214,7 +214,10 @@ export default function ProductDetailPage() {
       {/* Breadcrumb */}
       <div className="bg-white dark:bg-[#2D2D2D] border-b dark:border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <Link href="/menu" className="text-sm text-[#F5841F] hover:underline flex items-center gap-1">
+          <Link
+            href={(product.categoryId ? `/menu?category=${product.categoryId}` : '/menu') as '/menu'}
+            className="text-sm text-[#F5841F] hover:underline flex items-center gap-1"
+          >
             <ArrowLeft className="w-4 h-4" /> {th ? 'กลับหน้าสินค้า' : 'Back to Products'}
           </Link>
         </div>
