@@ -168,7 +168,7 @@ export default function HomePage() {
   useEffect(() => {
     api.get<{ success: boolean; data: FeaturedProduct[] }>('/menu')
       .then((r) => {
-        setFeaturedItems(r.data && r.data.length > 0 ? r.data.slice(0, 8) : []);
+        setFeaturedItems(r.data && r.data.length > 0 ? r.data : []);
       })
       .catch((err: unknown) => {
         setFeaturedError(err instanceof Error ? err.message : 'Failed to load products');
@@ -380,7 +380,7 @@ export default function HomePage() {
                 {(() => { const s = c('welcome.image') || 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?h=600&fit=crop&auto=format&q=80'; return (
                   <img
                     src={withWidth(s, 800)}
-                    srcSet={[400, 600, 800, 1200].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
+                    srcSet={[480, 640, 800, 1280].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     alt="Automotive paint workshop"
                     loading="lazy"
@@ -411,7 +411,7 @@ export default function HomePage() {
                 {(() => { const s = c('brands.image') || 'https://images.unsplash.com/photo-1611288875785-d673e3e6547c?h=600&fit=crop&auto=format&q=80'; return (
                   <img
                     src={withWidth(s, 800)}
-                    srcSet={[400, 600, 800, 1200].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
+                    srcSet={[480, 640, 800, 1280].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     alt="Paint products"
                     loading="lazy"
@@ -456,7 +456,7 @@ export default function HomePage() {
                 {(() => { const s = c('services.image') || 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?h=600&fit=crop&auto=format&q=80'; return (
                   <img
                     src={withWidth(s, 800)}
-                    srcSet={[400, 600, 800, 1200].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
+                    srcSet={[480, 640, 800, 1280].map((w) => `${withWidth(s, w)} ${w}w`).join(', ')}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     alt="Color matching service"
                     loading="lazy"
